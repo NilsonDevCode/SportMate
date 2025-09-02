@@ -1,3 +1,73 @@
 <resources>
-    <string name="app_name">SportMate</string>
+    <!-- Nombre de la app -->
+    <string name="app_name">AppSportMate</string>
+
+    <!-- Actividades -->
+    <string name="title_activity_formulario_usuario">Formulario Usuario</string>
+    <string name="title_activity_formulario_ayuntamiento">Formulario Ayuntamiento</string>
+    <string name="title_activity_gestion_eventos">Gestión de Eventos</string>
+    <string name="title_activity_login">Iniciar Sesión</string>
+    <string name="title_activity_register">Registro</string>
+    <string name="title_activity_main">Inicio</string>
+
+    <!-- Formularios comunes -->
+    <string name="prompt_alias">Alias</string>
+    <string name="prompt_nombre">Nombre</string>
+    <string name="prompt_apellidos">Apellidos</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="prompt_password_repeat">Repetir contraseña</string>
+    <string name="prompt_comunidad">Comunidad</string>
+    <string name="prompt_provincia">Provincia</string>
+    <string name="prompt_ciudad">Ciudad</string>
+    <string name="prompt_pueblo">Pueblo</string>
+    <string name="prompt_razon_social">Razón Social</string>
+
+    <!-- Botones / Acciones -->
+    <string name="action_sign_in">Inicia sesión o regístrate</string>
+    <string name="action_sign_in_short">Iniciar sesión</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="login">Login</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="guardar">Guardar</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="volver">Volver</string>
+    <string name="crear_evento">Crear evento</string>
+    <string name="gestionar_eventos">Gestionar eventos</string>
+    <string name="inscribirse">Inscribirse</string>
+    <string name="expulsar">Expulsar</string>
+
+    <!-- Mensajes -->
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="invalid_username">Alias no válido</string>
+    <string name="invalid_password">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="login_failed">Login fallido</string>
+    <string name="registro_exitoso">Registro exitoso</string>
+    <string name="registro_fallido">Error en el registro</string>
+    <string name="perfil_no_encontrado">Perfil no encontrado</string>
+    <string name="error_cargando">Error cargando datos</string>
+    <string name="error_guardando">Error guardando datos</string>
+    <string name="error_eliminando">Error eliminando datos</string>
+    <string name="error_migrando">Error migrando datos</string>
+    <string name="evento_creado">Evento creado correctamente</string>
+    <string name="evento_actualizado">Evento actualizado</string>
+    <string name="evento_borrado">Evento eliminado</string>
+    <string name="usuario_expulsado">Usuario expulsado</string>
+
+    <!-- Textos informativos -->
+    <string name="fecha">Fecha</string>
+    <string name="hora">Hora</string>
+    <string name="futbol">Fútbol</string>
+    <string name="plazas">Plazas disponibles</string>
+    <string name="sin_eventos">No hay eventos disponibles</string>
+    <string name="sin_inscritos">No hay inscritos en este evento</string>
+
+    <!-- Arrays -->
+    <string-array name="roles_array">
+        <item>Usuario Particular</item>
+        <item>Ayuntamiento</item>
+    </string-array>
 </resources>
