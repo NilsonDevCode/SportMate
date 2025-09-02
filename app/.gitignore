@@ -1,1 +1,64 @@
-/build
+# =====================================
+# Android / Gradle gitignore
+# Adaptado para NO ignorar google-services.json
+# =====================================
+
+# =====================================
+# Android / Gradle gitignore (Java)
+# =====================================
+
+# Build outputs
+/build/
+*/build/
+.gradle/
+local.properties
+captures/
+outputs/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# IDE (Android Studio)
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NDK / CMake
+.cxx/
+
+# Keystore (mantén esto privado si usas release firmado)
+*.jks
+*.keystore
+
+# Misc caches
+.externalNativeBuild
+.cxx
+.cache
+.navigation/
+*.hprof
+
+# Android Studio Profiling
+*.trace
+*.hprof
+*.gpuprofile
+
+# Firebase — dejamos explícitamente el json
+# (NO ignoramos google-services.json para que todos lo tengáis)
+# google-services.json
+
+# Node (si llegas a usar emuladores o scripts)
+node_modules/
+
+# Java generated (ya que tu proyecto es en Java)
+bin/
+gen/

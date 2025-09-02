@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "912382056340",
+    "project_id": "appsportmate",
+    "storage_bucket": "appsportmate.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912382056340:android:1791fd01591c0c8b952181",
+        "android_client_info": {
+          "package_name": "com.nilson.appsportmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzy3YxZhLcxVosPjnDSmNSg0eVpB1lCA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
