@@ -112,3 +112,44 @@ git commit -m "Primer commit - AppSportMate TFG DAM"
 # 5. Subir al repo remoto
 git branch -M main
 git push -u origin main
+```
+
+## Estructura recomendada para el proyecto
+```
+com.example.sportmate
+├── data
+│   ├── model             // Data Classes (User.java, Event.java)
+│   ├── repository        // Repositorios (UserRepository.java, EventRepository.java)
+│   ├── source
+│   │   └── remote        // Clases para interactuar con Firebase
+│   │       ├── firebase  // Específico de Firebase
+│   │       │   ├── auth    // AuthService.java (para FirebaseAuth)
+│   │       │   └── firestore // FirestoreService.java (para Cloud Firestore)
+│   │       └── dto       // Data Transfer Objects si necesitas transformar datos de Firebase
+│   └── util              // Clases de utilidad para el manejo de datos (e.g., Result.java para manejar éxito/error)
+│
+├── di                    // (Opcional, pero muy recomendado) Para Inyección de Dependencias (e.g., Hilt, Dagger)
+│   ├── AppModule.java
+│   └── ViewModelModule.java
+│
+├── ui
+│   ├── // Paquetes por funcionalidad (feature)
+│   ├── auth              // Funcionalidad de Autenticación
+│   │   ├── LoginActivity.java
+│   │   ├── RegisterActivity.java
+│   │   └── AuthViewModel.java
+│   │
+│   ├── home              // Funcionalidad de la pantalla principal
+│   │   ├── HomeActivity.java
+│   │   ├── HomeFragment.java // Si usas fragments
+│   │   └── HomeViewModel.java
+│   │
+│   ├── base              // Clases base comunes para UI (BaseActivity.java, BaseFragment.java)
+│   └── adapter           // Adapters comunes o base si los tienes
+│
+├── util                  // Clases de utilidad generales para la aplicación (Constants.java, Extensions.java si usas, etc.)
+│
+├── App.java              // Clase Application (si necesitas inicializar algo globalmente)
+│
+└── MainActivity.java     // Tu actividad principal de lanzamiento
+```
