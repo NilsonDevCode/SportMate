@@ -16,7 +16,7 @@
 
         <!-- Launcher -->
         <activity
-            android:name=".caracteristicas.principal.SplashActivity"
+            android:name=".features.main.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
@@ -27,32 +27,32 @@
 
         <!-- Autentificación -->
         <activity
-            android:name=".caracteristicas.autenticacion.ui.LoginActivity"
+            android:name=".features.auth.ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".caracteristicas.autenticacion.ui.RegisterActivity"
+            android:name=".features.auth.ui.RegisterActivity"
             android:exported="false" />
 
         <!-- Principal / Usuario -->
         <activity
-            android:name=".caracteristicas.principal.MainActivity"
+            android:name=".features.main.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".caracteristicas.usuario.ui.DeportesDisponiblesActivity"
+            android:name=".features.user.ui.DeportesDisponiblesActivity"
             android:exported="false" />
         <activity
-            android:name=".caracteristicas.usuario.ui.FormularioUsuarioAyuntamientoActivity"
+            android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity"
             android:exported="false" />
 
         <!-- Ayuntamiento -->
         <activity
-            android:name=".caracteristicas.ayuntamiento.ui.FormularioAyuntamientoActivity"
+            android:name=".features.townhall.ui.FormularioAyuntamientoActivity"
             android:exported="false" />
         <activity
-            android:name=".caracteristicas.ayuntamiento.ui.GestionDeportesAyuntamientoActivity"
+            android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity"
             android:exported="false" />
         <activity
-            android:name=".caracteristicas.ayuntamiento.ui.GestionEventosMasPlazasActivity"
+            android:name=".features.townhall.ui.GestionEventosMasPlazasActivity"
             android:exported="false" />
 
         <!-- Si usas un formulario de deporte separado y EXISTE esta clase, déjala.
