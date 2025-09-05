@@ -24,8 +24,8 @@ import com.nilson.appsportmate.features.townhall.presentacion.GestionEventosMasP
 import com.nilson.appsportmate.features.townhall.presentacion.GestionEventosMasPlazasView;
 import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFragment;
 import com.nilson.appsportmate.common.datos.firebase.FirestoreTransacciones;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
-import com.nilson.appsportmate.common.utilidades.ValidacionesEvento;
+import com.nilson.appsportmate.common.utils.Preferencias;
+import com.nilson.appsportmate.common.utils.ValidacionesEvento;
 
 import java.util.ArrayList;
 import java.util.HashMap;

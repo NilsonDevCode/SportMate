@@ -4,6 +4,7 @@
     package="com.nilson.appsportmate">
 
     <application
+        android:name=".SportMate"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,51 +14,57 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSportMate"
         tools:targetApi="31">
-
-        <!-- Launcher -->
         <activity
-            android:name=".features.main.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Autentificación -->
-        <activity
-            android:name=".features.auth.ui.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.auth.ui.RegisterActivity"
-            android:exported="false" />
-
-        <!-- Principal / Usuario -->
-        <activity
-            android:name=".features.main.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.user.ui.DeportesDisponiblesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity"
-            android:exported="false" />
-
-        <!-- Ayuntamiento -->
-        <activity
-            android:name=".features.townhall.ui.FormularioAyuntamientoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.townhall.ui.GestionEventosMasPlazasActivity"
-            android:exported="false" />
-
-        <!-- Si usas un formulario de deporte separado y EXISTE esta clase, déjala.
-             Si no existe, bórrala también para evitar ClassNotFoundException. -->
-
     </application>
 
 </manifest>
+
+<!--
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppSportMate" /> <!- Launcher
+<activity
+android:name=".features.main.SplashActivity"
+android:exported="true"
+android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+<intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+
+    <category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity> <!- Autentificación
+                <action android:name="android.intent.action.MAIN" />
+<activity
+android:name=".features.auth.ui.LoginActivity"
+android:exported="false" />
+<activity
+android:name=".features.auth.ui.RegisterActivity"
+android:exported="false" /> <!- Principal / Usuario
+<activity
+android:name=".MainActivity"
+android:exported="false" />
+<activity
+android:name=".features.user.ui.DeportesDisponiblesActivity"
+android:exported="false" />
+<activity
+android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity"
+android:exported="false" /> <!- Ayuntamiento
+<activity
+android:name=".features.townhall.ui.FormularioAyuntamientoActivity"
+android:exported="false" />
+<activity
+android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity"
+android:exported="false" />
+<activity
+android:name=".features.townhall.ui.GestionEventosMasPlazasActivity"
+android:exported="false" />
+
+-->

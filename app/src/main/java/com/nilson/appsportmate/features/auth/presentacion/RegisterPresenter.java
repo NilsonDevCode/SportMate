@@ -9,8 +9,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
-import com.nilson.appsportmate.common.utilidades.AuthAliasHelper;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
+import com.nilson.appsportmate.common.utils.AuthAliasHelper;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.HashMap;
 import java.util.Map;

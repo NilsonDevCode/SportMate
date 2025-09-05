@@ -50,7 +50,7 @@
             android:text="Entrar"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnIrRegistro"
+            android:id="@+id/btnNavRegister"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

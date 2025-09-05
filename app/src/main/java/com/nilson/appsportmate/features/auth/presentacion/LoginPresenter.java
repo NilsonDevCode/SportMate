@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.common.datos.firebase.FirestoreManager;
-import com.nilson.appsportmate.common.utilidades.AuthAliasHelper;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
+import com.nilson.appsportmate.common.utils.AuthAliasHelper;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
 public class LoginPresenter {
     private final LoginView view;

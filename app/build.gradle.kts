@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -27,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding = true
@@ -50,6 +53,16 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.google.hilt.compiler)
+
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment:2.9.3")
+    implementation("androidx.navigation:navigation-ui:2.9.3")
 
     // Test
     testImplementation("junit:junit:4.13.2")

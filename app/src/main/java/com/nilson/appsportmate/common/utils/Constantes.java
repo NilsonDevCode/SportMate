@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.common.utilidades;
+package com.nilson.appsportmate.common.utils;
 
 public class Constantes {
     public static final String NODO_USUARIOS = "usuarios";

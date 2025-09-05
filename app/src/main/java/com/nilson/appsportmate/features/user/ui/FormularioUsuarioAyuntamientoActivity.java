@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.modelos.UsuarioAyuntamiento;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.ArrayList;
 import java.util.List;

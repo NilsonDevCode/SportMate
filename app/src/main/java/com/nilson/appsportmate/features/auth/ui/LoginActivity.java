@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.features.auth.presentacion.LoginPresenter;
 import com.nilson.appsportmate.features.auth.presentacion.LoginView;
-import com.nilson.appsportmate.common.utilidades.AuthAliasHelper;
+import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 import com.nilson.appsportmate.features.townhall.ui.GestionDeportesAyuntamientoActivity;
 import com.nilson.appsportmate.features.user.ui.DeportesDisponiblesActivity;
 
@@ -29,12 +29,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.fragment_login);
 
         etAlias = findViewById(R.id.etAlias);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnIrRegistro = findViewById(R.id.btnIrRegistro);
+        btnIrRegistro = findViewById(R.id.btnNavRegister);
 
         presenter = new LoginPresenter(this, this);
 

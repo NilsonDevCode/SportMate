@@ -19,8 +19,8 @@ import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.WriteBatch;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.features.townhall.adaptadores.DeportesDisponiblesAdapter;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
-import com.nilson.appsportmate.features.main.MainActivity;
+import com.nilson.appsportmate.common.utils.Preferencias;
+import com.nilson.appsportmate.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

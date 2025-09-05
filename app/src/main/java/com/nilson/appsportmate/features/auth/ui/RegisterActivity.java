@@ -25,8 +25,8 @@ import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.features.auth.presentacion.RegisterPresenter;
 import com.nilson.appsportmate.features.auth.presentacion.RegisterView;
 import com.nilson.appsportmate.features.townhall.ui.GestionDeportesAyuntamientoActivity;
-import com.nilson.appsportmate.features.main.MainActivity;
-import com.nilson.appsportmate.common.utilidades.AuthAliasHelper;
+import com.nilson.appsportmate.MainActivity;
+import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.fragment_sign_in);
 
         tvTituloForm         = findViewById(R.id.tvTituloForm);
         etAlias              = findViewById(R.id.etAlias);

@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.features.auth.ui.LoginActivity;
-import com.nilson.appsportmate.common.utilidades.Preferencias;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.Calendar;
 import java.util.HashMap;

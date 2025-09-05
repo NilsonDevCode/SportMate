@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.common.utilidades;
+package com.nilson.appsportmate.common.utils;
 
 import java.text.Normalizer;
 
