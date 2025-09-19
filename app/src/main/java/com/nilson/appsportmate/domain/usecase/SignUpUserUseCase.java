@@ -8,6 +8,6 @@ public class SignUpUserUseCase {
     public SignUpUserUseCase(AuthRepository repository) { this.repository = repository; };
 
     public void execute(String email, String password) {
-        repository.login(email, password);
+        repository.signUp(email, password);
     }
 }
