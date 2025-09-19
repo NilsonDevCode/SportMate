@@ -61,8 +61,6 @@ dependencies {
     kapt(libs.google.hilt.compiler)
 
     // Navigation
-    implementation("androidx.navigation:navigation-fragment:2.9.3")
-    implementation("androidx.navigation:navigation-ui:2.9.3")
 
     // Test
     testImplementation("junit:junit:4.13.2")
