@@ -26,7 +26,6 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
 
-    // Ui Items
     private TextInputEditText aliasTI, passwordTI;
     private MaterialButton loginBtn, navRegisterBtn;
 

@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sign_in);
+        setContentView(R.layout.fragment_sign_up);
 
         tvTituloForm         = findViewById(R.id.tvTituloForm);
         etAlias              = findViewById(R.id.etAlias);
@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
         etComunidad          = findViewById(R.id.etDescripcionEvento);
         etProvincia          = findViewById(R.id.etReglasEvento);
         etCiudad             = findViewById(R.id.etMateriales);
-        etPueblo             = findViewById(R.id.etUrlPueblo);
+        // etPueblo             = findViewById(R.id.etUrlPueblo);
         etNumero             = findViewById(R.id.etNumero);
         layoutNombre         = findViewById(R.id.layoutNombre);
         layoutApellidos      = findViewById(R.id.layoutApellidos);

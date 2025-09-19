@@ -31,12 +31,12 @@ public class LoginViewModel extends ViewModel {
         String aliasError = validateAlias(alias);
 
         _uiState.setValue(new LoginUiState.Builder()
-                .setAlias(alias)
-                .setPassword(currentState.password)
-                .setAliasError(aliasError)
-                .setPasswordError(currentState.passwordError)
-                .setShowPassword(currentState.showPassword)
-                .setRememberMe(currentState.rememberMe)
+                .alias(alias)
+                .password(currentState.getPassword())
+                .aliasError(aliasError)
+                .passwordError(currentState.getPasswordError())
+                .showPassword(currentState.isShowPassword())
+                .rememberMe(currentState.isRememberMe())
                 .build());
     }
 
@@ -45,25 +45,25 @@ public class LoginViewModel extends ViewModel {
         String passwordError = validatePassword(password);
 
         _uiState.setValue(new LoginUiState.Builder()
-                .setAlias(currentState.alias)
-                .setPassword(password)
-                .setAliasError(currentState.aliasError)
-                .setPasswordError(passwordError)
-                .setShowPassword(currentState.showPassword)
-                .setRememberMe(currentState.rememberMe)
+                .alias(currentState.getAlias())
+                .password(password)
+                .aliasError(currentState.getAliasError())
+                .passwordError(passwordError)
+                .showPassword(currentState.isShowPassword())
+                .rememberMe(currentState.isRememberMe())
                 .build());
     }
 
     public void onLoginClicked() {
         LoginUiState currentState = getCurrentState();
 
-        if (!currentState.isLoadingEnabled) {
+        if (!currentState.isLoadingEnabled()) {
             return;
         }
 
         Log.d("LoginViewModel", "onLoginClicked");
 
-        loginUserUseCase.execute(currentState.alias, currentState.password);
+        loginUserUseCase.execute(currentState.getAlias(), currentState.getPassword());
     }
 
     private LoginUiState getCurrentState() {

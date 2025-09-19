@@ -40,8 +40,8 @@
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.nilson.appsportmate.ui.auth.signIn.SignInFragment"
+        android:name="com.nilson.appsportmate.ui.auth.signUp.SignUpFragment"
         android:label="@string/sign_in_fragment_label"
-        tools:layout="@layout/fragment_sign_in">
+        tools:layout="@layout/fragment_sign_up">
     </fragment>
 </navigation>

@@ -27,14 +27,3 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-// private Button btnIniciarSesion;
-// private Button btnRegistrarse;
-
-// btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
-// btnRegistrarse  = findViewById(R.id.boton1_ActivityRegister);
-//
-//         btnIniciarSesion.setOnClickListener(v ->
-// startActivity(new Intent(this, LoginActivity.class)));
-//
-//         btnRegistrarse.setOnClickListener(v ->
-// startActivity(new Intent(this, RegisterActivity.class)));

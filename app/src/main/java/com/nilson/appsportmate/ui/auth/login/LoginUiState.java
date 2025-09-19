@@ -1,16 +1,24 @@
 package com.nilson.appsportmate.ui.auth.login;
 
 public class LoginUiState {
-    public final String alias;
-    public final String password;
-    public final boolean isLoading;
-    public final boolean isLoadingEnabled;
-    public final String aliasError;
-    public final String passwordError;
-    public final String generalError;
-    public final boolean showPassword;
-    public final boolean loginSuccess;
-    public final boolean rememberMe;
+
+    private String alias;
+
+    private String password;
+
+    private boolean isLoading;
+
+    private boolean isLoadingEnabled;
+
+    private String aliasError;
+    private String passwordError;
+    private String generalError;
+
+    private boolean showPassword;
+
+    private boolean loginSuccess;
+
+    private boolean rememberMe;
 
     private LoginUiState(Builder builder) {
         this.alias = builder.alias != null ? builder.alias : "";
@@ -38,69 +46,115 @@ public class LoginUiState {
     }
 
     public static LoginUiState loading() {
-        return new Builder().setLoading(true).build();
+        return new Builder().loading(true).build();
     }
 
     public static LoginUiState success() {
-        return new Builder().setLoginSuccess(true).build();
+        return new Builder().loginSuccess(true).build();
     }
 
     public static LoginUiState error(String errorMessage) {
-        return new Builder().setGeneralError(errorMessage).build();
+        return new Builder().generalError(errorMessage).build();
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public boolean isLoadingEnabled() {
+        return isLoadingEnabled;
+    }
+
+    public String getAliasError() {
+        return aliasError;
+    }
+
+    public String getPasswordError() {
+        return passwordError;
+    }
+
+    public String getGeneralError() {
+        return generalError;
+    }
+
+    public boolean isShowPassword() {
+        return showPassword;
+    }
+
+    public boolean isLoginSuccess() {
+        return loginSuccess;
+    }
+
+    public boolean isRememberMe() {
+        return rememberMe;
     }
 
     public static class Builder {
-        private String alias = "";
-        private String password = "";
-        private boolean isLoading = false;
-        private String aliasError = null;
-        private String passwordError = null;
-        private String generalError = null;
-        private boolean showPassword = false;
-        private boolean loginSuccess = false;
-        private boolean rememberMe = false;
+        private String alias;
+        private String password;
+        private boolean isLoading;
+        private boolean isLoadingEnabled;
+        private String aliasError;
+        private String passwordError;
+        private String generalError;
+        private boolean showPassword;
+        private boolean loginSuccess;
+        private boolean rememberMe;
 
-        public Builder setAlias(String alias) {
+        public Builder alias(String alias) {
             this.alias = alias;
             return this;
         }
 
-        public Builder setPassword(String password) {
+        public Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public Builder setLoading(boolean isLoading) {
-            this.isLoading = isLoading;
+        public Builder loading(boolean loading) {
+            this.isLoading = loading;
             return this;
         }
 
-        public Builder setAliasError(String aliasError) {
+        public Builder loadingEnabled(boolean loadingEnabled) {
+            this.isLoadingEnabled = loadingEnabled;
+            return this;
+        }
+
+        public Builder aliasError(String aliasError) {
             this.aliasError = aliasError;
             return this;
         }
 
-        public Builder setPasswordError(String passwordError) {
+        public Builder passwordError(String passwordError) {
             this.passwordError = passwordError;
             return this;
         }
 
-        public Builder setGeneralError(String generalError) {
+        public Builder generalError(String generalError) {
             this.generalError = generalError;
             return this;
         }
 
-        public Builder setShowPassword(boolean showPassword) {
+        public Builder showPassword(boolean showPassword) {
             this.showPassword = showPassword;
             return this;
         }
 
-        public Builder setLoginSuccess(boolean loginSuccess) {
+        public Builder loginSuccess(boolean loginSuccess) {
             this.loginSuccess = loginSuccess;
             return this;
         }
 
-        public Builder setRememberMe(boolean rememberMe) {
+        public Builder rememberMe(boolean rememberMe) {
             this.rememberMe = rememberMe;
             return this;
         }
