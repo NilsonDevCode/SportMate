@@ -28,7 +28,7 @@ Uso
 ---
     python3 parse_townhalls.py
 
-El script preguntará automáticamente si deseas consevar el archivo Excel una
+El script preguntará automáticamente si deseas conservar el archivo Excel una
 vez terminado.
 """
 
