@@ -1,4 +1,5 @@
 # AppSportMate
+
 Aplicación Android desarrollada como parte del TFG de DAM.  
 El objetivo es conectar usuarios y ayuntamientos a través del deporte, permitiendo gestionar eventos, inscribirse y administrar plazas.
 
@@ -95,7 +96,6 @@ captures/
 # OS files
 .DS_Store
 Thumbs.db
-```
 
 # 1. Inicializar repo (si no lo tienes)
 git init
@@ -112,6 +112,7 @@ git commit -m "Primer commit - AppSportMate TFG DAM"
 # 5. Subir al repo remoto
 git branch -M main
 git push -u origin main
+```
 
 ## Estructura recomendada para el proyecto
 ```
