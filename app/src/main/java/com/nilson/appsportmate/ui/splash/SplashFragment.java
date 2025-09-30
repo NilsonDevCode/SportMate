@@ -1,6 +1,8 @@
 package com.nilson.appsportmate.ui.splash;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class SplashFragment extends Fragment {
 
+    private static final long SPLASH_DELAY_MS = 4000L; // 4 segundos
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
@@ -30,10 +34,13 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        checkAuth(view);
+        // Espera 4 segundos mostrando fragment_splash.xml antes de navegar
+        new Handler(Looper.getMainLooper()).postDelayed(() -> checkAuth(view), SPLASH_DELAY_MS);
     }
 
     private void checkAuth(View view) {
+        if (!isAdded()) return; // seguridad: evita crash si el fragment ya no está
+
         NavController nav = Navigation.findNavController(view);
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -46,10 +53,10 @@ public class SplashFragment extends Fragment {
         Log.i("SplashFragment", "Logged as " + role.toString());
 
         switch (role) {
-            case AuthRole.USER:
+            case USER:
                 nav.navigate(R.id.action_splashFragment_to_authFragment);
                 break;
-            case AuthRole.TOWNHALL:
+            case TOWNHALL:
                 nav.navigate(R.id.action_splashFragment_to_authFragment);
                 break;
             default:

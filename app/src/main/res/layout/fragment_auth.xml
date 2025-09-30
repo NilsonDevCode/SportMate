@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/img_fondo_generico"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp">
@@ -14,14 +14,18 @@
         android:layout_marginBottom="32dp"
         android:text="Bienvenido a AppSportMate"
         android:textSize="22sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@android:color/white" /> <!-- Texto blanco para contraste -->
 
     <Button
         android:id="@+id/btnLogin"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Iniciar sesión" />
+        android:text="Iniciar sesión"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnSignIn"
