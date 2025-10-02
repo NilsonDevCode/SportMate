@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
+    <!-- Splash con logo -->
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.nilson.appsportmate.ui.splash.SplashFragment"
@@ -14,8 +15,13 @@
         <action
             android:id="@+id/action_splashFragment_to_authFragment"
             app:destination="@id/authFragment" />
+
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
+    <!-- Bienvenida con botones -->
     <fragment
         android:id="@+id/authFragment"
         android:name="com.nilson.appsportmate.ui.auth.AuthFragment"
@@ -31,17 +37,27 @@
             app:destination="@id/signInFragment" />
     </fragment>
 
+    <!-- Login -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nilson.appsportmate.ui.auth.login.LoginFragment"
-        android:label="@string/auth_fragment_label"
+        android:label="@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_loginFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
 
+    <!-- Registro -->
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.nilson.appsportmate.ui.auth.signUp.SignUpFragment"
         android:label="@string/sign_in_fragment_label"
         tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_signInFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

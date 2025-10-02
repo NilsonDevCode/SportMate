@@ -1,8 +1,6 @@
 package com.nilson.appsportmate.ui.splash;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,54 +12,75 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.R;
-import com.nilson.appsportmate.domain.models.AuthRole;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SplashFragment extends Fragment {
 
-    private static final long SPLASH_DELAY_MS = 4000L; // 4 segundos
+    private boolean navigated = false;
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Espera 4 segundos mostrando fragment_splash.xml antes de navegar
-        new Handler(Looper.getMainLooper()).postDelayed(() -> checkAuth(view), SPLASH_DELAY_MS);
+        // Lanzar precarga y después navegar
+        prefetchThenNavigate(view);
     }
 
-    private void checkAuth(View view) {
-        if (!isAdded()) return; // seguridad: evita crash si el fragment ya no está
+    private void prefetchThenNavigate(@NonNull View view) {
+        if (!isAdded()) return;
 
-        NavController nav = Navigation.findNavController(view);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            nav.navigate(R.id.action_splashFragment_to_authFragment);
-            Log.i("SplashFragment", "The user is not logged in. Navigating to Auth...");
-            return;
-        }
+        // Colecciones que usarás más adelante (ajusta según tus necesidades)
+        List<Task<?>> tasks = new ArrayList<>();
+        tasks.add(db.collection("comunidades").get());
+        tasks.add(db.collection("provincias").get());
+        tasks.add(db.collection("ciudades").get());
+        tasks.add(db.collection("pueblos").get());
+        tasks.add(db.collection("deportes_ayuntamiento").get());
 
-        AuthRole role = AuthRole.USER; // TODO: Change to get the role from the device
-        Log.i("SplashFragment", "Logged as " + role.toString());
+        // Esperar a que todas terminen
+        Tasks.whenAllComplete(tasks).addOnCompleteListener(done -> {
+            if (!isAdded() || navigated) return;
 
-        switch (role) {
-            case USER:
-                nav.navigate(R.id.action_splashFragment_to_authFragment);
-                break;
-            case TOWNHALL:
-                nav.navigate(R.id.action_splashFragment_to_authFragment);
-                break;
-            default:
-                nav.navigate(R.id.action_splashFragment_to_authFragment);
-                break;
+            NavController nav = Navigation.findNavController(view);
+
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                Log.i("SplashFragment", "No hay sesión → AuthFragment");
+                safeNavigate(nav, R.id.action_splashFragment_to_authFragment);
+            } else {
+                Log.i("SplashFragment", "Sesión activa → AuthFragment (ajusta si quieres ir a Main directamente)");
+                safeNavigate(nav, R.id.action_splashFragment_to_authFragment);
+            }
+        });
+    }
+
+    private void safeNavigate(@NonNull NavController nav, int actionId) {
+        if (navigated) return;
+        try {
+            nav.navigate(actionId);
+            navigated = true;
+        } catch (IllegalArgumentException ignore) {
+            // Acción inválida → ignora sin crashear
         }
     }
 }
