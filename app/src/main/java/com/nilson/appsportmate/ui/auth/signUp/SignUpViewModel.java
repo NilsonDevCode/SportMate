@@ -166,6 +166,10 @@ public class SignUpViewModel extends ViewModel {
                                     puebloDoc.put("provinciaNombre", provinciaNombre);
                                     puebloDoc.put("ciudadNombre", ciudadNombre);
 
+                                    // 👉 Bonus: guardar también el ayuntamiento en el pueblo
+                                    puebloDoc.put("ayuntamientoId", uid);
+                                    puebloDoc.put("ayuntamientoNombre", nombre);
+
                                     db.collection("pueblos").add(puebloDoc)
                                             .addOnFailureListener(e -> message.setValue("Perfil OK pero falló crear pueblo: " + e.getMessage()));
                                 }

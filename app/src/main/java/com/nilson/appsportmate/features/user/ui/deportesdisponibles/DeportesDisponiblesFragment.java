@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -16,9 +18,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.WriteBatch;
+import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.ActivityDeportesDisponiblesBinding;
 import com.nilson.appsportmate.features.townhall.adaptadores.DeportesDisponiblesAdapter;
-import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,8 +98,15 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         cargarDisponibles();
         cargarMisDeportes();
 
-        // Botón salir (cierra la Activity host)
-        binding.btnSalir.setOnClickListener(v -> requireActivity().finish());
+        // Botón salir -> ir a Inicio y limpiar back stack
+        binding.btnSalir.setOnClickListener(v -> {
+            NavOptions opts = new NavOptions.Builder()
+                    // Limpia todo hasta este fragment (inclusive),
+                    // así no se puede volver atrás a "DeportesDisponibles"
+                    .setPopUpTo(R.id.deportesDisponiblesFragment, true)
+                    .build();
+            Navigation.findNavController(v).navigate(R.id.action_global_inicioFragment, null, opts);
+        });
     }
 
     /* ============================

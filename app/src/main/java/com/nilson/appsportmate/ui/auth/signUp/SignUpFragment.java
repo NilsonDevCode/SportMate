@@ -129,7 +129,6 @@ public class SignUpFragment extends Fragment {
         // ===== Navegación =====
         viewModel.getNavAyto().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go && isAdded()) {
-                // ✅ Antes abría una Activity → ahora va al Fragment
                 Navigation.findNavController(requireView())
                         .navigate(R.id.gestionDeportesAyuntamientoFragment);
                 viewModel.consumeNavAyto();
@@ -138,7 +137,6 @@ public class SignUpFragment extends Fragment {
 
         viewModel.getNavUser().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go && isAdded()) {
-                // El usuario normal sigue yendo a MainActivity
                 startActivity(new Intent(requireContext(), MainActivity.class));
                 requireActivity().finish();
                 viewModel.consumeNavUser();
@@ -157,7 +155,7 @@ public class SignUpFragment extends Fragment {
                 if (position < 0 || position >= comunidadesDocs.size()) return;
                 DocumentSnapshot d = comunidadesDocs.get(position);
                 comunidadIdSel = d.getId();
-                binding.etDescripcionEvento.setText(d.getString("nombre"));
+                binding.etDescripcionEvento.setText(safe(d.getString("nombre")));
                 cargarProvincias(comunidadIdSel);
             }
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -168,7 +166,7 @@ public class SignUpFragment extends Fragment {
                 if (position < 0 || position >= provinciasDocs.size()) return;
                 DocumentSnapshot d = provinciasDocs.get(position);
                 provinciaIdSel = d.getId();
-                binding.etReglasEvento.setText(d.getString("nombre"));
+                binding.etReglasEvento.setText(safe(d.getString("nombre")));
                 cargarCiudades(provinciaIdSel);
             }
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -179,7 +177,7 @@ public class SignUpFragment extends Fragment {
                 if (position < 0 || position >= ciudadesDocs.size()) return;
                 DocumentSnapshot d = ciudadesDocs.get(position);
                 ciudadIdSel = d.getId();
-                binding.etMateriales.setText(d.getString("nombre"));
+                binding.etMateriales.setText(safe(d.getString("nombre")));
                 if (binding.blocUsuario.getVisibility() == View.VISIBLE) {
                     cargarPueblosPorCiudad(ciudadIdSel);
                 }
@@ -191,20 +189,35 @@ public class SignUpFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= pueblosDocs.size()) return;
                 DocumentSnapshot d = pueblosDocs.get(position);
-                binding.etPuebloUsuario.setText(d.getString("nombre"));
 
-                String creadorUid = d.getString("createdByUid");
-                ayuntamientoIdSel = (creadorUid != null) ? creadorUid : "";
+                // Nombre del pueblo
+                binding.etPuebloUsuario.setText(safe(d.getString("nombre")));
+
+                // 1) Si el pueblo ya trae el nombre del ayuntamiento denormalizado, úsalo directo
+                String aytoNombreDenorm = trimOrNull(d.getString("ayuntamientoNombre"));
+                String aytoId = trimOrNull(d.getString("ayuntamientoId"));
+                String creadorUid = trimOrNull(d.getString("createdByUid")); // compatibilidad
+
+                if (aytoId == null) aytoId = creadorUid; // fallback a createdByUid
+                ayuntamientoIdSel = (aytoId != null) ? aytoId : "";
+
+                if (aytoNombreDenorm != null) {
+                    binding.etAyuntamientoUsuario.setText(aytoNombreDenorm);
+                    return;
+                }
+
+                // 2) Si no hay nombre denormalizado, resolver leyendo el doc de ayuntamientos
                 if (ayuntamientoIdSel == null || ayuntamientoIdSel.isEmpty()) {
                     binding.etAyuntamientoUsuario.setText("");
                 } else {
                     FirebaseFirestore.getInstance()
                             .collection("ayuntamientos").document(ayuntamientoIdSel).get()
                             .addOnSuccessListener(doc -> {
-                                String nombreAyto = doc.getString("razonSocial");
-                                if (nombreAyto == null || nombreAyto.isEmpty()) {
-                                    nombreAyto = doc.getString("nombre");
-                                }
+                                // PRIORIDAD: nombre -> razonSocial -> alias
+                                String nombreAyto = trimOrNull(doc.getString("nombre"));
+                                if (nombreAyto == null) nombreAyto = trimOrNull(doc.getString("razonSocial"));
+                                if (nombreAyto == null) nombreAyto = trimOrNull(doc.getString("alias"));
+
                                 binding.etAyuntamientoUsuario.setText(
                                         nombreAyto != null ? nombreAyto : "(Ayuntamiento)"
                                 );
@@ -223,7 +236,7 @@ public class SignUpFragment extends Fragment {
                     ArrayList<String> nombres = new ArrayList<>();
                     for (DocumentSnapshot d : snap.getDocuments()) {
                         comunidadesDocs.add(d);
-                        nombres.add(d.getString("nombre"));
+                        nombres.add(safe(d.getString("nombre")));
                     }
                     binding.spComunidad.setAdapter(new ArrayAdapter<>(requireContext(),
                             android.R.layout.simple_spinner_dropdown_item, nombres));
@@ -239,7 +252,7 @@ public class SignUpFragment extends Fragment {
             ArrayList<String> nombres = new ArrayList<>();
             for (DocumentSnapshot d : snap.getDocuments()) {
                 provinciasDocs.add(d);
-                nombres.add(d.getString("nombre"));
+                nombres.add(safe(d.getString("nombre")));
             }
             binding.spProvincia.setAdapter(new ArrayAdapter<>(requireContext(),
                     android.R.layout.simple_spinner_dropdown_item, nombres));
@@ -254,7 +267,7 @@ public class SignUpFragment extends Fragment {
             ArrayList<String> nombres = new ArrayList<>();
             for (DocumentSnapshot d : snap.getDocuments()) {
                 ciudadesDocs.add(d);
-                nombres.add(d.getString("nombre"));
+                nombres.add(safe(d.getString("nombre")));
             }
             binding.spCiudad.setAdapter(new ArrayAdapter<>(requireContext(),
                     android.R.layout.simple_spinner_dropdown_item, nombres));
@@ -269,7 +282,7 @@ public class SignUpFragment extends Fragment {
             ArrayList<String> nombres = new ArrayList<>();
             for (DocumentSnapshot d : snap.getDocuments()) {
                 pueblosDocs.add(d);
-                nombres.add(d.getString("nombre"));
+                nombres.add(safe(d.getString("nombre")));
             }
             binding.spPuebloUsuario.setAdapter(new ArrayAdapter<>(requireContext(),
                     android.R.layout.simple_spinner_dropdown_item, nombres));
@@ -298,6 +311,14 @@ public class SignUpFragment extends Fragment {
     }
 
     private void toast(String msg) { if (isAdded()) Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show(); }
+
+    private static String safe(String s) { return s == null ? "" : s; }
+
+    private static String trimOrNull(String s) {
+        if (s == null) return null;
+        String t = s.trim();
+        return t.isEmpty() ? null : t;
+    }
 
     @Override public void onDestroyView() { super.onDestroyView(); binding = null; }
 }

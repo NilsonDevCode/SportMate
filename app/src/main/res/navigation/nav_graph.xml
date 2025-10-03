@@ -81,7 +81,7 @@
     <!-- INICIO (Home del usuario con menú/foto/lista) -->
     <fragment
         android:id="@+id/inicioFragment"
-        android:name="com.nilson.appsportmate.features.user.ui.menuPrincipal.InicioFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.menuPrincipal.OpcionesMenuFragment"
         android:label="@string/inicio"
         tools:layout="@layout/fragment_inicio">
 
@@ -89,6 +89,11 @@
         <action
             android:id="@+id/action_inicioFragment_to_deportesDisponiblesFragment"
             app:destination="@id/deportesDisponiblesFragment" />
+
+        <!-- Menú: Cambiar ayuntamiento -->
+        <action
+            android:id="@+id/action_inicioFragment_to_seleccionarNuevoAyuntamientoFragment"
+            app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
     </fragment>
 
     <!-- Usuario: Deportes disponibles -->
@@ -97,6 +102,13 @@
         android:name="com.nilson.appsportmate.features.user.ui.deportesdisponibles.DeportesDisponiblesFragment"
         android:label="Deportes disponibles"
         tools:layout="@layout/activity_deportes_disponibles" />
+
+    <!-- Selección en cascada de nuevo ayuntamiento -->
+    <fragment
+        android:id="@+id/seleccionarNuevoAyuntamientoFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.menuPrincipal.opcionesMenu.SeleccionarNuevoAyuntamientoFragment"
+        android:label="@string/cambiar_ayuntamiento"
+        tools:layout="@layout/fragment_seleccionar_nuevo_ayuntamiento" />
 
     <!-- Ayuntamiento: Crear/gestionar (formulario de creación) -->
     <fragment
@@ -129,4 +141,7 @@
     <action
         android:id="@+id/action_global_gestionEventosMasPlazasFragment"
         app:destination="@id/gestionEventosMasPlazasFragment" />
+    <action
+        android:id="@+id/action_global_seleccionarNuevoAyuntamientoFragment"
+        app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
 </navigation>
