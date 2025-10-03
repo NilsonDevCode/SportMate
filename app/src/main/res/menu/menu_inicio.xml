@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Opción principal del menú -->
+    <item
+        android:id="@+id/action_editar_info_usuario"
+        android:title="@string/editar_informacion_del_usuario"
+        android:icon="@android:drawable/ic_menu_edit"
+        app:showAsAction="ifRoom">
+
+        <!-- Submenú con acciones específicas -->
+        <menu>
+            <item
+                android:id="@+id/action_cambiar_foto_perfil"
+                android:title="@string/cambiar_foto_de_perfil" />
+            <item
+                android:id="@+id/action_cambiar_ayuntamiento"
+                android:title="@string/cambiar_ayuntamiento" />
+        </menu>
+    </item>
+
+</menu>

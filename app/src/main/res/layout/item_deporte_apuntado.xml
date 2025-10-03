@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:cardUseCompatPadding="true">
+    android:layout_marginBottom="12dp"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <!-- Nombre del deporte -->
         <TextView
-            android:id="@+id/tvNombre"
+            android:id="@+id/tvNombreDeporte"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fútbol Sala"
-            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textSize="18sp"
+            tools:text="Fútbol 7" />
 
         <!-- Fecha -->
         <TextView
             android:id="@+id/tvFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fecha: 12/10/2025"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            tools:text="Fecha: 2025-10-24" />
 
         <!-- Hora -->
         <TextView
             android:id="@+id/tvHora"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hora: 19:00"
             android:layout_marginTop="2dp"
-            android:textSize="14sp" />
+            tools:text="Hora: 19:30" />
 
-        <!-- Cupos disponibles -->
+        <!-- Ayuntamiento -->
         <TextView
-            android:id="@+id/tvCupos"
+            android:id="@+id/tvAyuntamiento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cupos: 5/10"
-            android:layout_marginTop="2dp"
-            android:textSize="14sp"
-            android:textStyle="italic" />
-
+            android:layout_marginTop="4dp"
+            tools:text="Ayuntamiento: Madrid" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

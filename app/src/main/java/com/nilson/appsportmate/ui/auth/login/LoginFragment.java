@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
         // 👉 Como pediste: navegar al fragment de Deportes Disponibles
         viewModel.getNavUser().observe(getViewLifecycleOwner(), aytoId -> {
             if (aytoId != null && isAdded()) {
-                navController.navigate(R.id.deportesDisponiblesFragment);
+                navController.navigate(R.id.inicioFragment);
                 viewModel.consumeNavUser();
             }
         });
