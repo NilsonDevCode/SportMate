@@ -5,23 +5,29 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
-    <!-- Splash con logo -->
+    <!-- Splash (logo) -->
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.nilson.appsportmate.ui.splash.SplashFragment"
         android:label="@string/splash_fragment_label"
         tools:layout="@layout/fragment_splash">
 
+        <!-- Si NO hay sesión -> Auth -->
         <action
             android:id="@+id/action_splashFragment_to_authFragment"
-            app:destination="@id/authFragment" />
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
 
+        <!-- Si SÍ hay sesión -> Login (o tu home cuando quieras) -->
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- Bienvenida con botones -->
+    <!-- Pantalla bienvenida (Login / Registro) -->
     <fragment
         android:id="@+id/authFragment"
         android:name="com.nilson.appsportmate.ui.auth.AuthFragment"
@@ -41,12 +47,26 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nilson.appsportmate.ui.auth.login.LoginFragment"
-        android:label="@string/login_fragment_label"
+        android:label="@string/auth_fragment_label"
         tools:layout="@layout/fragment_login">
 
         <action
             android:id="@+id/action_loginFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+
+        <!-- Tras login como USUARIO -->
+        <action
+            android:id="@+id/action_loginFragment_to_deportesDisponiblesFragment"
+            app:destination="@id/deportesDisponiblesFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Tras login como AYUNTAMIENTO -->
+        <action
+            android:id="@+id/action_loginFragment_to_gestionDeportesAyuntamientoFragment"
+            app:destination="@id/gestionDeportesAyuntamientoFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Registro -->
@@ -60,4 +80,43 @@
             android:id="@+id/action_signInFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+
+    <!-- Usuario: Deportes disponibles -->
+    <fragment
+        android:id="@+id/deportesDisponiblesFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.deportesdisponibles.DeportesDisponiblesFragment"
+        android:label="Deportes disponibles"
+        tools:layout="@layout/activity_deportes_disponibles" />
+
+    <!-- Ayuntamiento: Crear/gestionar (formulario de creación) -->
+    <fragment
+        android:id="@+id/gestionDeportesAyuntamientoFragment"
+        android:name="com.nilson.appsportmate.features.townhall.ui.gestiondeportes.GestionDeportesAyuntamientoFragment"
+        android:label="Gestión de deportes"
+        tools:layout="@layout/activity_gestion_deportes_ayuntamiento">
+
+        <!-- Botón "Gestionar eventos" -->
+        <action
+            android:id="@+id/action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment"
+            app:destination="@id/gestionEventosMasPlazasFragment" />
+    </fragment>
+
+    <!-- Ayuntamiento: Lista/gestión de eventos publicados -->
+    <fragment
+        android:id="@+id/gestionEventosMasPlazasFragment"
+        android:name="com.nilson.appsportmate.features.townhall.ui.gestioneventos.GestionEventosMasPlazasFragment"
+        android:label="Eventos publicados"
+        tools:layout="@layout/activity_gestion_eventos_mas_plazas" />
+
+    <!-- (Opcional) acciones globales útiles desde cualquier pantalla -->
+    <action
+        android:id="@+id/action_global_deportesDisponiblesFragment"
+        app:destination="@id/deportesDisponiblesFragment" />
+    <action
+        android:id="@+id/action_global_gestionDeportesAyuntamientoFragment"
+        app:destination="@id/gestionDeportesAyuntamientoFragment" />
+    <action
+        android:id="@+id/action_global_gestionEventosMasPlazasFragment"
+        app:destination="@id/gestionEventosMasPlazasFragment" />
+
 </navigation>

@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AppSportMate"
         tools:targetApi="31">
 
-        <!-- LAUNCHER -->
+        <!-- ÚNICO LAUNCHER: MainActivity con NavHost (Splash/Auth/Login/SignUp como Fragments) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,28 +27,23 @@
             </intent-filter>
         </activity>
 
-        <!-- (Opcionales) otras Activities que ya usas fuera del NavHost -->
-        <activity
-            android:name=".features.auth.ui.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.auth.ui.RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.user.ui.DeportesDisponiblesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.townhall.ui.FormularioAyuntamientoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".features.townhall.ui.GestionEventosMasPlazasActivity"
-            android:exported="false" />
+
 
     </application>
 </manifest>
+    <!-- No declares aquí LoginActivity / RegisterActivity.
+                 Si aún existen en el proyecto y no se usan, bórralas.
+                 Si las necesitas para otra cosa puntual, re-introdúcelas sin launcher:
+                 <activity android:name=".features.auth.ui.LoginActivity" android:exported="false"/>
+                 <activity android:name=".features.auth.ui.RegisterActivity" android:exported="false"/> -->
+
+    <!-- De igual forma, las pantallas de usuario/ayuntamiento deberían ser Fragments.
+         Si hoy sigues usando Activities para esas pantallas, puedes dejarlas
+         sin launcher y exported="false" hasta migrarlas: -->
+    <!--
+    <activity android:name=".features.user.ui.DeportesDisponiblesActivity" android:exported="false" />
+    <activity android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity" android:exported="false" />
+    <activity android:name=".features.townhall.ui.FormularioAyuntamientoActivity" android:exported="false" />
+    <activity android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity" android:exported="false" />
+    <activity android:name=".features.townhall.ui.GestionEventosMasPlazasActivity" android:exported="false" />
+    -->

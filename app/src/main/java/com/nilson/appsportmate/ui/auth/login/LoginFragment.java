@@ -1,6 +1,5 @@
 package com.nilson.appsportmate.ui.auth.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,28 +11,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.nilson.appsportmate.R;
-import com.nilson.appsportmate.databinding.FragmentLoginBinding;
-import com.nilson.appsportmate.features.auth.presentacion.LoginPresenter;
-import com.nilson.appsportmate.features.auth.presentacion.LoginView;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
-import com.nilson.appsportmate.features.townhall.ui.GestionDeportesAyuntamientoActivity;
-import com.nilson.appsportmate.features.user.ui.DeportesDisponiblesActivity;
+import com.nilson.appsportmate.databinding.FragmentLoginBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class LoginFragment extends Fragment implements LoginView {
+public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
-    private LoginPresenter presenter;
+    private LoginViewModel viewModel;
 
     private TextInputEditText etAlias, etPassword;
     private MaterialButton btnLogin, btnNavRegister;
-
     private boolean aliasUpdating = false;
 
     @Nullable
@@ -46,25 +43,16 @@ public class LoginFragment extends Fragment implements LoginView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        etAlias       = binding.etAlias;
-        etPassword    = binding.etPassword;
-        btnLogin      = binding.btnLogin;
-        btnNavRegister= binding.btnNavRegister;
+        final NavController navController = Navigation.findNavController(view);
 
-        presenter = new LoginPresenter(this, requireContext());
+        etAlias = binding.etAlias;
+        etPassword = binding.etPassword;
+        btnLogin = binding.btnLogin;
+        btnNavRegister = binding.btnNavRegister;
 
-        configurarValidacionesTiempoReal();
-
-        btnLogin.setOnClickListener(v -> presenter.onLoginClicked());
-        btnNavRegister.setOnClickListener(v ->
-                // usa la acción del nav_graph
-                androidx.navigation.Navigation.findNavController(v)
-                        .navigate(R.id.action_loginFragment_to_signInFragment)
-        );
-    }
-
-    private void configurarValidacionesTiempoReal() {
+        // Validación y normalización del alias (primera letra mayúscula)
         etAlias.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -74,50 +62,63 @@ public class LoginFragment extends Fragment implements LoginView {
 
                 String input = s.toString();
                 if (!input.isEmpty()) {
-                    String first = input.substring(0, 1).toUpperCase();
-                    String rest = input.substring(1);
-                    String fixed = first + rest;
+                    String fixed = input.substring(0, 1).toUpperCase() + input.substring(1);
                     if (!fixed.equals(input)) {
                         etAlias.setText(fixed);
                         etAlias.setSelection(fixed.length());
                     }
                 }
-
-                String err = AuthAliasHelper.getAliasValidationError(
-                        etAlias.getText() == null ? "" : etAlias.getText().toString());
+                String err = AuthAliasHelper.getAliasValidationError(getText(etAlias));
                 etAlias.setError(err);
 
                 aliasUpdating = false;
             }
         });
+
+        // Acción: login
+        btnLogin.setOnClickListener(v ->
+                viewModel.onLoginClicked(getText(etAlias), getText(etPassword), requireContext())
+        );
+
+        // Acción: ir a registro
+        btnNavRegister.setOnClickListener(v ->
+                navController.navigate(R.id.action_loginFragment_to_signInFragment)
+        );
+
+        // Observadores ViewModel
+        viewModel.getErrorAlias().observe(getViewLifecycleOwner(), err -> {
+            if (err != null) etAlias.setError(err);
+        });
+
+        viewModel.getErrorPassword().observe(getViewLifecycleOwner(), err -> {
+            if (err != null) etPassword.setError(err);
+        });
+
+        viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && isAdded()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                viewModel.consumeMessage();
+            }
+        });
+
+        // Navegación tras login correcto (sea usuario o ayuntamiento)
+        // 👉 Como pediste: navegar al fragment de Deportes Disponibles
+        viewModel.getNavUser().observe(getViewLifecycleOwner(), aytoId -> {
+            if (aytoId != null && isAdded()) {
+                navController.navigate(R.id.deportesDisponiblesFragment);
+                viewModel.consumeNavUser();
+            }
+        });
+        viewModel.getNavTownhall().observe(getViewLifecycleOwner(), uid -> {
+            if (uid != null && isAdded()) {
+                navController.navigate(R.id.gestionDeportesAyuntamientoFragment);
+                viewModel.consumeNavTownhall();
+            }
+        });
     }
 
-    // ===== LoginView =====
-    @Override public String getAliasInput() {
-        return etAlias.getText() == null ? "" : etAlias.getText().toString().trim();
-    }
-    @Override public String getPasswordInput() {
-        return etPassword.getText() == null ? "" : etPassword.getText().toString().trim();
-    }
-
-    @Override public void mostrarErrorAlias(String msg) { etAlias.setError(msg); etAlias.requestFocus(); }
-    @Override public void mostrarErrorPassword(String msg) { etPassword.setError(msg); etPassword.requestFocus(); }
-
-    @Override public void mostrarMensaje(String msg) {
-        if (!isAdded()) return;
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override public void navegarAyuntamiento(String uid) {
-        if (!isAdded()) return;
-        startActivity(new Intent(requireContext(), GestionDeportesAyuntamientoActivity.class));
-        requireActivity().finish();
-    }
-
-    @Override public void navegarUsuario(String ayuntamientoId) {
-        if (!isAdded()) return;
-        startActivity(new Intent(requireContext(), DeportesDisponiblesActivity.class));
-        requireActivity().finish();
+    private String getText(TextInputEditText t) {
+        return t.getText() == null ? "" : t.getText().toString().trim();
     }
 
     @Override
