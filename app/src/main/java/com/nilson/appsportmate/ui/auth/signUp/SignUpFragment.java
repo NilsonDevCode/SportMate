@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +25,6 @@ import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentSignUpBinding;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 import com.nilson.appsportmate.MainActivity;
-import com.nilson.appsportmate.features.townhall.ui.GestionDeportesAyuntamientoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,6 @@ public class SignUpFragment extends Fragment {
     private final List<DocumentSnapshot> pueblosDocs     = new ArrayList<>();
 
     private String comunidadIdSel, provinciaIdSel, ciudadIdSel, ayuntamientoIdSel;
-
     private boolean aliasUpdating = false;
 
     @Nullable @Override
@@ -57,7 +56,7 @@ public class SignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(SignUpViewModel.class);
 
-        // Alias: capitalizar y validar
+        // ===== Alias =====
         binding.etAlias.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -78,7 +77,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        // Toggle UI por rol
+        // ===== Toggle UI por rol =====
         binding.rgRol.setOnCheckedChangeListener((g, id) -> {
             RadioButton rb = binding.getRoot().findViewById(id);
             boolean esUsuario = (rb == null) || "usuario".equals(String.valueOf(rb.getTag()));
@@ -88,7 +87,7 @@ public class SignUpFragment extends Fragment {
             binding.blocAyuntamiento.setVisibility(esUsuario ? View.GONE : View.VISIBLE);
         });
 
-        // Registrar
+        // ===== Botón registrar =====
         binding.btnRegistrar.setOnClickListener(v ->
                 viewModel.onRegisterClicked(
                         requireContext(),
@@ -100,7 +99,6 @@ public class SignUpFragment extends Fragment {
                         getTxt(binding.etDescripcionEvento),   // comunidadNombre
                         getTxt(binding.etReglasEvento),        // provinciaNombre
                         getTxt(binding.etMateriales),          // ciudadNombre
-                        // Pueblo según rol visible
                         binding.blocUsuario.getVisibility() == View.VISIBLE
                                 ? getTxt(binding.etPuebloUsuario)
                                 : getTxt(binding.etPuebloAyto),
@@ -113,7 +111,7 @@ public class SignUpFragment extends Fragment {
                 )
         );
 
-        // Observers errores
+        // ===== Observers =====
         viewModel.getEAlias().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etAlias.setError(e); binding.etAlias.requestFocus(); }});
         viewModel.getEPassword().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etPassword.setError(e); binding.etPassword.requestFocus(); }});
         viewModel.getENombre().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etNombre.setError(e); binding.etNombre.requestFocus(); }});
@@ -122,32 +120,37 @@ public class SignUpFragment extends Fragment {
 
         // Mensajes
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
-            if (msg != null && isAdded()) { Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show(); viewModel.consumeMessage(); }
+            if (msg != null && isAdded()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                viewModel.consumeMessage();
+            }
         });
 
-        // Navegación
+        // ===== Navegación =====
         viewModel.getNavAyto().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go && isAdded()) {
-                startActivity(new Intent(requireContext(), GestionDeportesAyuntamientoActivity.class));
-                requireActivity().finish();
+                // ✅ Antes abría una Activity → ahora va al Fragment
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.gestionDeportesAyuntamientoFragment);
                 viewModel.consumeNavAyto();
             }
         });
+
         viewModel.getNavUser().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go && isAdded()) {
+                // El usuario normal sigue yendo a MainActivity
                 startActivity(new Intent(requireContext(), MainActivity.class));
                 requireActivity().finish();
                 viewModel.consumeNavUser();
             }
         });
 
-        // Carga en cascada
+        // ===== Carga en cascada =====
         configurarSpinners();
         cargarComunidades();
     }
 
-    // ===== Spinners & cargas =====
-
+    // ===== Spinners =====
     private void configurarSpinners() {
         binding.spComunidad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -282,15 +285,18 @@ public class SignUpFragment extends Fragment {
     private String getTxt(com.google.android.material.textfield.TextInputEditText t) {
         return t.getText() == null ? "" : t.getText().toString().trim();
     }
+
     private String getRolLower() {
         int checkedId = binding.rgRol.getCheckedRadioButtonId();
         if (checkedId == -1) return "usuario";
         RadioButton rb = binding.getRoot().findViewById(checkedId);
         return rb != null ? String.valueOf(rb.getTag()).trim().toLowerCase() : "usuario";
     }
+
     private String getAyuntamientoSeleccionadoId() {
         return ayuntamientoIdSel == null ? "" : ayuntamientoIdSel;
     }
+
     private void toast(String msg) { if (isAdded()) Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show(); }
 
     @Override public void onDestroyView() { super.onDestroyView(); binding = null; }

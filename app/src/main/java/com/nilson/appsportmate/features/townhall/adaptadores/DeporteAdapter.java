@@ -1,7 +1,5 @@
 package com.nilson.appsportmate.features.townhall.adaptadores;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.modelos.Deporte;
-import com.nilson.appsportmate.features.townhall.ui.GestionDeportesAyuntamientoActivity;
 
 import java.util.List;
 
 public class DeporteAdapter extends RecyclerView.Adapter<DeporteAdapter.DeporteViewHolder> {
 
-    private Context context;
     private List<Deporte> listaDeportes;
     private FirebaseFirestore db;
+    private final Listener listener;
 
-    public DeporteAdapter(Context context, List<Deporte> listaDeportes) {
-        this.context = context;
+    // 🔹 Interfaz para comunicar eventos al Fragment
+    public interface Listener {
+        void onEditar(Deporte deporte);
+        void onEliminar(String deporteId);
+    }
+
+    public DeporteAdapter(List<Deporte> listaDeportes, Listener listener) {
         this.listaDeportes = listaDeportes;
+        this.listener = listener;
         db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
     @Override
     public DeporteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_deporte, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_deporte, parent, false);
         return new DeporteViewHolder(view);
     }
 
@@ -46,27 +50,18 @@ public class DeporteAdapter extends RecyclerView.Adapter<DeporteAdapter.DeporteV
         holder.tvHora.setText("Hora: " + d.getHora());
         holder.tvCupos.setText("Cupos: " + d.getApuntados() + "/" + d.getMax_personas());
 
-        // Al hacer click -> editar
+        // Click -> editar (avisamos al Fragment)
         holder.itemView.setOnClickListener(v -> {
-            Intent i = new Intent(context, GestionDeportesAyuntamientoActivity.class);
-            i.putExtra("id", d.getId());
-            i.putExtra("nombre", d.getNombre());
-            i.putExtra("fecha", d.getFecha());
-            i.putExtra("hora", d.getHora());
-            i.putExtra("max_personas", d.getMax_personas());
-            i.putExtra("apuntados", d.getApuntados());
-            context.startActivity(i);
+            if (listener != null) {
+                listener.onEditar(d);
+            }
         });
 
-        // Long click -> eliminar
+        // Long click -> eliminar (avisamos al Fragment)
         holder.itemView.setOnLongClickListener(v -> {
-            db.collection("deportes").document(d.getId()).delete()
-                    .addOnSuccessListener(unused ->
-                            Toast.makeText(context, "Deporte eliminado", Toast.LENGTH_SHORT).show()
-                    )
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                    );
+            if (listener != null) {
+                listener.onEliminar(d.getId());
+            }
             return true;
         });
     }
