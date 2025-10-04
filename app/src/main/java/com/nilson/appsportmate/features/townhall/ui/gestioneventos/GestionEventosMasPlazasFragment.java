@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import com.google.android.material.textfield.TextInputEditText;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -208,20 +212,23 @@ public class GestionEventosMasPlazasFragment extends Fragment
         TextInputEditText etPlazas    = view.findViewById(R.id.etCantidadJugadores);
         TextInputEditText etFecha     = view.findViewById(R.id.etFecha);
         TextInputEditText etHora      = view.findViewById(R.id.etHora);
-        TextInputEditText etComunidad = view.findViewById(R.id.etDescripcionEvento);
-        TextInputEditText etProvincia = view.findViewById(R.id.etReglasEvento);
-        TextInputEditText etCiudad    = view.findViewById(R.id.etMateriales);
-        TextInputEditText etPueblo    = view.findViewById(R.id.etUrlPueblo);
+        TextInputEditText etDesc      = view.findViewById(R.id.etDescripcionEvento);
+        TextInputEditText etReglas    = view.findViewById(R.id.etReglasEvento);
+        TextInputEditText etMaterial  = view.findViewById(R.id.etMateriales);
+        TextInputEditText etUrl       = view.findViewById(R.id.etUrlPueblo);
 
-        // Precarga (mismas claves)
+        // Precarga segura (evita "null" en UI)
         etNombre.setText(String.valueOf(evento.get("nombre")));
         etPlazas.setText(String.valueOf(evento.get("plazasDisponibles")));
         etFecha.setText(String.valueOf(evento.get("fecha")));
         etHora.setText(String.valueOf(evento.get("hora")));
-        etComunidad.setText(String.valueOf(evento.get("comunidad")));
-        etProvincia.setText(String.valueOf(evento.get("provincia")));
-        etCiudad.setText(String.valueOf(evento.get("ciudad")));
-        etPueblo.setText(String.valueOf(evento.get("pueblo")));
+        // Pickers al tocar los campos
+        etFecha.setOnClickListener(v -> mostrarDatePickerPara(etFecha));
+        etHora.setOnClickListener(v -> mostrarTimePickerPara(etHora));
+        etDesc.setText(evento.get("descripcion") == null ? "" : String.valueOf(evento.get("descripcion")));
+        etReglas.setText(evento.get("reglas") == null ? "" : String.valueOf(evento.get("reglas")));
+        etMaterial.setText(evento.get("materiales") == null ? "" : String.valueOf(evento.get("materiales")));
+        etUrl.setText(evento.get("urlPueblo") == null ? "" : String.valueOf(evento.get("urlPueblo")));
 
         AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Editar evento")
@@ -235,21 +242,21 @@ public class GestionEventosMasPlazasFragment extends Fragment
             String plazasTx  = String.valueOf(etPlazas.getText()).trim();
             String fecha     = String.valueOf(etFecha.getText()).trim();
             String hora      = String.valueOf(etHora.getText()).trim();
-            String comunidad = String.valueOf(etComunidad.getText()).trim();
-            String provincia = String.valueOf(etProvincia.getText()).trim();
-            String ciudad    = String.valueOf(etCiudad.getText()).trim();
-            String pueblo    = String.valueOf(etPueblo.getText()).trim();
+            String desc      = String.valueOf(etDesc.getText()).trim();
+            String reglas    = String.valueOf(etReglas.getText()).trim();
+            String material  = String.valueOf(etMaterial.getText()).trim();
+            String url       = String.valueOf(etUrl.getText()).trim();
 
-            if (nombre.isEmpty())    { etNombre.setError("Obligatorio"); return; }
-            if (comunidad.isEmpty()) { etComunidad.setError("Obligatorio"); return; }
-            if (provincia.isEmpty()) { etProvincia.setError("Obligatorio"); return; }
-            if (ciudad.isEmpty())    { etCiudad.setError("Obligatorio"); return; }
-            if (pueblo.isEmpty())    { etPueblo.setError("Obligatorio"); return; }
+            if (nombre.isEmpty())  { etNombre.setError("Obligatorio"); return; }
+            if (desc.isEmpty())    { etDesc.setError("Obligatorio"); return; }
+            if (reglas.isEmpty())  { etReglas.setError("Obligatorio"); return; }
+            if (material.isEmpty()){ etMaterial.setError("Obligatorio"); return; }
+            if (url.isEmpty())     { etUrl.setError("Obligatorio"); return; }
 
-            String errPlazas = ValidacionesEvento.validarPlazas(plazasTx, 1, 200);
+            String errPlazas = com.nilson.appsportmate.common.utils.ValidacionesEvento.validarPlazas(plazasTx, 1, 200);
             if (errPlazas != null) { etPlazas.setError(errPlazas); return; }
 
-            String errFechaHora = ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);
+            String errFechaHora = com.nilson.appsportmate.common.utils.ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);
             if (errFechaHora != null) { etFecha.setError(errFechaHora); return; }
 
             int plazas;
@@ -261,10 +268,10 @@ public class GestionEventosMasPlazasFragment extends Fragment
             nuevos.put("plazasDisponibles", plazas);
             nuevos.put("fecha", fecha);
             nuevos.put("hora", hora);
-            nuevos.put("comunidad", comunidad);
-            nuevos.put("provincia", provincia);
-            nuevos.put("ciudad", ciudad);
-            nuevos.put("pueblo", pueblo);
+            nuevos.put("descripcion", desc);
+            nuevos.put("reglas", reglas);
+            nuevos.put("materiales", material);
+            nuevos.put("urlPueblo", url);
             nuevos.put("ayuntamientoId", ayuntamientoId);
 
             String oldId = String.valueOf(evento.get("idDoc"));
@@ -276,6 +283,55 @@ public class GestionEventosMasPlazasFragment extends Fragment
 
         dialog.show();
     }
+    private void mostrarDatePickerPara(TextInputEditText target) {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        // Si ya hay fecha, intenta precargarla (formato dd/MM/yyyy)
+        String f = target.getText() != null ? target.getText().toString().trim() : "";
+        if (!f.isEmpty()) {
+            try {
+                String[] p = f.split("/");
+                int day = Integer.parseInt(p[0]);
+                int mon = Integer.parseInt(p[1]) - 1;
+                int yr  = Integer.parseInt(p[2]);
+                c.set(yr, mon, day);
+            } catch (Exception ignored) {}
+        }
+        new DatePickerDialog(
+                requireContext(),
+                (view, year, month, dayOfMonth) ->
+                        target.setText(String.format(java.util.Locale.getDefault(),
+                                "%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                c.get(java.util.Calendar.YEAR),
+                c.get(java.util.Calendar.MONTH),
+                c.get(java.util.Calendar.DAY_OF_MONTH)
+        ).show();
+    }
+
+    private void mostrarTimePickerPara(TextInputEditText target) {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        // Si ya hay hora, intenta precargarla (formato HH:mm)
+        String h = target.getText() != null ? target.getText().toString().trim() : "";
+        if (!h.isEmpty()) {
+            try {
+                String[] p = h.split(":");
+                int hr = Integer.parseInt(p[0]);
+                int mi = Integer.parseInt(p[1]);
+                c.set(java.util.Calendar.HOUR_OF_DAY, hr);
+                c.set(java.util.Calendar.MINUTE, mi);
+            } catch (Exception ignored) {}
+        }
+        new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) ->
+                        target.setText(String.format(java.util.Locale.getDefault(),
+                                "%02d:%02d", hourOfDay, minute)),
+                c.get(java.util.Calendar.HOUR_OF_DAY),
+                c.get(java.util.Calendar.MINUTE),
+                true
+        ).show();
+    }
+
+
 
     // ---------------------------
     // Helpers diálogo inscritos (sin @Override)
