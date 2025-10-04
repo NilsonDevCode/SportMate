@@ -28,6 +28,7 @@ public class GestionDeportesAyuntamientoViewModel extends ViewModel {
     private final MutableLiveData<String>  toast = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navigateToLogin = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> navigateToGestionEventos = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> clearForm = new MutableLiveData<>(false); // NUEVO
 
     // ---------------------------
     // Exposición
@@ -36,8 +37,12 @@ public class GestionDeportesAyuntamientoViewModel extends ViewModel {
     public void setAyuntamientoId(String id) { this.ayuntamientoId = id; }
 
     public LiveData<String>  getToast()                 { return toast; }
+    public void consumeToast() { toast.setValue(null); }
+
     public LiveData<Boolean> getNavigateToLogin()       { return navigateToLogin; }
     public LiveData<Boolean> getNavigateToGestionEventos() { return navigateToGestionEventos; }
+    public LiveData<Boolean> getClearForm()             { return clearForm; } // NUEVO
+    public void onFormCleared()                         { clearForm.setValue(false); } // NUEVO
 
     // ---------------------------
     // Acciones
@@ -85,8 +90,9 @@ public class GestionDeportesAyuntamientoViewModel extends ViewModel {
                 .document(docId)
                 .set(deporte)
                 .addOnSuccessListener(unused -> {
-                    toast.postValue("Evento creado correctamente.");
-                    navigateToGestionEventos.postValue(true);
+                    toast.postValue("Deporte creado correctamente."); // CAMBIADO
+                    clearForm.postValue(true);                         // NUEVO: limpiar
+                    navigateToGestionEventos.postValue(true);          // luego navegar
                 })
                 .addOnFailureListener(e ->
                         toast.postValue("Error al crear el evento: " + e.getMessage()));

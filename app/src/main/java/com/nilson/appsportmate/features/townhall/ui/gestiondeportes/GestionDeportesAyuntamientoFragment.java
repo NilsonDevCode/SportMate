@@ -111,7 +111,7 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         ));
 
         btnGestionEventos.setOnClickListener(v -> {
-            // Navegación a Activity/Fragment según tu grafo (IDs existentes)
+            // Navegación a Fragment según tu grafo
             NavController nav = Navigation.findNavController(requireView());
             Bundle args = new Bundle();
             args.putString("ayuntamientoId", ayuntamientoId);
@@ -125,6 +125,16 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         vm.getToast().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && !msg.isEmpty()) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                vm.consumeToast(); // evita que se repita al volver atrás
+            }
+        });
+
+
+        // NUEVO: limpiar el formulario al crear correctamente
+        vm.getClearForm().observe(getViewLifecycleOwner(), clear -> {
+            if (clear != null && clear) {
+                limpiarFormulario();
+                vm.onFormCleared();
             }
         });
 
@@ -191,5 +201,27 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
             et.setError("Número inválido");
             return null;
         }
+    }
+
+    // NUEVO: limpiar inputs tras crear
+    private void limpiarFormulario() {
+        etNombreDeporte.setText("");
+        etCantidadJugadores.setText("");
+        etFecha.setText("");
+        etHora.setText("");
+        etDescripcionEvento.setText("");
+        etReglasEvento.setText("");
+        etMateriales.setText("");
+        etUrlPueblo.setText("");
+
+        // limpiar errores (opcional)
+        etNombreDeporte.setError(null);
+        etCantidadJugadores.setError(null);
+        etFecha.setError(null);
+        etHora.setError(null);
+        etDescripcionEvento.setError(null);
+        etReglasEvento.setError(null);
+        etMateriales.setError(null);
+        etUrlPueblo.setError(null);
     }
 }
