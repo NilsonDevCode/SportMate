@@ -1,29 +1,32 @@
 package com.nilson.appsportmate.features.townhall.ui.gestioneventos;
 
 import android.app.AlertDialog;
-import android.text.InputType;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
+import com.nilson.appsportmate.common.utils.ValidacionesEvento;
+import com.nilson.appsportmate.features.townhall.adaptadores.EventosAdapter;
+import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,259 +34,279 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Pantalla con lista y CRUD (+/−, editar, borrar, ver inscritos).
- * Usa tu layout:
- *   - List: R.layout.gestion_eventos_mas_plazas
- *   - Item: R.layout.item_evento_gestion
+ * Lista/gestión de eventos (MVVM).
+ * Mantiene IDs/keys y layouts existentes.
  */
-public class GestionEventosMasPlazasFragment extends Fragment {
+public class GestionEventosMasPlazasFragment extends Fragment
+        implements EventosAdapter.EventoActions, InscritosDialogFragment.Host {
 
-    private GestionEventosMasPlazasViewModel viewModel;
-
+    // UI
+    private RecyclerView rvEventos;
     private TextView tvEmpty;
     private ProgressBar progress;
-    private RecyclerView rvEventos;
-    private Button btnVolver;
+    private MaterialButton btnVolver;
 
-    private EventosAdapter adapter;
+    // Estado
     private String ayuntamientoId;
+    private final List<Map<String, Object>> listaEventos = new ArrayList<>();
+    private EventosAdapter adapter;
+
+    // VM
+    private GestionEventosMasPlazasViewModel vm;
+
+    // Diálogo inscritos
+    private InscritosDialogFragment inscritosDialog;
+
+    public GestionEventosMasPlazasFragment() { }
+
+    // ---------------------------
+    // Lifecycle
+    // ---------------------------
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Se usa tu layout existente tal cual
         return inflater.inflate(R.layout.activity_gestion_eventos_mas_plazas, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(root, savedInstanceState);
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+        bindViews(v);
+        setupRecycler();
 
-        viewModel = new ViewModelProvider(this).get(GestionEventosMasPlazasViewModel.class);
+        // ayuntamientoId: arg o Preferencias
+        Bundle args = getArguments();
+        String extra = args != null ? args.getString("ayuntamientoId", "") : "";
+        ayuntamientoId = !TextUtils.isEmpty(extra) ? extra : Preferencias.obtenerAyuntamientoId(requireContext());
 
-        tvEmpty   = root.findViewById(R.id.tvEmpty);
-        progress  = root.findViewById(R.id.progress);
-        rvEventos = root.findViewById(R.id.rvEventos);
-        btnVolver = root.findViewById(R.id.btnVolver);
+        if (TextUtils.isEmpty(ayuntamientoId)) {
+            Toast.makeText(requireContext(), "ayuntamientoId no encontrado", Toast.LENGTH_LONG).show();
+            Navigation.findNavController(v).popBackStack();
+            return;
+        }
 
-        ayuntamientoId = Preferencias.obtenerAyuntamientoId(requireContext());
+        vm = new ViewModelProvider(this).get(GestionEventosMasPlazasViewModel.class);
+        vm.setAyuntamientoId(ayuntamientoId);
 
+        observeVm();
+        setupClicks();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        vm.suscribirTiempoRealEventos();
+    }
+
+    @Override
+    public void onStop() {
+        vm.desuscribirTiempoRealEventos();
+        vm.dejarDeEscucharInscritos();
+        super.onStop();
+    }
+
+    // ---------------------------
+    // Bind / Observers / Clicks
+    // ---------------------------
+
+    private void bindViews(View v) {
+        rvEventos = v.findViewById(R.id.rvEventos);
+        tvEmpty   = v.findViewById(R.id.tvEmpty);
+        progress  = v.findViewById(R.id.progress);
+        btnVolver = v.findViewById(R.id.btnVolver);
+    }
+
+    private void setupRecycler() {
         rvEventos.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new EventosAdapter(new EventosAdapter.Listener() {
-            @Override public void onMas(String docId) { viewModel.updatePlazas(ayuntamientoId, docId, +1); }
-            @Override public void onMenos(String docId) { viewModel.updatePlazas(ayuntamientoId, docId, -1); }
-            @Override public void onBorrar(String docId) { confirmarBorrado(docId); }
-            @Override public void onInscritos(String docId) { mostrarInscritos(docId); }
-            @Override public void onEditar(String docId, Map<String, Object> actual) { mostrarDialogoEditar(docId, actual); }
-        });
+        adapter = new EventosAdapter(listaEventos, this);
         rvEventos.setAdapter(adapter);
+    }
 
-        btnVolver.setOnClickListener(v -> requireActivity().onBackPressed());
+    private void observeVm() {
+        vm.getLoading().observe(getViewLifecycleOwner(), show ->
+                progress.setVisibility(show != null && show ? View.VISIBLE : View.GONE));
 
-        viewModel.uiState.observe(getViewLifecycleOwner(), state -> {
-            progress.setVisibility(state.loading ? View.VISIBLE : View.GONE);
+        vm.getEmpty().observe(getViewLifecycleOwner(), show ->
+                tvEmpty.setVisibility(show != null && show ? View.VISIBLE : View.GONE));
 
-            boolean empty = state.eventos == null || state.eventos.isEmpty();
-            tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
-            rvEventos.setVisibility(empty ? View.GONE : View.VISIBLE);
-
-            adapter.submit(state.eventos);
-            if (state.error != null && !state.error.isEmpty()) {
-                Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show();
+        vm.getMensaje().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
-        viewModel.fetchEventos(ayuntamientoId);
+        vm.getEventos().observe(getViewLifecycleOwner(), eventos -> {
+            listaEventos.clear();
+            if (eventos != null) listaEventos.addAll(eventos);
+            adapter.notifyDataSetChanged();
+        });
+
+        // Señal para abrir diálogo de inscritos
+        vm.getOpenInscritosEvent().observe(getViewLifecycleOwner(), pair -> {
+            if (pair == null) return;
+            abrirInscritosDialog(pair.first, pair.second);
+        });
+
+        // Datos en tiempo real de inscritos (aliases + uids a la vez)
+        vm.getInscritosData().observe(getViewLifecycleOwner(), pair -> {
+            if (inscritosDialog != null && pair != null) {
+                inscritosDialog.updateData(pair.first, pair.second);
+            }
+        });
     }
 
-    private void confirmarBorrado(String docId) {
+    private void setupClicks() {
+        btnVolver.setOnClickListener(view -> {
+            NavController nav = Navigation.findNavController(view);
+            nav.popBackStack();
+        });
+    }
+
+    // ---------------------------
+    // Adapter actions
+    // ---------------------------
+
+    @Override public void onIncrementar(String idDoc) { vm.incrementarPlazas(idDoc); }
+    @Override public void onDecrementar(String idDoc) { vm.decrementarPlazas(idDoc); }
+    @Override public void onBorrar(Map<String, Object> evento) { pedirConfirmacionBorrar(evento); }
+    @Override public void onEditar(Map<String, Object> evento) { mostrarDialogoEditar(evento); }
+
+    @Override
+    public void onVerInscritos(String idDoc, String tituloMostrado) {
+        vm.abrirInscritosTiempoReal(idDoc, tituloMostrado);
+    }
+
+    @Override
+    public CollectionReference getInscritosRef(String idDoc) {
+        return vm.getInscritosRef(idDoc);
+    }
+
+    // ---------------------------
+    // Diálogos y helpers UI
+    // ---------------------------
+
+    private void pedirConfirmacionBorrar(Map<String, Object> evento) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Borrar evento")
-                .setMessage("¿Seguro que quieres borrar este evento?")
-                .setPositiveButton("Borrar", (d, w) -> viewModel.deleteEvento(ayuntamientoId, docId))
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-
-    /** Diálogo simple para editar nombre, fecha, hora y plazas. */
-    private void mostrarDialogoEditar(String docId, Map<String, Object> actual) {
-        LinearLayout layout = new LinearLayout(requireContext());
-        layout.setOrientation(LinearLayout.VERTICAL);
-        int pad = (int) (16 * getResources().getDisplayMetrics().density);
-        layout.setPadding(pad, pad, pad, pad);
-
-        EditText etNombre = new EditText(requireContext());
-        etNombre.setHint("Nombre del deporte");
-        etNombre.setText(s(actual.get("nombre")));
-        layout.addView(etNombre);
-
-        EditText etFecha = new EditText(requireContext());
-        etFecha.setHint("Fecha");
-        etFecha.setText(s(actual.get("fecha")));
-        layout.addView(etFecha);
-
-        EditText etHora = new EditText(requireContext());
-        etHora.setHint("Hora");
-        etHora.setText(s(actual.get("hora")));
-        layout.addView(etHora);
-
-        EditText etPlazas = new EditText(requireContext());
-        etPlazas.setHint("Plazas disponibles");
-        etPlazas.setInputType(InputType.TYPE_CLASS_NUMBER);
-        etPlazas.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        Long p = asLong(actual.get("plazasDisponibles"));
-        etPlazas.setText(p == null ? "" : String.valueOf(p));
-        layout.addView(etPlazas);
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Editar evento")
-                .setView(layout)
-                .setPositiveButton("Guardar", (d, w) -> {
-                    Map<String, Object> fields = new HashMap<>();
-                    fields.put("nombre", etNombre.getText().toString().trim());
-                    fields.put("fecha", etFecha.getText().toString().trim());
-                    fields.put("hora", etHora.getText().toString().trim());
-                    String plazasTxt = etPlazas.getText().toString().trim();
-                    if (!plazasTxt.isEmpty()) {
-                        try { fields.put("plazasDisponibles", Long.parseLong(plazasTxt)); }
-                        catch (Exception ignored) {}
-                    }
-                    viewModel.updateEvento(ayuntamientoId, docId, fields);
+                .setMessage("¿Seguro que quieres borrar este evento? Se perderán inscripciones.")
+                .setPositiveButton("Borrar", (d, w) -> {
+                    String idDoc = String.valueOf(evento.get("idDoc"));
+                    vm.borrarEvento(idDoc);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    /** Lista simple de inscritos (alias) en un AlertDialog. */
-    private void mostrarInscritos(String docId) {
-        viewModel.fetchInscritos(ayuntamientoId, docId, (aliases, error) -> {
-            if (error != null) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (aliases == null) aliases = new ArrayList<>();
-            if (aliases.isEmpty()) aliases.add("(Sin inscritos)");
+    private void mostrarDialogoEditar(Map<String, Object> evento) {
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_editar_deporte, null);
 
-            CharSequence[] items = aliases.toArray(new CharSequence[0]);
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Inscritos")
-                    .setItems(items, null)
-                    .setPositiveButton("Cerrar", null)
-                    .show();
-        });
+        TextInputEditText etNombre    = view.findViewById(R.id.etNombreDeporte);
+        TextInputEditText etPlazas    = view.findViewById(R.id.etCantidadJugadores);
+        TextInputEditText etFecha     = view.findViewById(R.id.etFecha);
+        TextInputEditText etHora      = view.findViewById(R.id.etHora);
+        TextInputEditText etComunidad = view.findViewById(R.id.etDescripcionEvento);
+        TextInputEditText etProvincia = view.findViewById(R.id.etReglasEvento);
+        TextInputEditText etCiudad    = view.findViewById(R.id.etMateriales);
+        TextInputEditText etPueblo    = view.findViewById(R.id.etUrlPueblo);
+
+        // Precarga (mismas claves)
+        etNombre.setText(String.valueOf(evento.get("nombre")));
+        etPlazas.setText(String.valueOf(evento.get("plazasDisponibles")));
+        etFecha.setText(String.valueOf(evento.get("fecha")));
+        etHora.setText(String.valueOf(evento.get("hora")));
+        etComunidad.setText(String.valueOf(evento.get("comunidad")));
+        etProvincia.setText(String.valueOf(evento.get("provincia")));
+        etCiudad.setText(String.valueOf(evento.get("ciudad")));
+        etPueblo.setText(String.valueOf(evento.get("pueblo")));
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Editar evento")
+                .setView(view)
+                .setPositiveButton("Guardar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(dlg -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String nombre    = String.valueOf(etNombre.getText()).trim();
+            String plazasTx  = String.valueOf(etPlazas.getText()).trim();
+            String fecha     = String.valueOf(etFecha.getText()).trim();
+            String hora      = String.valueOf(etHora.getText()).trim();
+            String comunidad = String.valueOf(etComunidad.getText()).trim();
+            String provincia = String.valueOf(etProvincia.getText()).trim();
+            String ciudad    = String.valueOf(etCiudad.getText()).trim();
+            String pueblo    = String.valueOf(etPueblo.getText()).trim();
+
+            if (nombre.isEmpty())    { etNombre.setError("Obligatorio"); return; }
+            if (comunidad.isEmpty()) { etComunidad.setError("Obligatorio"); return; }
+            if (provincia.isEmpty()) { etProvincia.setError("Obligatorio"); return; }
+            if (ciudad.isEmpty())    { etCiudad.setError("Obligatorio"); return; }
+            if (pueblo.isEmpty())    { etPueblo.setError("Obligatorio"); return; }
+
+            String errPlazas = ValidacionesEvento.validarPlazas(plazasTx, 1, 200);
+            if (errPlazas != null) { etPlazas.setError(errPlazas); return; }
+
+            String errFechaHora = ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);
+            if (errFechaHora != null) { etFecha.setError(errFechaHora); return; }
+
+            int plazas;
+            try { plazas = Integer.parseInt(plazasTx); }
+            catch (Exception e) { etPlazas.setError("Número inválido"); return; }
+
+            Map<String, Object> nuevos = new HashMap<>();
+            nuevos.put("nombre", nombre);
+            nuevos.put("plazasDisponibles", plazas);
+            nuevos.put("fecha", fecha);
+            nuevos.put("hora", hora);
+            nuevos.put("comunidad", comunidad);
+            nuevos.put("provincia", provincia);
+            nuevos.put("ciudad", ciudad);
+            nuevos.put("pueblo", pueblo);
+            nuevos.put("ayuntamientoId", ayuntamientoId);
+
+            String oldId = String.valueOf(evento.get("idDoc"));
+            String newId = GestionEventosMasPlazasViewModel.generarDocId(nombre, fecha, hora);
+
+            vm.guardarEdicion(oldId, newId, nuevos);
+            dialog.dismiss();
+        }));
+
+        dialog.show();
     }
 
-    private static String s(Object o) {
-        if (o == null) return "";
-        String x = String.valueOf(o);
-        return "null".equalsIgnoreCase(x) ? "" : x;
+    // ---------------------------
+    // Helpers diálogo inscritos (sin @Override)
+    // ---------------------------
+
+    private void abrirInscritosDialog(String idDoc, String titulo) {
+        inscritosDialog = InscritosDialogFragment.newInstance(idDoc, titulo);
+        inscritosDialog.show(getParentFragmentManager(), "inscritos_dialog");
     }
-    private static Long asLong(Object o) {
-        if (o instanceof Number) return ((Number) o).longValue();
-        try { return Long.parseLong(s(o)); } catch (Exception e) { return null; }
+
+    private void cerrarInscritosDialog() {
+        if (inscritosDialog != null) {
+            inscritosDialog.dismissAllowingStateLoss();
+            inscritosDialog = null;
+        }
     }
 
-    // =========================
-    //   ADAPTER interno
-    // =========================
-    private static class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
-        interface Listener {
-            void onMas(String docId);
-            void onMenos(String docId);
-            void onBorrar(String docId);
-            void onInscritos(String docId);
-            void onEditar(String docId, Map<String, Object> actual);
-        }
+    // ---------------------------
+    // Host callbacks del diálogo
+    // ---------------------------
 
-        private final List<Map<String, Object>> data = new ArrayList<>();
-        private final Listener listener;
+    @Override public void onDialogShown(String idDoc, String titulo) { /* VM ya escuchando */ }
 
-        EventosAdapter(Listener l) { this.listener = l; }
+    @Override
+    public void onDialogDismissRequested() {
+        vm.cerrarInscritosTiempoReal(); // detiene listener
+        cerrarInscritosDialog();        // cierra UI por si acaso
+    }
 
-        void submit(@Nullable List<Map<String, Object>> nuevos) {
-            data.clear();
-            if (nuevos != null) data.addAll(nuevos);
-            notifyDataSetChanged();
-        }
-
-        @NonNull @Override
-        public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_evento_gestion, parent, false);
-            return new VH(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull VH h, int position) {
-            Map<String, Object> ev = data.get(position);
-
-            String docId   = s(ev.get("idDoc"));
-            String nombre  = s(ev.get("nombre"));
-            String fecha   = s(ev.get("fecha"));
-            String hora    = s(ev.get("hora"));
-            String comunidad = s(ev.get("comunidadNombre"));
-            String provincia = s(ev.get("provinciaNombre"));
-            String ciudad    = s(ev.get("ciudadNombre"));
-            String pueblo    = s(ev.get("puebloNombre"));
-            Long plazas      = asLong(ev.get("plazasDisponibles"));
-            if (plazas == null) plazas = 0L;
-            Long inscritos    = asLong(ev.get("inscritosCount"));
-            if (inscritos == null) inscritos = 0L;
-
-            StringBuilder titulo = new StringBuilder();
-            if (!nombre.isEmpty()) titulo.append(nombre);
-            if (!fecha.isEmpty() || !hora.isEmpty()) {
-                if (titulo.length() > 0) titulo.append(" - ");
-                titulo.append(fecha);
-                if (!hora.isEmpty()) titulo.append(" ").append(hora);
-            }
-            h.tvTitulo.setText(titulo.length() == 0 ? "(Evento)" : titulo.toString());
-
-            StringBuilder ubic = new StringBuilder();
-            if (!ciudad.isEmpty())    ubic.append(ciudad);
-            if (!provincia.isEmpty()) { if (ubic.length() > 0) ubic.append(", "); ubic.append(provincia); }
-            if (!pueblo.isEmpty())    { if (ubic.length() > 0) ubic.append(" · "); ubic.append(pueblo); }
-            if (ubic.length() == 0)   ubic.append(comunidad);
-            h.tvUbicacion.setText(ubic.length() == 0 ? "(Ubicación)" : ubic.toString());
-
-            h.tvPlazas.setText("Plazas disponibles: " + plazas);
-            h.tvInscritosCount.setText("Inscritos: " + inscritos);
-
-            h.btnMas.setOnClickListener(v -> { if (listener != null) listener.onMas(docId); });
-            h.btnMenos.setOnClickListener(v -> { if (listener != null) listener.onMenos(docId); });
-            h.btnBorrar.setOnClickListener(v -> { if (listener != null) listener.onBorrar(docId); });
-            h.btnInscritos.setOnClickListener(v -> { if (listener != null) listener.onInscritos(docId); });
-            h.btnEditar.setOnClickListener(v -> { if (listener != null) listener.onEditar(docId, ev); });
-        }
-
-        @Override public int getItemCount() { return data.size(); }
-
-        static class VH extends RecyclerView.ViewHolder {
-            final TextView tvTitulo, tvUbicacion, tvPlazas, tvInscritosCount;
-            final View btnMenos, btnMas, btnInscritos, btnEditar, btnBorrar;
-            VH(@NonNull View itemView) {
-                super(itemView);
-                tvTitulo        = itemView.findViewById(R.id.tvTitulo);
-                tvUbicacion     = itemView.findViewById(R.id.tvUbicacion);
-                tvPlazas        = itemView.findViewById(R.id.tvPlazas);
-                tvInscritosCount= itemView.findViewById(R.id.tvInscritosCount);
-                btnMenos        = itemView.findViewById(R.id.btnMenos);
-                btnMas          = itemView.findViewById(R.id.btnMas);
-                btnInscritos    = itemView.findViewById(R.id.btnInscritos);
-                btnEditar       = itemView.findViewById(R.id.btnEditar);
-                btnBorrar       = itemView.findViewById(R.id.btnBorrar);
-            }
-        }
-
-        private static String s(Object o) {
-            if (o == null) return "";
-            String x = String.valueOf(o);
-            return "null".equalsIgnoreCase(x) ? "" : x;
-        }
-        private static Long asLong(Object o) {
-            if (o instanceof Number) return ((Number) o).longValue();
-            try { return Long.parseLong(s(o)); } catch (Exception e) { return null; }
-        }
+    @Override
+    public void onExpulsarClicked(String idDoc, String uid) {
+        vm.expulsarInscrito(idDoc, uid);
     }
 }

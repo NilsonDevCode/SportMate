@@ -7,148 +7,189 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.button.MaterialButton;
 import com.nilson.appsportmate.R;
-import com.nilson.appsportmate.databinding.ActivityGestionDeportesAyuntamientoBinding;
+import com.nilson.appsportmate.common.utils.Preferencias;
+
+import java.util.Calendar;
 
 /**
- * Fragment conectado a tu layout "gestionDeportesAyuntamiento" (ids de los inputs y botones).
- * Este nombre de ViewBinding debe coincidir con el nombre real generado por tu layout.
- * Si tu archivo XML se llama "gestion_deportes_ayuntamiento.xml", el binding sería
- * "GestionDeportesAyuntamientoBinding". Ajusta el import si tu nombre difiere.
+ * Formulario de creación/oferta de deporte (MVVM).
+ * Layout e IDs se mantienen intactos.
  */
 public class GestionDeportesAyuntamientoFragment extends Fragment {
 
-    private ActivityGestionDeportesAyuntamientoBinding binding;
-    private GestionDeportesAyuntamientoViewModel viewModel;
+    // UI
+    private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
+            etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
+    private MaterialButton btnCrearEvento, btnGestionEventos;
+    private Button btnLogout;
 
+    // VM
+    private GestionDeportesAyuntamientoViewModel vm;
+
+    // Estado
+    private String ayuntamientoId;
+
+    public GestionDeportesAyuntamientoFragment() { }
+
+    // ---------------------------
+    // Lifecycle
+    // ---------------------------
+
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = ActivityGestionDeportesAyuntamientoBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        // Usamos tu layout sin cambios
+        return inflater.inflate(R.layout.activity_gestion_deportes_ayuntamiento, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(GestionDeportesAyuntamientoViewModel.class);
+        vm = new ViewModelProvider(this).get(GestionDeportesAyuntamientoViewModel.class);
 
-        setupPickers();
+        ayuntamientoId = Preferencias.obtenerAyuntamientoId(requireContext());
+        if (TextUtils.isEmpty(ayuntamientoId)) {
+            Toast.makeText(requireContext(), "Error: ayuntamiento_id no encontrado.", Toast.LENGTH_LONG).show();
+            Navigation.findNavController(view).navigate(R.id.loginFragment);
+            return;
+        }
+        vm.setAyuntamientoId(ayuntamientoId);
+
+        bindViews(view);
         setupClicks();
-        observeUi();
-
-        viewModel.init();
+        observeVm();
     }
 
-    private void setupPickers() {
-        // Selector de fecha
-        binding.etFecha.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            int y = c.get(Calendar.YEAR);
-            int m = c.get(Calendar.MONTH);
-            int d = c.get(Calendar.DAY_OF_MONTH);
-            new DatePickerDialog(requireContext(), (picker, year, month, dayOfMonth) -> {
-                String mm = String.format("%02d", month + 1);
-                String dd = String.format("%02d", dayOfMonth);
-                binding.etFecha.setText(year + "-" + mm + "-" + dd);
-            }, y, m, d).show();
-        });
+    // ---------------------------
+    // Bind / Observers / Clicks
+    // ---------------------------
 
-        // Selector de hora
-        binding.etHora.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            int hh = c.get(Calendar.HOUR_OF_DAY);
-            int mm = c.get(Calendar.MINUTE);
-            new TimePickerDialog(requireContext(), (picker, hourOfDay, minute) -> {
-                String H = String.format("%02d", hourOfDay);
-                String M = String.format("%02d", minute);
-                binding.etHora.setText(H + ":" + M);
-            }, hh, mm, true).show();
-        });
+    private void bindViews(View v) {
+        etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);
+        etCantidadJugadores  = v.findViewById(R.id.etCantidadJugadores);
+        etFecha              = v.findViewById(R.id.etFecha);
+        etHora               = v.findViewById(R.id.etHora);
+        etDescripcionEvento  = v.findViewById(R.id.etDescripcionEvento);
+        etReglasEvento       = v.findViewById(R.id.etReglasEvento);
+        etMateriales         = v.findViewById(R.id.etMateriales);
+        etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);
+
+        btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);
+        btnGestionEventos    = v.findViewById(R.id.btnGestionEventos);
+        btnLogout            = v.findViewById(R.id.btnLogout);
     }
-
 
     private void setupClicks() {
-        // Crear evento
-        binding.btnCrearEvento.setOnClickListener(v -> {
-            viewModel.crearEvento(
-                    txt(binding.etNombreDeporte),
-                    txt(binding.etCantidadJugadores),
-                    txt(binding.etFecha),
-                    txt(binding.etHora),
-                    txt(binding.etDescripcionEvento),
-                    txt(binding.etReglasEvento),
-                    txt(binding.etMateriales),
-                    txt(binding.etUrlPueblo)
-            );
+        etFecha.setOnClickListener(v -> mostrarDatePicker());
+        etHora.setOnClickListener(v -> mostrarTimePicker());
+
+        btnCrearEvento.setOnClickListener(v -> vm.crearDeporte(
+                txt(etNombreDeporte),
+                txtInt(etCantidadJugadores),
+                txt(etFecha),
+                txt(etHora),
+                txt(etDescripcionEvento),
+                txt(etReglasEvento),
+                txt(etMateriales),
+                txt(etUrlPueblo)
+        ));
+
+        btnGestionEventos.setOnClickListener(v -> {
+            // Navegación a Activity/Fragment según tu grafo (IDs existentes)
+            NavController nav = Navigation.findNavController(requireView());
+            Bundle args = new Bundle();
+            args.putString("ayuntamientoId", ayuntamientoId);
+            nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);
         });
 
-        // Navegar a gestión (lista) de eventos
-        binding.btnGestionEventos.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment)
-        );
-
-        // Logout
-        binding.btnLogout.setOnClickListener(v -> viewModel.logout());
+        btnLogout.setOnClickListener(v -> vm.logout(requireContext()));
     }
 
-    private void observeUi() {
-        viewModel.ui.observe(getViewLifecycleOwner(), state -> {
-            // loading → deshabilitar botón crear para evitar dobles clics
-            binding.btnCrearEvento.setEnabled(!state.loading);
-            binding.btnGestionEventos.setEnabled(!state.loading);
-            binding.btnLogout.setEnabled(!state.loading);
-
-            if (state.message != null) {
-                Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
-                if ("Evento creado".equals(state.message)) {
-                    // Limpia campos básicos tras crear
-                    binding.etNombreDeporte.setText("");
-                    binding.etCantidadJugadores.setText("");
-                    // opcional: deja fecha/hora/desc si quieres
-                }
-            }
-            if (state.error != null) {
-                Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show();
+    private void observeVm() {
+        vm.getToast().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
-        viewModel.navigateToGestionEventos.observe(getViewLifecycleOwner(), go -> {
+        vm.getNavigateToLogin().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go) {
-                // Si ya tienes un destino en el NavGraph:
-                // Navigation.findNavController(requireView()).navigate(R.id.action_gestionDeportes_to_gestionEventosListado);
-                // De momento, mostramos un mensaje:
-                Toast.makeText(requireContext(), "Abrir pantalla de gestión/listado de eventos", Toast.LENGTH_SHORT).show();
+                NavController nav = Navigation.findNavController(requireView());
+                nav.navigate(R.id.loginFragment);
+                vm.onNavigatedToLogin();
             }
         });
 
-        viewModel.navigateAfterLogout.observe(getViewLifecycleOwner(), go -> {
+        vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go) {
-                // Vuelve a Auth/Login según tu NavGraph:
-                // Navigation.findNavController(requireView()).navigate(R.id.action_gestionDeportes_to_authFragment);
-                Toast.makeText(requireContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
-                Navigation.findNavController(requireView()).navigate(R.id.authFragment);
+                NavController nav = Navigation.findNavController(requireView());
+                Bundle args = new Bundle();
+                args.putString("ayuntamientoId", ayuntamientoId);
+                nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);
+                vm.onNavigatedToGestionEventos();
             }
         });
     }
 
-    private String txt(@Nullable android.widget.TextView tv) {
-        if (tv == null || tv.getText() == null) return "";
-        return tv.getText().toString().trim();
+    // ---------------------------
+    // Pickers
+    // ---------------------------
+
+    private void mostrarDatePicker() {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(
+                requireContext(),
+                (view, year, month, dayOfMonth) ->
+                        etFecha.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH)
+        ).show();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void mostrarTimePicker() {
+        Calendar c = Calendar.getInstance();
+        new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) ->
+                        etHora.setText(String.format("%02d:%02d", hourOfDay, minute)),
+                c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE),
+                true
+        ).show();
+    }
+
+    // ---------------------------
+    // Utils
+    // ---------------------------
+
+    private static String txt(EditText et) {
+        return et.getText() == null ? "" : et.getText().toString().trim();
+    }
+
+    private static Integer txtInt(EditText et) {
+        try {
+            String t = txt(et);
+            return t.isEmpty() ? null : Integer.parseInt(t);
+        } catch (Exception e) {
+            et.setError("Número inválido");
+            return null;
+        }
     }
 }

@@ -1,168 +1,223 @@
 package com.nilson.appsportmate.features.townhall.ui.gestioneventos;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.nilson.appsportmate.common.datos.firebase.FirestoreTransacciones;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** ViewModel con CRUD sobre eventos del ayuntamiento. */
+/**
+ * Lógica y persistencia para Gestión de eventos (MVVM).
+ * Mismas operaciones que el Presenter original.
+ */
 public class GestionEventosMasPlazasViewModel extends ViewModel {
 
-    public static class UiState {
-        public final boolean loading;
-        public final List<Map<String, Object>> eventos;
-        public final String error;
+    // Estado base
+    private String ayuntamientoId;
+    private FirestoreTransacciones fx;
 
-        public UiState(boolean loading, List<Map<String, Object>> eventos, String error) {
-            this.loading = loading;
-            this.eventos = eventos;
-            this.error = error;
+    // Estado UI
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> empty   = new MutableLiveData<>(true);
+    private final MutableLiveData<String>  mensaje = new MutableLiveData<>("");
+
+    private final MutableLiveData<List<Map<String, Object>>> eventos =
+            new MutableLiveData<>(new ArrayList<>());
+
+    // Tiempo real
+    private ListenerRegistration regEventos;
+
+    // Inscritos (tiempo real)
+    private ListenerRegistration regInscritos;
+    private final MutableLiveData<Pair<String, String>> openInscritosEvent = new MutableLiveData<>();
+
+
+    private final MutableLiveData<Pair<List<String>, List<String>>> inscritosData = new MutableLiveData<>();
+
+    // ---------------------------
+    // Init
+    // ---------------------------
+
+    public void setAyuntamientoId(String id) {
+        this.ayuntamientoId = id;
+        if (this.fx == null) {
+            this.fx = new FirestoreTransacciones(FirebaseFirestore.getInstance(), ayuntamientoId);
         }
-
-        public static UiState loading() { return new UiState(true, new ArrayList<>(), null); }
-        public static UiState success(List<Map<String, Object>> eventos) { return new UiState(false, eventos, null); }
-        public static UiState error(String msg) { return new UiState(false, new ArrayList<>(), msg); }
     }
 
-    private final MutableLiveData<UiState> _ui = new MutableLiveData<>(UiState.loading());
-    public LiveData<UiState> uiState = _ui;
+    // ---------------------------
+    // Exposición estado
+    // ---------------------------
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public LiveData<Pair<List<String>, List<String>>> getInscritosData() { return inscritosData; }
+    public LiveData<Boolean> getLoading() { return loading; }
+    public LiveData<Boolean> getEmpty()   { return empty; }
+    public LiveData<String>  getMensaje() { return mensaje; }
+    public LiveData<List<Map<String, Object>>> getEventos() { return eventos; }
 
-    /** Carga todos los eventos y, para cada uno, calcula número de inscritos. */
-    public void fetchEventos(@NonNull String ayuntamientoId) {
-        if (ayuntamientoId.isEmpty()) {
-            _ui.setValue(UiState.error("Falta ayuntamientoId"));
-            return;
-        }
-        _ui.setValue(UiState.loading());
+    public LiveData<Pair<String,String>> getOpenInscritosEvent() { return openInscritosEvent; }
 
-        db.collection("deportes_ayuntamiento")
-                .document(ayuntamientoId)
-                .collection("lista")
-                .get()
-                .addOnSuccessListener(snap -> {
-                    List<Map<String, Object>> base = new ArrayList<>();
-                    List<com.google.android.gms.tasks.Task<QuerySnapshot>> pending = new ArrayList<>();
 
-                    for (DocumentSnapshot d : snap.getDocuments()) {
-                        Map<String, Object> ev = d.getData();
-                        if (ev == null) continue;
-                        ev = new HashMap<>(ev);
-                        ev.put("idDoc", d.getId());
-                        base.add(ev);
+    // ---------------------------
+    // Carga one-shot (opcional)
+    // ---------------------------
 
-                        // tarea para contar inscritos de este evento
-                        com.google.android.gms.tasks.Task<QuerySnapshot> t =
-                                d.getReference().collection("inscritos").get();
-                        Map<String, Object> finalEv = ev;
-                        pending.add(t.continueWith(task -> {
-                            int count = 0;
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                count = task.getResult().size();
-                            }
-                            finalEv.put("inscritosCount", count);
-                            return null;
-                        }));
-                    }
-
-                    Tasks.whenAllComplete(pending).addOnCompleteListener(done ->
-                            _ui.setValue(UiState.success(base))
-                    );
-                })
-                .addOnFailureListener(e -> _ui.setValue(UiState.error("Error cargando: " + e.getMessage())));
-    }
-
-    /** +1 / -1 plazas con transacción de servidor. */
-    public void updatePlazas(@NonNull String aytoId, @NonNull String docId, int delta) {
-        if (aytoId.isEmpty() || docId.isEmpty()) return;
-        DocumentReference ref = db.collection("deportes_ayuntamiento")
-                .document(aytoId).collection("lista").document(docId);
-
-        db.runTransaction(tx -> {
-                    DocumentSnapshot d = tx.get(ref);
-                    Long plazas = d.getLong("plazasDisponibles");
-                    if (plazas == null) plazas = 0L;
-                    long nuevo = plazas + delta;
-                    if (nuevo < 0) nuevo = 0;
-                    tx.update(ref, "plazasDisponibles", nuevo);
-                    return null;
-                }).addOnSuccessListener(v -> fetchEventos(aytoId))
-                .addOnFailureListener(e -> _ui.setValue(UiState.error("No se pudo actualizar: " + e.getMessage())));
-    }
-
-    /** Borra el evento y sus subdocumentos 'inscritos'. */
-    public void deleteEvento(@NonNull String aytoId, @NonNull String docId) {
-        if (aytoId.isEmpty() || docId.isEmpty()) return;
-        DocumentReference ref = db.collection("deportes_ayuntamiento")
-                .document(aytoId).collection("lista").document(docId);
-
-        // Borramos subcolección inscritos (si existe) y luego el evento
-        ref.collection("inscritos").get().addOnSuccessListener(snap -> {
-            List<com.google.android.gms.tasks.Task<Void>> deletions = new ArrayList<>();
-            for (DocumentSnapshot d : snap.getDocuments()) {
-                deletions.add(d.getReference().delete());
+    public void cargarEventos() {
+        loading.postValue(true);
+        fx.listarEventos(new FirestoreTransacciones.EventsResult() {
+            @Override public void onSuccess(@NonNull List<Map<String, Object>> list) {
+                loading.postValue(false);
+                eventos.postValue(list);
+                empty.postValue(list == null || list.isEmpty());
             }
-            Tasks.whenAll(deletions).addOnCompleteListener(x ->
-                    ref.delete()
-                            .addOnSuccessListener(v -> fetchEventos(aytoId))
-                            .addOnFailureListener(e -> _ui.setValue(UiState.error("No se pudo borrar: " + e.getMessage())))
-            );
-        }).addOnFailureListener(e -> _ui.setValue(UiState.error("No se pudo borrar inscritos: " + e.getMessage())));
+            @Override public void onError(@NonNull Exception e) {
+                loading.postValue(false);
+                mensaje.postValue("Error cargando eventos: " + e.getMessage());
+            }
+        });
     }
 
-    /** Actualiza campos del evento (merge). */
-    public void updateEvento(@NonNull String aytoId, @NonNull String docId, @NonNull Map<String, Object> fields) {
-        if (aytoId.isEmpty() || docId.isEmpty()) return;
-        db.collection("deportes_ayuntamiento")
-                .document(aytoId).collection("lista").document(docId)
-                .update(fields)
-                .addOnSuccessListener(v -> fetchEventos(aytoId))
-                .addOnFailureListener(e -> _ui.setValue(UiState.error("No se pudo editar: " + e.getMessage())));
+    // ---------------------------
+    // Tiempo real: eventos
+    // ---------------------------
+
+    public void suscribirTiempoRealEventos() {
+        desuscribirTiempoRealEventos();
+        loading.postValue(true);
+        regEventos = fx.escucharEventos(new FirestoreTransacciones.EventsListener() {
+            @Override public void onChange(@NonNull List<Map<String, Object>> list) {
+                loading.postValue(false);
+                eventos.postValue(list);
+                empty.postValue(list == null || list.isEmpty());
+            }
+            @Override public void onError(@NonNull Exception e) {
+                loading.postValue(false);
+                mensaje.postValue("Error tiempo real: " + e.getMessage());
+            }
+        });
     }
 
-    /** Obtiene alias (o info básica) de inscritos para mostrar en diálogo. */
-    public void fetchInscritos(@NonNull String aytoId, @NonNull String docId,
-                               @NonNull InscritosCallback cb) {
-        if (aytoId.isEmpty() || docId.isEmpty()) {
-            cb.onResult(new ArrayList<>(), "Faltan IDs");
-            return;
+    public void desuscribirTiempoRealEventos() {
+        if (regEventos != null) {
+            regEventos.remove();
+            regEventos = null;
         }
-        db.collection("deportes_ayuntamiento")
-                .document(aytoId).collection("lista").document(docId)
-                .collection("inscritos")
-                .get()
-                .addOnSuccessListener(snap -> {
-                    List<String> lista = new ArrayList<>();
-                    for (DocumentSnapshot d : snap.getDocuments()) {
-                        String alias = asString(d.get("alias"));
-                        if (alias.isEmpty()) alias = d.getId();
-                        lista.add(alias);
-                    }
-                    cb.onResult(lista, null);
-                })
-                .addOnFailureListener(e -> cb.onResult(new ArrayList<>(), e.getMessage()));
     }
 
-    public interface InscritosCallback {
-        void onResult(List<String> aliases, String error);
+    // ---------------------------
+    // Acciones rápidas
+    // ---------------------------
+
+    public void incrementarPlazas(String idDoc) {
+        fx.incrementarPlazas(idDoc, simpleToastReload("Plaza añadida"));
     }
 
-    private static String asString(Object o) {
-        if (o == null) return "";
-        String s = String.valueOf(o);
-        return "null".equalsIgnoreCase(s) ? "" : s;
+    public void decrementarPlazas(String idDoc) {
+        fx.decrementarPlazas(idDoc, simpleToastReload("Plaza restada"));
+    }
+
+    public void borrarEvento(String idDoc) {
+        fx.borrarEvento(idDoc, simpleToastReload("Evento borrado"));
+    }
+
+    public void guardarEdicion(String oldId, String newId, Map<String, Object> nuevos) {
+        if (oldId.equals(newId)) {
+            fx.actualizarEventoCampos(oldId, nuevos, new FirestoreTransacciones.SimpleResult() {
+                @Override public void onSuccess() {
+                    mensaje.postValue("Actualizado");
+                    if (regEventos == null) cargarEventos();
+                }
+                @Override public void onError(@NonNull Exception e) {
+                    mensaje.postValue("Error: " + e.getMessage());
+                }
+            });
+        } else {
+            fx.crearEventoConMigracion(oldId, newId, nuevos, new FirestoreTransacciones.SimpleResult() {
+                @Override public void onSuccess() {
+                    mensaje.postValue("Actualizado y migrado");
+                    if (regEventos == null) cargarEventos();
+                }
+                @Override public void onError(@NonNull Exception e) {
+                    mensaje.postValue("Error migrando: " + e.getMessage());
+                }
+            });
+        }
+    }
+
+    // ---------------------------
+    // Inscritos en tiempo real
+    // ---------------------------
+
+    public void abrirInscritosTiempoReal(String idDoc, String titulo) {
+        openInscritosEvent.postValue(new Pair<>(idDoc, titulo));
+        dejarDeEscucharInscritos();
+        regInscritos = fx.escucharInscritos(idDoc, new FirestoreTransacciones.InscritosListener() {
+            @Override public void onChange(@NonNull List<String> aliases, @NonNull List<String> uids) {
+                inscritosData.postValue(new Pair<>(aliases, uids));
+            }
+            @Override public void onError(@NonNull Exception e) {
+                mensaje.postValue("Error tiempo real (inscritos): " + e.getMessage());
+            }
+        });
+    }
+
+    public void cerrarInscritosTiempoReal() {
+        dejarDeEscucharInscritos();
+        // El cierre visual lo realiza el Fragment
+    }
+
+    public void dejarDeEscucharInscritos() {
+        if (regInscritos != null) {
+            regInscritos.remove();
+            regInscritos = null;
+        }
+    }
+
+    public void expulsarInscrito(String idDoc, String uidSeleccionado) {
+        fx.expulsarInscrito(idDoc, uidSeleccionado, simpleToastReload("Usuario expulsado"));
+    }
+
+    public CollectionReference getInscritosRef(String idDoc) {
+        return fx.inscritosRef(idDoc);
+    }
+
+    // ---------------------------
+    // Helpers
+    // ---------------------------
+
+    private FirestoreTransacciones.SimpleResult simpleToastReload(String okMsg) {
+        return new FirestoreTransacciones.SimpleResult() {
+            @Override public void onSuccess() {
+                mensaje.postValue(okMsg);
+                if (regEventos == null) cargarEventos();
+            }
+            @Override public void onError(@NonNull Exception e) {
+                mensaje.postValue("Error: " + e.getMessage());
+            }
+        };
+    }
+
+    /** Igual que el Presenter original */
+    public static String generarDocId(String nombre, String fecha, String hora) {
+        if (nombre == null) nombre = "";
+        if (fecha  == null) fecha  = "";
+        if (hora   == null) hora   = "";
+        return nombre + "_" + fecha.replace("/", "_") + "_" + hora.replace(":", "_");
+    }
+
+    @Override
+    protected void onCleared() {
+        desuscribirTiempoRealEventos();
+        dejarDeEscucharInscritos();
+        super.onCleared();
     }
 }

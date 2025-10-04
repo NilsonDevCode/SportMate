@@ -1,138 +1,113 @@
 package com.nilson.appsportmate.features.townhall.ui.gestiondeportes;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ViewModel para crear eventos deportivos del ayuntamiento.
- * Guarda en la ruta: deportes_ayuntamiento/{ayuntamientoUid}/lista/{autoId}
+ * Lógica de creación de evento (MVVM).
+ * Keys/colecciones iguales a tu implementación previa.
  */
 public class GestionDeportesAyuntamientoViewModel extends ViewModel {
 
-    private final MutableLiveData<GestionDeportesAyuntamientoUiState> _ui =
-            new MutableLiveData<>(GestionDeportesAyuntamientoUiState.loading(null));
-    public LiveData<GestionDeportesAyuntamientoUiState> ui = _ui;
-
-    // Señales simples de navegación (sin crear nuevas clases).
-    private final MutableLiveData<Boolean> _navigateToGestionEventos = new MutableLiveData<>(false);
-    public LiveData<Boolean> navigateToGestionEventos = _navigateToGestionEventos;
-
-    private final MutableLiveData<Boolean> _navigateAfterLogout = new MutableLiveData<>(false);
-    public LiveData<Boolean> navigateAfterLogout = _navigateAfterLogout;
-
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    /** Llamar en onViewCreated() del Fragment */
-    public void init() {
-        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
-        _ui.setValue(GestionDeportesAyuntamientoUiState.idle(uid));
-    }
+    // Estado base
+    private String ayuntamientoId;
 
-    /** Validación mínima */
-    private String validate(String nombreDeporte,
-                            String plazasStr,
-                            String fecha,
-                            String hora,
-                            String descripcion,
-                            String reglas,
-                            String materiales,
-                            String url) {
+    // Señales UI
+    private final MutableLiveData<String>  toast = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> navigateToLogin = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> navigateToGestionEventos = new MutableLiveData<>(false);
 
-        if (isEmpty(nombreDeporte)) return "Nombre del deporte requerido";
-        if (isEmpty(plazasStr)) return "Cantidad de jugadores requerida";
-        try {
-            int p = Integer.parseInt(plazasStr.trim());
-            if (p <= 0) return "Plazas debe ser > 0";
-        } catch (NumberFormatException e) {
-            return "Plazas debe ser un número";
-        }
-        if (isEmpty(fecha)) return "Fecha requerida";
-        if (isEmpty(hora)) return "Hora requerida";
-        // descripción/reglas/materiales/url pueden ser opcionales, adapta si quieres forzarlas
-        return null;
-    }
+    // ---------------------------
+    // Exposición
+    // ---------------------------
 
-    private boolean isEmpty(String s) {
-        return s == null || s.trim().isEmpty();
-    }
+    public void setAyuntamientoId(String id) { this.ayuntamientoId = id; }
 
-    /**
-     * Crea un evento en la colección del ayuntamiento autenticado.
-     * Campos mapeados a tus inputs.
-     */
-    public void crearEvento(String nombreDeporte,
-                            String plazasStr,
-                            String fecha,      // texto (p.ej. 2025-10-03)
-                            String hora,       // texto (p.ej. 18:30)
-                            String descripcion,
-                            String reglas,
-                            String materiales,
-                            String urlExacta) {
+    public LiveData<String>  getToast()                 { return toast; }
+    public LiveData<Boolean> getNavigateToLogin()       { return navigateToLogin; }
+    public LiveData<Boolean> getNavigateToGestionEventos() { return navigateToGestionEventos; }
 
-        GestionDeportesAyuntamientoUiState st = _ui.getValue();
-        String aytoUid = st != null ? st.ayuntamientoUid : (auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null);
+    // ---------------------------
+    // Acciones
+    // ---------------------------
 
-        if (aytoUid == null) {
-            _ui.setValue(GestionDeportesAyuntamientoUiState.error(null, "No hay sesión de ayuntamiento"));
+    public void crearDeporte(String nombre,
+                             Integer cantidad,
+                             String fecha,
+                             String hora,
+                             String descripcion,
+                             String reglas,
+                             String materiales,
+                             String urlPueblo) {
+
+        if (isEmpty(nombre) || cantidad == null || cantidad < 1 ||
+                isEmpty(fecha) || isEmpty(hora) || isEmpty(descripcion) ||
+                isEmpty(reglas) || isEmpty(materiales) || isEmpty(urlPueblo)) {
+            toast.postValue("Completa todos los campos");
             return;
         }
 
-        String v = validate(nombreDeporte, plazasStr, fecha, hora, descripcion, reglas, materiales, urlExacta);
-        if (v != null) {
-            _ui.setValue(GestionDeportesAyuntamientoUiState.error(aytoUid, v));
+        if (isEmpty(ayuntamientoId)) {
+            toast.postValue("Error: ayuntamiento_id no encontrado.");
+            navigateToLogin.postValue(true);
             return;
         }
 
-        int plazas = Integer.parseInt(plazasStr.trim());
+        Map<String, Object> deporte = new HashMap<>();
+        deporte.put("nombre", nombre);
+        deporte.put("plazasDisponibles", cantidad);
+        deporte.put("fecha", fecha);
+        deporte.put("hora", hora);
+        deporte.put("descripcion", descripcion);
+        deporte.put("reglas", reglas);
+        // claves reales que consume tu adapter
+        deporte.put("materiales", materiales);
+        deporte.put("urlPueblo", urlPueblo);
+        deporte.put("ayuntamientoId", ayuntamientoId);
 
-        _ui.setValue(GestionDeportesAyuntamientoUiState.loading(aytoUid));
-
-        Map<String, Object> evento = new HashMap<>();
-        evento.put("nombreDeporte", nombreDeporte.trim());
-        evento.put("plazasTotales", plazas);
-        evento.put("plazasDisponibles", plazas);
-        evento.put("fecha", fecha.trim());
-        evento.put("hora", hora.trim());
-        evento.put("descripcion", isEmpty(descripcion) ? null : descripcion.trim());
-        evento.put("reglas", isEmpty(reglas) ? null : reglas.trim());
-        evento.put("materiales", isEmpty(materiales) ? null : materiales.trim());
-        evento.put("url", isEmpty(urlExacta) ? null : urlExacta.trim());
-
-        // Metadatos
-        evento.put("ayuntamientoId", aytoUid);
-        evento.put("createdAt", FieldValue.serverTimestamp());
-        evento.put("updatedAt", FieldValue.serverTimestamp());
+        String docId = generarDocId(nombre, fecha, hora);
 
         db.collection("deportes_ayuntamiento")
-                .document(aytoUid)
+                .document(ayuntamientoId)
                 .collection("lista")
-                .add(evento)
-                .addOnSuccessListener(ref ->
-                        _ui.setValue(GestionDeportesAyuntamientoUiState.success(aytoUid, "Evento creado")))
+                .document(docId)
+                .set(deporte)
+                .addOnSuccessListener(unused -> {
+                    toast.postValue("Evento creado correctamente.");
+                    navigateToGestionEventos.postValue(true);
+                })
                 .addOnFailureListener(e ->
-                        _ui.setValue(GestionDeportesAyuntamientoUiState.error(aytoUid, "Error al crear: " + e.getMessage())));
+                        toast.postValue("Error al crear el evento: " + e.getMessage()));
     }
 
-    /** Señal para abrir la pantalla/listado de gestión de eventos */
-    public void irAGestionEventos() {
-        _navigateToGestionEventos.setValue(true);
-        // reset (por si se observa varias veces)
-        _navigateToGestionEventos.setValue(false);
+    public void logout(Context ctx) {
+        FirebaseAuth.getInstance().signOut();
+        Preferencias.guardarRol(ctx, null);
+        navigateToLogin.postValue(true);
     }
 
-    /** Cerrar sesión del admin (ayuntamiento) */
-    public void logout() {
-        auth.signOut();
-        _navigateAfterLogout.setValue(true);
-        _navigateAfterLogout.setValue(false);
+    public void onNavigatedToLogin()            { navigateToLogin.setValue(false); }
+    public void onNavigatedToGestionEventos()   { navigateToGestionEventos.setValue(false); }
+
+    // ---------------------------
+    // Helpers
+    // ---------------------------
+
+    public static String generarDocId(String nombre, String fecha, String hora) {
+        return nombre.replace(" ", "_") + "_" + fecha.replace("/", "_") + "_" + hora.replace(":", "_");
     }
+
+    private boolean isEmpty(String s) { return s == null || s.trim().isEmpty(); }
 }
