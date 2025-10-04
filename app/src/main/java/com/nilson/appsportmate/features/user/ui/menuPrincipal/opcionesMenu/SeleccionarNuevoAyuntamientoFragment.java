@@ -96,7 +96,16 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
 
     private void setupClicks() {
         binding.btnGuardar.setOnClickListener(v -> vm.guardarSeleccion());
-        binding.toolbarSeleccionAyto.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+
+        // Toolbar back
+        if (binding.toolbarSeleccionAyto != null) {
+            binding.toolbarSeleccionAyto.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+        }
+
+        // ✅ Botón "Cancelar cambio" → volver atrás sin guardar
+        if (binding.btnCancelar != null) {
+            binding.btnCancelar.setOnClickListener(v -> requireActivity().onBackPressed());
+        }
     }
 
     private void observeUi() {
@@ -134,18 +143,10 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
 
                 // 2) Precarga por IDs (si el ViewModel las establece). Se hace UNA vez.
                 if (!didPreload) {
-                    if (trySelectById(binding.spComunidad, mapIds(s.comunidades), s.comunidadIdSel)) {
-                        // nada
-                    }
-                    if (trySelectById(binding.spProvincia, mapIds(s.provincias), s.provinciaIdSel)) {
-                        // nada
-                    }
-                    if (trySelectById(binding.spCiudad, mapIds(s.ciudades), s.ciudadIdSel)) {
-                        // nada
-                    }
-                    if (trySelectById(binding.spPueblo, mapPuebloIds(s.pueblos), s.puebloIdSel)) {
-                        // nada
-                    }
+                    trySelectById(binding.spComunidad, mapIds(s.comunidades), s.comunidadIdSel);
+                    trySelectById(binding.spProvincia, mapIds(s.provincias), s.provinciaIdSel);
+                    trySelectById(binding.spCiudad, mapIds(s.ciudades), s.ciudadIdSel);
+                    trySelectById(binding.spPueblo, mapPuebloIds(s.pueblos), s.puebloIdSel);
                     didPreload = true; // evita repetir
                 }
             } finally {

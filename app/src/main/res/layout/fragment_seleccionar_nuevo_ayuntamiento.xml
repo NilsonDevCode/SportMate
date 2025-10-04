@@ -87,7 +87,7 @@
 
             <Space android:layout_width="0dp" android:layout_height="12dp"/>
 
-            <!-- NUEVO: Nombre del pueblo elegido (solo lectura) -->
+            <!-- Nombre del pueblo elegido (solo lectura) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPuebloNombre"
                 android:layout_width="match_parent"
@@ -104,7 +104,7 @@
 
             <Space android:layout_width="0dp" android:layout_height="8dp"/>
 
-            <!-- NUEVO: Ayuntamiento (auto) (solo lectura) -->
+            <!-- Ayuntamiento (auto) (solo lectura) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAytoNombre"
                 android:layout_width="match_parent"
@@ -121,11 +121,22 @@
 
             <Space android:layout_width="0dp" android:layout_height="12dp"/>
 
+            <!-- Botón Guardar -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/guardar" />
+
+            <!-- Botón Cancelar cambio -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancelar cambio"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginTop="8dp" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
