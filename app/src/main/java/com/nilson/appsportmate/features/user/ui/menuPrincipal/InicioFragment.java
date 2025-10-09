@@ -14,7 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentInicioBinding;
 import com.nilson.appsportmate.features.user.ui.menuPrincipal.adaptadores.DeporteApuntadoAdapter;
 
@@ -24,12 +28,19 @@ public class InicioFragment extends Fragment {
     private InicioViewModel viewModel;
     private DeporteApuntadoAdapter adapter;
 
+    // 🔹 Añadido para mostrar el nombre del ayuntamiento
+    private FirebaseFirestore db;
+    private String ayuntamientoId;
+    private String lastAyuntamientoId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
+        // 🔹 init Firestore
+        db = FirebaseFirestore.getInstance();
         return binding.getRoot();
     }
 
@@ -87,8 +98,85 @@ public class InicioFragment extends Fragment {
             );
         });
 
+        // 🔹 NUEVO: leer ayuntamientoId de Preferencias y mostrar nombre
+        if (getContext() != null) {
+            ayuntamientoId = Preferencias.obtenerAyuntamientoId(getContext());
+            lastAyuntamientoId = ayuntamientoId;
+        }
+        cargarNombreAyuntamiento(); // pinta título+nombre
+
         // Cargar datos
         viewModel.cargarDeportesApuntados();
+    }
+
+    // 🔹 NUEVO: refrescar si cambia el ayuntamiento (por ejemplo, al volver de otro fragment)
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getContext() != null) {
+            String nuevo = Preferencias.obtenerAyuntamientoId(getContext());
+            if (nuevo == null ? lastAyuntamientoId != null : !nuevo.equals(lastAyuntamientoId)) {
+                ayuntamientoId = nuevo;
+                lastAyuntamientoId = nuevo;
+                cargarNombreAyuntamiento();
+            }
+        }
+    }
+
+    // 🔹 NUEVO: carga el nombre del ayuntamiento y lo pinta en tvAytoTitulo/tvAytoNombre
+    private void cargarNombreAyuntamiento() {
+        if (!isAdded()) return;
+
+        if (ayuntamientoId == null || ayuntamientoId.isEmpty()) {
+            binding.tvAytoTitulo.setText("Sin ayuntamiento asignado");
+            binding.tvAytoNombre.setText("—");
+            return;
+        }
+
+        // título fijo cuando hay ayto configurado
+        binding.tvAytoTitulo.setText("Ayuntamiento actual");
+
+        // 1) prefill desde cache si lo tienes guardado
+        if (getContext() != null) {
+            String cache = Preferencias.obtenerAyuntamientoNombre(getContext());
+            if (cache != null && !cache.trim().isEmpty()) {
+                binding.tvAytoNombre.setText(cache);
+            } else {
+                binding.tvAytoNombre.setText("—");
+            }
+        }
+
+        // 2) refresco online (o cache Firestore) y guardado en preferencias
+        db.collection("ayuntamientos")
+                .document(ayuntamientoId)
+                .get(Source.DEFAULT)
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded()) return;
+                    String nombre = extraerNombreAyuntamiento(doc);
+                    binding.tvAytoNombre.setText(nombre);
+
+                    // guardamos en prefs para futuras aperturas rápidas
+                    if (getContext() != null && nombre != null && !nombre.trim().isEmpty()
+                            && !"(desconocido)".equals(nombre)) {
+                        Preferencias.guardarAyuntamientoNombre(getContext(), nombre);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (!isAdded()) return;
+                    binding.tvAytoTitulo.setText("Error al cargar");
+                    binding.tvAytoNombre.setText("(desconocido)");
+                });
+    }
+
+    private String extraerNombreAyuntamiento(DocumentSnapshot doc) {
+        if (doc == null || !doc.exists()) return "(desconocido)";
+        Object n1 = doc.get("nombre");
+        Object n2 = doc.get("razonSocial");
+        String nom = n1 != null ? String.valueOf(n1) : null;
+        if (nom == null || nom.trim().isEmpty() || "null".equalsIgnoreCase(nom)) {
+            nom = n2 != null ? String.valueOf(n2) : "(desconocido)";
+        }
+        return nom;
     }
 
     @Override
