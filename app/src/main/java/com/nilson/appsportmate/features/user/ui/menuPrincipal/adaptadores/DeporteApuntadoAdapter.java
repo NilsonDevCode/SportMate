@@ -18,6 +18,7 @@ public class DeporteApuntadoAdapter extends RecyclerView.Adapter<DeporteApuntado
 
     public interface Listener {
         void onItemClick(InicioUiState.DeporteUi item);
+        void onItemLongClick(InicioUiState.DeporteUi item); // ⬅️ nuevo
     }
 
     private final List<InicioUiState.DeporteUi> data = new ArrayList<>();
@@ -52,6 +53,12 @@ public class DeporteApuntadoAdapter extends RecyclerView.Adapter<DeporteApuntado
         h.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(it);
         });
+
+        // ⬇️ Long press para desapuntarse
+        h.itemView.setOnLongClickListener(v -> {
+            if (listener != null) listener.onItemLongClick(it);
+            return true; // importante: consumir el evento
+        });
     }
 
     @Override
@@ -65,9 +72,9 @@ public class DeporteApuntadoAdapter extends RecyclerView.Adapter<DeporteApuntado
         VH(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tvNombreDeporte);
-            tvFecha = itemView.findViewById(R.id.tvFecha);
-            tvHora = itemView.findViewById(R.id.tvHora);
-            tvAyto = itemView.findViewById(R.id.tvAyuntamiento);
+            tvFecha  = itemView.findViewById(R.id.tvFecha);
+            tvHora   = itemView.findViewById(R.id.tvHora);
+            tvAyto   = itemView.findViewById(R.id.tvAyuntamiento);
         }
     }
 }

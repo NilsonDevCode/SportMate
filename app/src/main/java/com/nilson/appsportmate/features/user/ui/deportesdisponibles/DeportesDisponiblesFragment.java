@@ -17,7 +17,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
-import com.google.firebase.firestore.WriteBatch;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.ActivityDeportesDisponiblesBinding;
@@ -28,20 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Fragment que muestra deportes disponibles y permite apuntarse/desapuntarse.
- * Usa el layout activity_deportes_disponibles.xml con ViewBinding:
- *   ActivityDeportesDisponiblesBinding
- *
- * Reutiliza tu adapter existente:
- *   com.nilson.appsportmate.features.townhall.adaptadores.DeportesDisponiblesAdapter
- *
- * Estructura esperada en Firestore:
- * - deportes_ayuntamiento/{ayuntamientoId}/lista/{docId}
- *      fields: plazasDisponibles:int, ... (y demás info del evento)
- *      - inscritos/{uid}  => { uid, alias, ts }
- * - usuarios/{uid}/inscripciones/{docId} => copia de datos del evento + ayuntamientoId
- */
 public class DeportesDisponiblesFragment extends Fragment implements DeportesDisponiblesAdapter.Listener {
 
     private ActivityDeportesDisponiblesBinding binding;
@@ -51,67 +36,60 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
     private String uid;
     private String alias;
 
+    private String lastAyuntamientoId;
+
     private final List<Map<String, Object>> listaDisponibles = new ArrayList<>();
-    private final List<Map<String, Object>> listaMis = new ArrayList<>();
-
     private DeportesDisponiblesAdapter adapterDisponibles;
-    private DeportesDisponiblesAdapter adapterMis;
 
-    // Evita dobles taps mientras hay una operación en curso
     private boolean accionEnProgreso = false;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    @Nullable @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ActivityDeportesDisponiblesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Preferencias
         if (getContext() != null) {
             ayuntamientoId = Preferencias.obtenerAyuntamientoId(getContext());
             uid            = Preferencias.obtenerUid(getContext());
             alias          = Preferencias.obtenerAlias(getContext());
+            lastAyuntamientoId = ayuntamientoId;
         }
 
-        // RecyclerViews
         binding.rvDisponibles.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvMisDeportes.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        adapterDisponibles = new DeportesDisponiblesAdapter(listaDisponibles, false, this);
-        adapterMis         = new DeportesDisponiblesAdapter(listaMis, true, this);
-
+        adapterDisponibles = new DeportesDisponiblesAdapter(listaDisponibles, this);
         binding.rvDisponibles.setAdapter(adapterDisponibles);
-        binding.rvMisDeportes.setAdapter(adapterMis);
 
-        // Cargar datos
         cargarDisponibles();
-        cargarMisDeportes();
 
-        // Botón salir -> ir a Inicio y limpiar back stack
         binding.btnSalir.setOnClickListener(v -> {
             NavOptions opts = new NavOptions.Builder()
-                    // Limpia todo hasta este fragment (inclusive),
-                    // así no se puede volver atrás a "DeportesDisponibles"
                     .setPopUpTo(R.id.deportesDisponiblesFragment, true)
                     .build();
             Navigation.findNavController(v).navigate(R.id.action_global_inicioFragment, null, opts);
         });
     }
 
-    /* ============================
-       Carga de datos disponibles
-       ============================ */
+    @Override public void onResume() {
+        super.onResume();
+        if (getContext() != null) {
+            String nuevo = Preferencias.obtenerAyuntamientoId(getContext());
+            if (nuevo == null ? lastAyuntamientoId != null : !nuevo.equals(lastAyuntamientoId)) {
+                ayuntamientoId = nuevo;
+                lastAyuntamientoId = nuevo;
+                listaDisponibles.clear();
+                adapterDisponibles.notifyDataSetChanged();
+                cargarDisponibles();
+            }
+        }
+    }
+
+    /* ===== Carga de disponibles ===== */
     private void cargarDisponibles() {
         if (ayuntamientoId == null || ayuntamientoId.isEmpty()) {
             binding.tvEmptyDisponibles.setText("No tienes ayuntamiento asignado.");
@@ -123,12 +101,13 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         db.collection("deportes_ayuntamiento")
                 .document(ayuntamientoId)
                 .collection("lista")
-                .get(Source.SERVER) // fuerza servidor para evitar caché vieja
+                .get(Source.SERVER)
                 .addOnSuccessListener(query -> {
                     listaDisponibles.clear();
                     for (DocumentSnapshot d : query.getDocuments()) {
                         Map<String, Object> m = d.getData();
                         if (m == null) continue;
+                        m = new HashMap<>(m);
                         m.put("idDoc", d.getId());
                         listaDisponibles.add(m);
                     }
@@ -140,114 +119,11 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
                 })
                 .addOnFailureListener(e -> {
                     if (!isAdded()) return;
-                    Toast.makeText(requireContext(),
-                            "Error cargando disponibles: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error cargando disponibles: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    /* ============================
-       Carga de "mis deportes"
-       ============================ */
-    private void cargarMisDeportes() {
-        if (uid == null || uid.isEmpty()) {
-            binding.tvEmptyMis.setText("Inicia sesión para ver tus deportes.");
-            binding.tvEmptyMis.setVisibility(View.VISIBLE);
-            binding.rvMisDeportes.setVisibility(View.GONE);
-            return;
-        }
-
-        db.collection("usuarios")
-                .document(uid)
-                .collection("inscripciones")
-                .get(Source.SERVER)
-                .addOnSuccessListener(query -> {
-                    listaMis.clear();
-
-                    if (query.isEmpty()) {
-                        adapterMis.notifyDataSetChanged();
-                        binding.tvEmptyMis.setVisibility(View.VISIBLE);
-                        binding.rvMisDeportes.setVisibility(View.GONE);
-                        return;
-                    }
-
-                    // Verifica que cada inscripción siga existiendo en el origen; si no, la limpia.
-                    List<Map<String, Object>> tmp = new ArrayList<>();
-                    WriteBatch batchDelete = db.batch();
-                    final int total = query.size();
-                    final int[] procesados = {0};
-
-                    for (DocumentSnapshot d : query.getDocuments()) {
-                        Map<String, Object> m = d.getData();
-                        if (m == null) {
-                            procesados[0]++;
-                            if (procesados[0] == total) finProcesadoMis(tmp, batchDelete);
-                            continue;
-                        }
-
-                        String idDoc = d.getId();
-                        String aytoIdInscripcion = valueOf(m.get("ayuntamientoId"));
-                        if (aytoIdInscripcion == null || aytoIdInscripcion.isEmpty()) {
-                            aytoIdInscripcion = ayuntamientoId; // fallback
-                        }
-
-                        m.put("idDoc", idDoc);
-
-                        final String aytoFinal = aytoIdInscripcion;
-                        db.collection("deportes_ayuntamiento")
-                                .document(aytoFinal)
-                                .collection("lista")
-                                .document(idDoc)
-                                .get(Source.SERVER)
-                                .addOnSuccessListener(evSnap -> {
-                                    if (evSnap.exists()) {
-                                        // El evento aún existe → mostrar
-                                        tmp.add(m);
-                                    } else {
-                                        // El evento ya no existe → borrar inscripción huérfana
-                                        DocumentReference refUserIns = d.getReference();
-                                        batchDelete.delete(refUserIns);
-                                    }
-                                    procesados[0]++;
-                                    if (procesados[0] == total) finProcesadoMis(tmp, batchDelete);
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Si falla la comprobación, no mostramos ese item
-                                    procesados[0]++;
-                                    if (procesados[0] == total) finProcesadoMis(tmp, batchDelete);
-                                });
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (!isAdded()) return;
-                    Toast.makeText(requireContext(),
-                            "Error cargando mis deportes: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void finProcesadoMis(List<Map<String, Object>> tmp, WriteBatch batchDelete) {
-        batchDelete.commit().addOnCompleteListener(task -> {
-            listaMis.clear();
-            listaMis.addAll(tmp);
-            adapterMis.notifyDataSetChanged();
-
-            boolean vacio = listaMis.isEmpty();
-            binding.tvEmptyMis.setVisibility(vacio ? View.VISIBLE : View.GONE);
-            binding.rvMisDeportes.setVisibility(vacio ? View.GONE : View.VISIBLE);
-        });
-    }
-
-    private static String valueOf(Object o) {
-        if (o == null) return null;
-        String s = String.valueOf(o);
-        return "null".equalsIgnoreCase(s) ? null : s;
-    }
-
-    /* ============================
-       Callbacks del Adapter (Listener)
-       ============================ */
-
+    /* ===== Listener del adapter ===== */
     @Override
     public void onApuntarse(Map<String, Object> deporte) {
         if (!isAdded()) return;
@@ -256,7 +132,7 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
             Toast.makeText(requireContext(), "Inicia sesión para inscribirte", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (accionEnProgreso) return; // evita doble click
+        if (accionEnProgreso) return;
         accionEnProgreso = true;
 
         String docId = String.valueOf(deporte.get("idDoc"));
@@ -271,17 +147,14 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
                 .collection("inscripciones").document(docId);
 
         db.runTransaction(tx -> {
-            // 1) Comprobar plazas
             DocumentSnapshot snapDeporte = tx.get(refDeporte);
             Long plazas = snapDeporte.getLong("plazasDisponibles");
             if (plazas == null) plazas = 0L;
             if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
 
-            // 2) Comprobar si YA está inscrito
             DocumentSnapshot snapInscrito = tx.get(refInscrito);
             if (snapInscrito.exists()) throw new IllegalStateException("YA_INSCRITO");
 
-            // 3) Proceder: decremento y escribo
             tx.update(refDeporte, "plazasDisponibles", plazas - 1);
 
             Map<String, Object> ins = new HashMap<>();
@@ -291,7 +164,6 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
             tx.set(refInscrito, ins);
 
             Map<String, Object> copia = new HashMap<>(deporte);
-            copia.remove("idDoc");
             copia.put("idDoc", docId);
             copia.put("ayuntamientoId", ayuntamientoId);
             tx.set(refUser, copia);
@@ -300,8 +172,8 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         }).addOnSuccessListener(unused -> {
             if (!isAdded()) return;
             Toast.makeText(requireContext(), "Inscripción realizada", Toast.LENGTH_SHORT).show();
-            cargarDisponibles();
-            cargarMisDeportes();
+            adapterDisponibles.markApuntado(docId); // ⬅️ pinta “Apuntado” al instante
+            cargarDisponibles();                    // opcional: refresco de plazas
             accionEnProgreso = false;
         }).addOnFailureListener(e -> {
             if (!isAdded()) return;
@@ -317,62 +189,7 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         });
     }
 
-    @Override
-    public void onDesapuntarse(Map<String, Object> deporte) {
-        if (!isAdded()) return;
-
-        if (uid == null || uid.isEmpty()) {
-            Toast.makeText(requireContext(), "Inicia sesión para continuar", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (accionEnProgreso) return; // evita doble click
-        accionEnProgreso = true;
-
-        String docId = String.valueOf(deporte.get("idDoc"));
-        DocumentReference refDeporte = db.collection("deportes_ayuntamiento")
-                .document(ayuntamientoId)
-                .collection("lista")
-                .document(docId);
-
-        DocumentReference refInscrito = refDeporte.collection("inscritos").document(uid);
-        DocumentReference refUser = db.collection("usuarios")
-                .document(uid)
-                .collection("inscripciones").document(docId);
-
-        db.runTransaction(tx -> {
-            DocumentSnapshot snapDeporte = tx.get(refDeporte);
-            Long plazas = snapDeporte.getLong("plazasDisponibles");
-            if (plazas == null) plazas = 0L;
-
-            // Solo incremento si realmente estaba inscrito
-            DocumentSnapshot snapInscrito = tx.get(refInscrito);
-            if (!snapInscrito.exists()) throw new IllegalStateException("NO_ESTABA_INSCRITO");
-
-            tx.update(refDeporte, "plazasDisponibles", plazas + 1);
-            tx.delete(refInscrito);
-            tx.delete(refUser);
-
-            return null;
-        }).addOnSuccessListener(unused -> {
-            if (!isAdded()) return;
-            Toast.makeText(requireContext(), "Te has desapuntado", Toast.LENGTH_SHORT).show();
-            cargarDisponibles();
-            cargarMisDeportes();
-            accionEnProgreso = false;
-        }).addOnFailureListener(e -> {
-            if (!isAdded()) return;
-            String code = e.getMessage() != null ? e.getMessage() : "";
-            if (code.contains("NO_ESTABA_INSCRITO")) {
-                Toast.makeText(requireContext(), "No estabas inscrito en esta actividad.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Error al desapuntarte: " + code, Toast.LENGTH_SHORT).show();
-            }
-            accionEnProgreso = false;
-        });
-    }
-
-    @Override
-    public void onDestroyView() {
+    @Override public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }

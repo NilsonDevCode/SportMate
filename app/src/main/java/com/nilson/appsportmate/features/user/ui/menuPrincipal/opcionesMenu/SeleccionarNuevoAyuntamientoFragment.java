@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
+import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentSeleccionarNuevoAyuntamientoBinding;
 
 import java.util.ArrayList;
@@ -117,7 +121,13 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
             }
             if ("Guardado".equals(s.message)) {
                 Toast.makeText(requireContext(), "Ayuntamiento actualizado", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
+
+                // 🔁 IMPORTANTE: recrea DeportesDisponiblesFragment para que no reutilice VM/datos viejos
+                NavController nav = Navigation.findNavController(requireView());
+                NavOptions opts = new NavOptions.Builder()
+                        .setPopUpTo(R.id.deportesDisponiblesFragment, true) // limpia el anterior
+                        .build();
+                nav.navigate(R.id.action_global_deportesDisponiblesFragment, null, opts);
                 return;
             }
 
@@ -141,19 +151,19 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
                     lastPueCount = s.pueblos.size();
                 }
 
-                // 2) Precarga por IDs (si el ViewModel las establece). Se hace UNA vez.
+                // 2) Precarga por IDs (una vez)
                 if (!didPreload) {
                     trySelectById(binding.spComunidad, mapIds(s.comunidades), s.comunidadIdSel);
                     trySelectById(binding.spProvincia, mapIds(s.provincias), s.provinciaIdSel);
                     trySelectById(binding.spCiudad, mapIds(s.ciudades), s.ciudadIdSel);
                     trySelectById(binding.spPueblo, mapPuebloIds(s.pueblos), s.puebloIdSel);
-                    didPreload = true; // evita repetir
+                    didPreload = true;
                 }
             } finally {
                 settingUp = false;
             }
 
-            // 3) Pinta SOLO los textos de lectura (no tocar spinners aquí)
+            // 3) Textos de lectura
             binding.etPuebloNombre.setText(s.puebloNombre);
             binding.etAytoNombre.setText(s.ayuntamientoNombre);
         });
@@ -169,7 +179,6 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
         ArrayAdapter<String> ad = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_dropdown_item, data);
         sp.setAdapter(ad);
-        // IMPORTANTE: no hacemos setSelection aquí
     }
 
     private ArrayList<String> mapNombres(List<SeleccionarNuevoAyuntamientoUiState.Opcion> lista) {
@@ -196,7 +205,7 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
         return r;
     }
 
-    /** Selecciona por ID si existe en la lista; NO dispara listeners por el guard settingUp */
+    /** Selecciona por ID si existe en la lista */
     private boolean trySelectById(Spinner sp, List<String> ids, String targetId) {
         if (targetId == null || targetId.isEmpty() || ids == null) return false;
         int idx = -1;
@@ -204,7 +213,7 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
             if (targetId.equals(ids.get(i))) { idx = i; break; }
         }
         if (idx >= 0) {
-            sp.setSelection(idx, false); // no animación, y con settingUp=true no dispara lógica
+            sp.setSelection(idx, false);
             return true;
         }
         return false;

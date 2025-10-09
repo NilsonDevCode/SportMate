@@ -1,5 +1,6 @@
 package com.nilson.appsportmate.features.user.ui.menuPrincipal;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,20 +41,34 @@ public class InicioFragment extends Fragment {
 
         // RecyclerView
         binding.rvDeportesApuntados.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new DeporteApuntadoAdapter(item ->
+        adapter = new DeporteApuntadoAdapter(new DeporteApuntadoAdapter.Listener() {
+            @Override
+            public void onItemClick(InicioUiState.DeporteUi item) {
+                // Click corto (opcional)
                 Toast.makeText(requireContext(),
                         item.nombreDeporte + " - " + item.ayuntamiento,
-                        Toast.LENGTH_SHORT).show()
-        );
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(InicioUiState.DeporteUi item) {
+                // Long-press -> confirmar desapuntarse
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Desapuntarse")
+                        .setMessage("¿Quieres desapuntarte de \"" + item.nombreDeporte + "\"?")
+                        .setPositiveButton("Sí", (d, w) -> viewModel.desapuntarse(item.docId, item.aytoId))
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        });
         binding.rvDeportesApuntados.setAdapter(adapter);
 
-        // Navegar a "DeportesDisponiblesFragment" al pulsar el botón
+        binding.rvDeportesApuntados.setAdapter(adapter);
+
+        // Ir a deportes disponibles
         binding.btnVerDeportes.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_global_deportesDisponiblesFragment)
         );
-        // Si en tu nav_graph añadiste una action específica desde Inicio -> DeportesDisponibles,
-        // usa ese id en lugar del global:
-        // Navigation.findNavController(v).navigate(R.id.action_inicioFragment_to_deportesDisponiblesFragment);
 
         // Observers
         viewModel.uiState.observe(getViewLifecycleOwner(), state -> {
@@ -62,10 +77,14 @@ public class InicioFragment extends Fragment {
             if (state.error != null && !state.error.isEmpty()) {
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show();
             }
+            if (state.message != null && !state.message.isEmpty()) {
+                Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
+            }
 
             adapter.submit(state.deportes);
-            binding.tvEmpty.setVisibility(state.deportes == null || state.deportes.isEmpty()
-                    ? View.VISIBLE : View.GONE);
+            binding.tvEmpty.setVisibility(
+                    state.deportes == null || state.deportes.isEmpty() ? View.VISIBLE : View.GONE
+            );
         });
 
         // Cargar datos

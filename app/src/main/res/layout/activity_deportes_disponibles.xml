@@ -32,37 +32,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Separador -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="12dp" />
-
-    <!-- Bloque: Mis deportes -->
-    <TextView
-        android:id="@+id/tvTituloMis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mis deportes"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/tvEmptyMis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Aún no te has apuntado a ningún deporte."
-        android:visibility="gone"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="14sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvMisDeportes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <!-- Botón salir al Main -->
     <Button
         android:id="@+id/btnSalir"

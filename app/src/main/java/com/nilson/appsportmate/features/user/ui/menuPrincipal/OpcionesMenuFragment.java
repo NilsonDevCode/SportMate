@@ -49,11 +49,28 @@ public class OpcionesMenuFragment extends Fragment {
 
         // RecyclerView
         binding.rvDeportesApuntados.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new DeporteApuntadoAdapter(item ->
+        adapter = new DeporteApuntadoAdapter(new DeporteApuntadoAdapter.Listener() {
+            @Override
+            public void onItemClick(InicioUiState.DeporteUi item) {
+                // Click corto (opcional)
                 Toast.makeText(requireContext(),
                         item.nombreDeporte + " - " + item.ayuntamiento,
-                        Toast.LENGTH_SHORT).show()
-        );
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(InicioUiState.DeporteUi item) {
+                // Long-press -> confirmar desapuntarse
+                new android.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Desapuntarse")
+                        .setMessage("¿Quieres desapuntarte de \"" + item.nombreDeporte + "\"?")
+                        .setPositiveButton("Sí", (d, w) -> viewModel.desapuntarse(item.docId, item.aytoId))
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        });
+        binding.rvDeportesApuntados.setAdapter(adapter);
+
         binding.rvDeportesApuntados.setAdapter(adapter);
 
         // Toolbar: listener del menú (el menú ya está en el XML con app:menu)

@@ -17,17 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * MVVM ViewModel para Deportes Disponibles integrado con Firestore.
- * - Llama init(ayuntamientoId, uid, alias) una sola vez desde tu Fragment (por ejemplo en onViewCreated).
- * - Usa loadAll() para cargar disponibles y tus inscripciones.
- * - Métodos apuntarse(...) y desapuntarse(...) actualizan Firestore con transacciones y recargan.
- *
- * Estructura Firestore esperada:
- * deportes_ayuntamiento/{ayuntamientoId}/lista/{docId} (plazasDisponibles:int, ...)
- * └── inscritos/{uid} (uid, alias, ts)
- * usuarios/{uid}/inscripciones/{docId} (ayuntamientoId, ...copia de datos del evento)
- */
 public class DeportesDisponiblesViewModel extends ViewModel {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -36,12 +25,10 @@ public class DeportesDisponiblesViewModel extends ViewModel {
             new MutableLiveData<>(DeportesDisponiblesUiState.loading());
     public final LiveData<DeportesDisponiblesUiState> uiState = _uiState;
 
-    // sesión/contexto
     private @Nullable String ayuntamientoId;
     private @Nullable String uid;
     private @Nullable String alias;
 
-    // caches en memoria (para re-pintar sin reconsultar si quieres)
     private final List<Map<String, Object>> cacheDisponibles = new ArrayList<>();
     private final List<Map<String, Object>> cacheMis = new ArrayList<>();
 
@@ -51,9 +38,18 @@ public class DeportesDisponiblesViewModel extends ViewModel {
         this.alias = emptyToNull(alias);
     }
 
+    /** Permite reinyectar ayuntamiento y recargar cuando cambie */
+    public void ensureAyuntamientoId(@Nullable String nuevoId) {
+        nuevoId = emptyToNull(nuevoId);
+        if ((nuevoId == null && ayuntamientoId != null) ||
+                (nuevoId != null && !nuevoId.equals(ayuntamientoId))) {
+            this.ayuntamientoId = nuevoId;
+            loadAll();
+        }
+    }
+
     public void loadAll() {
         _uiState.setValue(DeportesDisponiblesUiState.loading());
-        // Carga disponibles y mis inscripciones en paralelo y al final publica el estado
         Tasks.whenAll(
                 Tasks.call(() -> { cargarDisponiblesInternal(); return null; }),
                 Tasks.call(() -> { cargarMisInternal(); return null; })
@@ -63,7 +59,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
                     new ArrayList<>(cacheMis)
             ));
         }).addOnFailureListener(e -> {
-            // Aunque falle, intentamos publicar lo que haya
             _uiState.setValue(DeportesDisponiblesUiState.message(
                     DeportesDisponiblesUiState.success(new ArrayList<>(cacheDisponibles), new ArrayList<>(cacheMis)),
                     "Error cargando datos: " + (e != null ? e.getMessage() : "")
@@ -71,16 +66,10 @@ public class DeportesDisponiblesViewModel extends ViewModel {
         });
     }
 
-    /* ====================
-       Lecturas internas
-       ==================== */
-
     private void cargarDisponiblesInternal() throws Exception {
         cacheDisponibles.clear();
-
         if (ayuntamientoId == null) return;
 
-        // Fuerza servidor para evitar cache obsoleta
         List<DocumentSnapshot> docs = Tasks.await(
                 db.collection("deportes_ayuntamiento")
                         .document(ayuntamientoId)
@@ -99,7 +88,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
 
     private void cargarMisInternal() throws Exception {
         cacheMis.clear();
-
         if (uid == null) return;
 
         List<DocumentSnapshot> snaps = Tasks.await(
@@ -111,7 +99,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
 
         if (snaps.isEmpty()) return;
 
-        // Verifica que los eventos aún existan, limpia huérfanos
         List<Map<String, Object>> tmp = new ArrayList<>();
         WriteBatch batchDelete = db.batch();
 
@@ -122,13 +109,12 @@ public class DeportesDisponiblesViewModel extends ViewModel {
             String idDoc = d.getId();
             String aytoIdInscripcion = valueOf(m.get("ayuntamientoId"));
             if (aytoIdInscripcion == null || aytoIdInscripcion.isEmpty()) {
-                aytoIdInscripcion = ayuntamientoId; // fallback
+                aytoIdInscripcion = ayuntamientoId;
             }
 
             m = new HashMap<>(m);
             m.put("idDoc", idDoc);
 
-            // Comprobar existencia del evento
             DocumentSnapshot evSnap = Tasks.await(
                     db.collection("deportes_ayuntamiento")
                             .document(aytoIdInscripcion)
@@ -140,21 +126,15 @@ public class DeportesDisponiblesViewModel extends ViewModel {
             if (evSnap.exists()) {
                 tmp.add(m);
             } else {
-                // borrar inscripción huérfana
                 batchDelete.delete(d.getReference());
             }
         }
 
-        // Ejecutar borrado acumulado
         Tasks.await(batchDelete.commit());
 
         cacheMis.clear();
         cacheMis.addAll(tmp);
     }
-
-    /* ====================
-       Acciones de usuario
-       ==================== */
 
     public void apuntarse(Map<String, Object> deporte) {
         if (uid == null || ayuntamientoId == null || alias == null) {
@@ -175,17 +155,14 @@ public class DeportesDisponiblesViewModel extends ViewModel {
                 .collection("inscripciones").document(docId);
 
         db.runTransaction(tx -> {
-            // 1) Comprobar plazas
             DocumentSnapshot snapDeporte = tx.get(refDeporte);
             Long plazas = snapDeporte.getLong("plazasDisponibles");
             if (plazas == null) plazas = 0L;
             if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
 
-            // 2) Ya inscrito?
             DocumentSnapshot snapInscrito = tx.get(refInscrito);
             if (snapInscrito.exists()) throw new IllegalStateException("YA_INSCRITO");
 
-            // 3) Decrementar + set inscrito + copia en usuario
             tx.update(refDeporte, "plazasDisponibles", plazas - 1);
 
             Map<String, Object> ins = new HashMap<>();
@@ -262,7 +239,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
     }
 
     private void reloadAfterAction() {
-        // Recarga listas tras una acción y desactiva bandera de progreso cuando todo acaba
         Tasks.whenAll(
                 Tasks.call(() -> { cargarDisponiblesInternal(); return null; }),
                 Tasks.call(() -> { cargarMisInternal(); return null; })
@@ -280,10 +256,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
             setActionInProgress(false);
         });
     }
-
-    /* ====================
-       Helpers de estado
-       ==================== */
 
     private void setActionInProgress(boolean inProgress) {
         DeportesDisponiblesUiState prev = _uiState.getValue();
