@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
@@ -42,6 +44,8 @@ public class menuAyuntamientoFragment extends Fragment {
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,7 +60,6 @@ public class menuAyuntamientoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         vm = new ViewModelProvider(this).get(MenuAyuntamientoViewModel.class);
 
-        /* ==== Toolbar (solo lápiz con 2 opciones + botón de apagar) ==== */
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
@@ -76,21 +79,27 @@ public class menuAyuntamientoFragment extends Fragment {
             return false;
         });
 
-        /* ==== RecyclerView ==== */
         binding.rvEventos.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new EventosResumenAdapter();
         binding.rvEventos.setAdapter(adapter);
 
-        /* ==== Botón principal ==== */
         binding.btnGestionDeportes.setOnClickListener(v ->
                 Navigation.findNavController(v)
                         .navigate(R.id.action_global_gestionDeportesAyuntamientoFragment)
         );
 
-        /* ==== Observers ==== */
         vm.getAyuntamientoNombre().observe(getViewLifecycleOwner(),
                 nombre -> binding.tvAytoNombre.setText(
                         TextUtils.isEmpty(nombre) ? "Sin ayuntamiento asignado" : nombre));
+
+        vm.getLogoUrl().observe(getViewLifecycleOwner(), url -> {
+            if (url != null && !url.isEmpty() && isAdded()) {
+                Glide.with(requireContext())
+                        .load(url)
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .into(binding.imgLogo);
+            }
+        });
 
         vm.getEventos().observe(getViewLifecycleOwner(), evs -> {
             listaEventos.clear();
@@ -107,14 +116,16 @@ public class menuAyuntamientoFragment extends Fragment {
     }
 
     private void onImagePicked(@Nullable Uri uri) {
-        if (!isAdded()) return;
-        if (uri == null) {
+        if (!isAdded() || uri == null) {
             Toast.makeText(requireContext(), "No se seleccionó imagen.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Log.d("AYTO_DEBUG", "Imagen seleccionada desde galería: " + uri);
         binding.imgLogo.setImageURI(uri);
-        Toast.makeText(requireContext(), "Imagen seleccionada.", Toast.LENGTH_SHORT).show();
+        vm.subirLogoAyuntamiento(uri, requireContext());
     }
+
 
     private void confirmarLogout() {
         new AlertDialog.Builder(requireContext())
@@ -133,7 +144,6 @@ public class menuAyuntamientoFragment extends Fragment {
                 .show();
     }
 
-    /* ==== Adapter de resumen ==== */
     private class EventosResumenAdapter extends RecyclerView.Adapter<EventosResumenAdapter.VH> {
 
         class VH extends RecyclerView.ViewHolder {
@@ -141,9 +151,9 @@ public class menuAyuntamientoFragment extends Fragment {
             MaterialButton btnMas, btnMenos, btnEditar, btnBorrar, btnInscritos;
             VH(@NonNull View itemView) {
                 super(itemView);
-                tvTitulo    = itemView.findViewById(R.id.tvTitulo);
-                tvSub       = itemView.findViewById(R.id.tvUbicacion);
-                tvPlazas    = itemView.findViewById(R.id.tvPlazas);
+                tvTitulo = itemView.findViewById(R.id.tvTitulo);
+                tvSub = itemView.findViewById(R.id.tvUbicacion);
+                tvPlazas = itemView.findViewById(R.id.tvPlazas);
                 tvInscritos = itemView.findViewById(R.id.tvInscritosCount);
                 btnMas = itemView.findViewById(R.id.btnMas);
                 btnMenos = itemView.findViewById(R.id.btnMenos);
@@ -158,7 +168,8 @@ public class menuAyuntamientoFragment extends Fragment {
             }
         }
 
-        @NonNull @Override
+        @NonNull
+        @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_evento_gestion, parent, false);
@@ -193,10 +204,13 @@ public class menuAyuntamientoFragment extends Fragment {
         public int getItemCount() { return listaEventos.size(); }
 
         private String safe(Object o) { return o == null ? "" : String.valueOf(o).trim(); }
+
         private long toLong(Object o) {
             if (o instanceof Long) return (Long) o;
             if (o instanceof Integer) return ((Integer) o).longValue();
-            if (o instanceof String) { try { return Long.parseLong((String) o); } catch (Exception ignored) {} }
+            if (o instanceof String) {
+                try { return Long.parseLong((String) o); } catch (Exception ignored) {}
+            }
             return 0L;
         }
     }
