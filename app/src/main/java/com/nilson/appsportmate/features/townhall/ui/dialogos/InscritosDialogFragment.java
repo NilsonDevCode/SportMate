@@ -21,8 +21,7 @@ import java.util.List;
 
 /**
  * DialogFragment para mostrar inscritos en TIEMPO REAL.
- * La Activity es el Host y recibe actualizaciones desde el Presenter,
- * llamando a updateData(...) en este fragment.
+ * El Host es el **parent fragment** (GestionEventosMasPlazasFragment).
  */
 public class InscritosDialogFragment extends DialogFragment {
 
@@ -61,18 +60,29 @@ public class InscritosDialogFragment extends DialogFragment {
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_inscritos, null);
         rv = view.findViewById(R.id.rvInscritos);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // ⬇️ Cambio: confirmación antes de expulsar
         adapter = new InscritosAdapter(new ArrayList<>(), new ArrayList<>(), (uid) -> {
-            Host host = (Host) requireActivity();
-            host.onExpulsarClicked(idDoc, uid);
+            Host host = getHostFromParent();
+            if (host == null) return;
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Confirmar expulsión")
+                    .setMessage("¿Seguro que quieres eliminar a este usuario del evento?")
+                    .setPositiveButton("Sí, eliminar", (d, w) -> host.onExpulsarClicked(idDoc, uid))
+                    .setNegativeButton("Cancelar", null)
+                    .show();
         });
         rv.setAdapter(adapter);
 
         return new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Inscritos — " + titulo)
+                .setTitle("inscritos — " + titulo)
                 .setView(view)
                 .setNegativeButton("Cerrar", (d, w) -> {
-                    Host host = (Host) requireActivity();
-                    host.onDialogDismissRequested();
+                    Host host = getHostFromParent();
+                    if (host != null) {
+                        host.onDialogDismissRequested();
+                    }
                 })
                 .create();
     }
@@ -80,13 +90,24 @@ public class InscritosDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Host host = (Host) requireActivity();
-        host.onDialogShown(idDoc, titulo);
+        Host host = getHostFromParent();
+        if (host != null) {
+            host.onDialogShown(idDoc, titulo);
+        }
     }
 
     public void updateData(@NonNull List<String> aliases, @NonNull List<String> uids) {
         if (adapter != null) {
             adapter.submit(aliases, uids);
         }
+    }
+
+    /** Obtiene el Host del **parent fragment** de forma segura. */
+    @Nullable
+    private Host getHostFromParent() {
+        if (getParentFragment() instanceof Host) {
+            return (Host) getParentFragment();
+        }
+        return null;
     }
 }

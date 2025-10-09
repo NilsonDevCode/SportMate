@@ -13,7 +13,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
@@ -185,7 +183,7 @@ public class GestionEventosMasPlazasFragment extends Fragment
     }
 
     @Override
-    public CollectionReference getInscritosRef(String idDoc) {
+    public com.google.firebase.firestore.CollectionReference getInscritosRef(String idDoc) {
         return vm.getInscritosRef(idDoc);
     }
 
@@ -253,10 +251,10 @@ public class GestionEventosMasPlazasFragment extends Fragment
             if (material.isEmpty()){ etMaterial.setError("Obligatorio"); return; }
             if (url.isEmpty())     { etUrl.setError("Obligatorio"); return; }
 
-            String errPlazas = com.nilson.appsportmate.common.utils.ValidacionesEvento.validarPlazas(plazasTx, 1, 200);
+            String errPlazas = ValidacionesEvento.validarPlazas(plazasTx, 1, 200);
             if (errPlazas != null) { etPlazas.setError(errPlazas); return; }
 
-            String errFechaHora = com.nilson.appsportmate.common.utils.ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);
+            String errFechaHora = ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);
             if (errFechaHora != null) { etFecha.setError(errFechaHora); return; }
 
             int plazas;
@@ -283,9 +281,9 @@ public class GestionEventosMasPlazasFragment extends Fragment
 
         dialog.show();
     }
+
     private void mostrarDatePickerPara(TextInputEditText target) {
         java.util.Calendar c = java.util.Calendar.getInstance();
-        // Si ya hay fecha, intenta precargarla (formato dd/MM/yyyy)
         String f = target.getText() != null ? target.getText().toString().trim() : "";
         if (!f.isEmpty()) {
             try {
@@ -309,7 +307,6 @@ public class GestionEventosMasPlazasFragment extends Fragment
 
     private void mostrarTimePickerPara(TextInputEditText target) {
         java.util.Calendar c = java.util.Calendar.getInstance();
-        // Si ya hay hora, intenta precargarla (formato HH:mm)
         String h = target.getText() != null ? target.getText().toString().trim() : "";
         if (!h.isEmpty()) {
             try {
@@ -331,15 +328,14 @@ public class GestionEventosMasPlazasFragment extends Fragment
         ).show();
     }
 
-
-
     // ---------------------------
-    // Helpers diálogo inscritos (sin @Override)
+    // Helpers diálogo inscritos
     // ---------------------------
 
     private void abrirInscritosDialog(String idDoc, String titulo) {
         inscritosDialog = InscritosDialogFragment.newInstance(idDoc, titulo);
-        inscritosDialog.show(getParentFragmentManager(), "inscritos_dialog");
+        // ⬅️ Importante: usar el CHILD FragmentManager para que el parent sea ESTE fragment
+        inscritosDialog.show(getChildFragmentManager(), "inscritos_dialog");
     }
 
     private void cerrarInscritosDialog() {
@@ -347,6 +343,7 @@ public class GestionEventosMasPlazasFragment extends Fragment
             inscritosDialog.dismissAllowingStateLoss();
             inscritosDialog = null;
         }
+        // El listener se corta desde onDialogDismissRequested()
     }
 
     // ---------------------------
