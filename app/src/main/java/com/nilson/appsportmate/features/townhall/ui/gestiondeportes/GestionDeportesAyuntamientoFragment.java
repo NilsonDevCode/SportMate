@@ -118,7 +118,14 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
             nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);
         });
 
-        btnLogout.setOnClickListener(v -> vm.logout(requireContext()));
+        btnLogout.setOnClickListener(v -> {
+            NavController nav = Navigation.findNavController(v);
+            boolean popped = nav.popBackStack(R.id.menuAyuntamientoFragment, false);
+            if (!popped) {
+                nav.navigate(R.id.action_global_menuAyuntamientoFragment);
+            }
+        });
+
     }
 
     private void observeVm() {
