@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
@@ -35,7 +36,6 @@ public class OpcionesMenuFragment extends Fragment {
     private String ayuntamientoId;
     private String lastAyuntamientoId;
 
-    // Picker para "Cambiar foto de perfil" (abre galería)
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
@@ -55,18 +55,24 @@ public class OpcionesMenuFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
-        // ===== Toolbar: manejar menú aquí =====
-        // Asegúrate de que en el XML el toolbar tiene app:menu="@menu/menu_inicio"
+        // ===== Toolbar: manejar menú =====
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.action_cambiar_foto_perfil) {
-                // Abre selector de imagen
                 pickImage.launch("image/*");
                 return true;
             } else if (id == R.id.action_cambiar_ayuntamiento) {
-                // Navega al selector de ayuntamiento (acción global o local, ya existe en tu nav_graph)
                 Navigation.findNavController(binding.getRoot())
                         .navigate(R.id.action_global_seleccionarNuevoAyuntamientoFragment);
+                return true;
+            } else if (id == R.id.action_cerrarSesion) {
+                // 🔥 NUEVO: Confirmar cierre de sesión
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Cerrar sesión")
+                        .setMessage("¿Seguro que quieres cerrar sesión?")
+                        .setPositiveButton("Sí", (dialog, which) -> cerrarSesion())
+                        .setNegativeButton("No", null)
+                        .show();
                 return true;
             }
             return false;
@@ -127,6 +133,19 @@ public class OpcionesMenuFragment extends Fragment {
         viewModel.cargarDeportesApuntados();
     }
 
+    /** Cerrar sesión completamente **/
+    private void cerrarSesion() {
+        FirebaseAuth.getInstance().signOut();
+        if (getContext() != null) {
+            Preferencias.borrarTodo(getContext());
+        }
+        Toast.makeText(requireContext(), "Sesión cerrada correctamente.", Toast.LENGTH_SHORT).show();
+
+        // Navegar al login (acción global o fragment inicial)
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_splashFragment_to_authFragment);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -140,7 +159,6 @@ public class OpcionesMenuFragment extends Fragment {
         }
     }
 
-    /** Pinta el nombre del ayuntamiento en la cabecera. */
     private void cargarNombreAyuntamiento() {
         if (!isAdded()) return;
 
@@ -152,7 +170,6 @@ public class OpcionesMenuFragment extends Fragment {
 
         binding.tvAytoTitulo.setText("Ayuntamiento actual");
 
-        // Prefill rápido desde preferencias
         if (getContext() != null) {
             String cache = Preferencias.obtenerAyuntamientoNombre(getContext());
             if (cache != null && !cache.trim().isEmpty()) {
@@ -162,7 +179,6 @@ public class OpcionesMenuFragment extends Fragment {
             }
         }
 
-        // Refresco desde Firestore
         db.collection("ayuntamientos")
                 .document(ayuntamientoId)
                 .get(Source.DEFAULT)
@@ -200,8 +216,6 @@ public class OpcionesMenuFragment extends Fragment {
             Toast.makeText(requireContext(), "No se seleccionó imagen.", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Aquí ya tienes la URI de la foto. Sube a tu Storage o muéstrala.
-        // Ejemplo rápido: ponerla en la ImageView (si quieres previsualizar):
         binding.imgFotoPerfil.setImageURI(uri);
         Toast.makeText(requireContext(), "Foto seleccionada.", Toast.LENGTH_SHORT).show();
     }
