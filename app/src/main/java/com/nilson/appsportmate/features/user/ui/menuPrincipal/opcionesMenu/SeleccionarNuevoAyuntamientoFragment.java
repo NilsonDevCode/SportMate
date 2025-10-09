@@ -18,6 +18,7 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentSeleccionarNuevoAyuntamientoBinding;
 
 import java.util.ArrayList;
@@ -101,12 +102,10 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
     private void setupClicks() {
         binding.btnGuardar.setOnClickListener(v -> vm.guardarSeleccion());
 
-        // Toolbar back
         if (binding.toolbarSeleccionAyto != null) {
             binding.toolbarSeleccionAyto.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
         }
 
-        // ✅ Botón "Cancelar cambio" → volver atrás sin guardar
         if (binding.btnCancelar != null) {
             binding.btnCancelar.setOnClickListener(v -> requireActivity().onBackPressed());
         }
@@ -119,13 +118,30 @@ public class SeleccionarNuevoAyuntamientoFragment extends Fragment {
             if (s.error != null) {
                 Toast.makeText(requireContext(), s.error, Toast.LENGTH_SHORT).show();
             }
+
             if ("Guardado".equals(s.message)) {
                 Toast.makeText(requireContext(), "Ayuntamiento actualizado", Toast.LENGTH_SHORT).show();
 
-                // 🔁 IMPORTANTE: recrea DeportesDisponiblesFragment para que no reutilice VM/datos viejos
+                // ✅ GUARDAR EN PREFERENCIAS LO SELECCIONADO (CLAVE DEL BUG)
+                if (getContext() != null) {
+                    if (s.ayuntamientoIdSel != null) {
+                        Preferencias.guardarAyuntamientoId(getContext(), s.ayuntamientoIdSel);
+                    }
+                    if (s.ayuntamientoNombre != null) {
+                        Preferencias.guardarAyuntamientoNombre(getContext(), s.ayuntamientoNombre);
+                    }
+                    if (s.puebloIdSel != null) {
+                        Preferencias.guardarPuebloId(getContext(), s.puebloIdSel);
+                    }
+                    if (s.puebloNombre != null) {
+                        Preferencias.guardarPuebloNombre(getContext(), s.puebloNombre);
+                    }
+                }
+
+                // 🔁 Recrea DeportesDisponibles para que lea el NUEVO ayuntamiento desde Preferencias
                 NavController nav = Navigation.findNavController(requireView());
                 NavOptions opts = new NavOptions.Builder()
-                        .setPopUpTo(R.id.deportesDisponiblesFragment, true) // limpia el anterior
+                        .setPopUpTo(R.id.deportesDisponiblesFragment, true) // limpia cualquier instancia previa
                         .build();
                 nav.navigate(R.id.action_global_deportesDisponiblesFragment, null, opts);
                 return;

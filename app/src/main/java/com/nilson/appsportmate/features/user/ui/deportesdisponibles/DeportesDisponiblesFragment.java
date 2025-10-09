@@ -43,13 +43,15 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
 
     private boolean accionEnProgreso = false;
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ActivityDeportesDisponiblesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
@@ -65,6 +67,8 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         adapterDisponibles = new DeportesDisponiblesAdapter(listaDisponibles, this);
         binding.rvDisponibles.setAdapter(adapterDisponibles);
 
+        // cargar datos
+        cargarNombreAyuntamiento();
         cargarDisponibles();
 
         binding.btnSalir.setOnClickListener(v -> {
@@ -75,18 +79,56 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         });
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         if (getContext() != null) {
             String nuevo = Preferencias.obtenerAyuntamientoId(getContext());
             if (nuevo == null ? lastAyuntamientoId != null : !nuevo.equals(lastAyuntamientoId)) {
                 ayuntamientoId = nuevo;
                 lastAyuntamientoId = nuevo;
+
+                // refrescar encabezado y listas
+                cargarNombreAyuntamiento();
                 listaDisponibles.clear();
                 adapterDisponibles.notifyDataSetChanged();
                 cargarDisponibles();
             }
         }
+    }
+
+    /* ===== Encabezado: nombre del ayuntamiento ===== */
+    private void cargarNombreAyuntamiento() {
+        if (!isAdded()) return;
+
+        if (ayuntamientoId == null || ayuntamientoId.isEmpty()) {
+            binding.tvAytoNombre.setText("Sin ayuntamiento");
+            return;
+        }
+
+        db.collection("ayuntamientos")
+                .document(ayuntamientoId)
+                .get(Source.SERVER)
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded()) return;
+                    String nombre = extraerNombreAyuntamiento(doc);
+                    binding.tvAytoNombre.setText(nombre);
+                })
+                .addOnFailureListener(e -> {
+                    if (!isAdded()) return;
+                    binding.tvAytoNombre.setText("(desconocido)");
+                });
+    }
+
+    private String extraerNombreAyuntamiento(DocumentSnapshot doc) {
+        if (doc == null || !doc.exists()) return "(desconocido)";
+        Object n1 = doc.get("nombre");
+        Object n2 = doc.get("razonSocial");
+        String nom = n1 != null ? String.valueOf(n1) : null;
+        if (nom == null || nom.trim().isEmpty() || "null".equalsIgnoreCase(nom)) {
+            nom = n2 != null ? String.valueOf(n2) : "(desconocido)";
+        }
+        return nom;
     }
 
     /* ===== Carga de disponibles ===== */
@@ -172,8 +214,8 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         }).addOnSuccessListener(unused -> {
             if (!isAdded()) return;
             Toast.makeText(requireContext(), "Inscripción realizada", Toast.LENGTH_SHORT).show();
-            adapterDisponibles.markApuntado(docId); // ⬅️ pinta “Apuntado” al instante
-            cargarDisponibles();                    // opcional: refresco de plazas
+            adapterDisponibles.markApuntado(docId); // pinta “Apuntado”
+            cargarDisponibles();                    // refresca plazas
             accionEnProgreso = false;
         }).addOnFailureListener(e -> {
             if (!isAdded()) return;
@@ -189,7 +231,8 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
         });
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }

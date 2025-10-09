@@ -38,7 +38,6 @@ public class DeportesDisponiblesViewModel extends ViewModel {
         this.alias = emptyToNull(alias);
     }
 
-    /** Permite reinyectar ayuntamiento y recargar cuando cambie */
     public void ensureAyuntamientoId(@Nullable String nuevoId) {
         nuevoId = emptyToNull(nuevoId);
         if ((nuevoId == null && ayuntamientoId != null) ||

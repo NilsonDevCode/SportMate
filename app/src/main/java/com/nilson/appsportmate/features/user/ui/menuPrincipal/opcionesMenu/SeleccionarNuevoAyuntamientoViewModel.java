@@ -183,7 +183,7 @@ public class SeleccionarNuevoAyuntamientoViewModel extends ViewModel {
 
         ayuntamientoId = p.ayuntamientoId;
         _ui.setValue(SeleccionarNuevoAyuntamientoUiState.loading(_ui.getValue()));
-        db.collection("ayuntamientos").document(p.ayuntamientoId).get()
+        FirebaseFirestore.getInstance().collection("ayuntamientos").document(p.ayuntamientoId).get()
                 .addOnSuccessListener(doc -> {
                     String nombre = doc.getString("nombre");            // 1º nombre
                     if (nombre == null || nombre.isEmpty())

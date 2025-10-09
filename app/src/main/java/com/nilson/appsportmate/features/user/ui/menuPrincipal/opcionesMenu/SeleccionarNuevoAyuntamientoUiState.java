@@ -13,8 +13,8 @@ public class SeleccionarNuevoAyuntamientoUiState {
     public final List<Opcion> ciudades;
     public final List<PuebloOpcion> pueblos;
 
-    public final String puebloNombre;       // solo lectura (rellenado tras elegir pueblo)
-    public final String ayuntamientoNombre; // auto (desde pueblo o fetch de ayuntamiento)
+    public final String puebloNombre;       // solo lectura
+    public final String ayuntamientoNombre; // solo lectura
 
     // IDs seleccionadas (para precarga determinista en el Fragment)
     public final String comunidadIdSel;
@@ -126,7 +126,7 @@ public class SeleccionarNuevoAyuntamientoUiState {
         public final String id;
         public final String nombre;
         public final String ayuntamientoId;       // puede venir null
-        public final String ayuntamientoNombre;   // opcional (si lo guardas en el doc de pueblo)
+        public final String ayuntamientoNombre;   // opcional
         public PuebloOpcion(String id, String nombre, String aytoId, String aytoNombre) {
             this.id = id; this.nombre = nombre; this.ayuntamientoId = aytoId; this.ayuntamientoNombre = aytoNombre;
         }
