@@ -19,7 +19,7 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
-        <!-- SÍ sesión -> INICIO (Home de usuario) -->
+        <!-- SÍ sesión -> INICIO (Home de usuario normal) -->
         <action
             android:id="@+id/action_splashFragment_to_inicioFragment"
             app:destination="@id/inicioFragment"
@@ -59,7 +59,14 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
-        <!-- Ayuntamiento -> Gestión -->
+        <!-- Ayuntamiento -> MENÚ AYUNTAMIENTO (NUEVO destino inicial para ayuntamiento) -->
+        <action
+            android:id="@+id/action_loginFragment_to_menuAyuntamientoFragment"
+            app:destination="@id/menuAyuntamientoFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- (Se mantiene la acción antigua por si la usas en algún sitio) -->
         <action
             android:id="@+id/action_loginFragment_to_gestionDeportesAyuntamientoFragment"
             app:destination="@id/gestionDeportesAyuntamientoFragment"
@@ -110,6 +117,24 @@
         android:label="@string/cambiar_ayuntamiento"
         tools:layout="@layout/fragment_seleccionar_nuevo_ayuntamiento" />
 
+    <!-- Ayuntamiento: NUEVO Menú principal -->
+    <fragment
+        android:id="@+id/menuAyuntamientoFragment"
+        android:name="com.nilson.appsportmate.features.townhall.ui.menuTownhall.menuAyuntamientoFragment"
+        android:label="@string/inicio_ayuntamiento"
+        tools:layout="@layout/fragment_menu_ayuntamiento">
+
+        <!-- Ir a Gestión de deportes -->
+        <action
+            android:id="@+id/action_menuAyuntamientoFragment_to_gestionDeportesAyuntamientoFragment"
+            app:destination="@id/gestionDeportesAyuntamientoFragment" />
+
+        <!-- Ir a Gestión de eventos (más plazas) -->
+        <action
+            android:id="@+id/action_menuAyuntamientoFragment_to_gestionEventosMasPlazasFragment"
+            app:destination="@id/gestionEventosMasPlazasFragment" />
+    </fragment>
+
     <!-- Ayuntamiento: Crear/gestionar (formulario de creación) -->
     <fragment
         android:id="@+id/gestionDeportesAyuntamientoFragment"
@@ -144,4 +169,7 @@
     <action
         android:id="@+id/action_global_seleccionarNuevoAyuntamientoFragment"
         app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
+    <action
+        android:id="@+id/action_global_menuAyuntamientoFragment"
+        app:destination="@id/menuAyuntamientoFragment" />
 </navigation>

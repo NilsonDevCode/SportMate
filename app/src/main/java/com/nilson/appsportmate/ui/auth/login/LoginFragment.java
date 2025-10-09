@@ -111,7 +111,7 @@ public class LoginFragment extends Fragment {
         });
         viewModel.getNavTownhall().observe(getViewLifecycleOwner(), uid -> {
             if (uid != null && isAdded()) {
-                navController.navigate(R.id.gestionDeportesAyuntamientoFragment);
+                navController.navigate(R.id.menuAyuntamientoFragment);
                 viewModel.consumeNavTownhall();
             }
         });
