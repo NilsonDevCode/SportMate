@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -70,8 +71,16 @@ public class OpcionesMenuFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Cerrar sesión")
                         .setMessage("¿Seguro que quieres cerrar sesión?")
-                        .setPositiveButton("Sí", (dialog, which) -> cerrarSesion())
-                        .setNegativeButton("No", null)
+                        .setPositiveButton("Sí, salir", (d, w) -> {
+                            FirebaseAuth.getInstance().signOut();
+                            Preferencias.borrarTodo(requireContext());
+                            NavOptions opts = new NavOptions.Builder()
+                                    .setPopUpTo(R.id.nav_graph, true)
+                                    .build();
+                            Navigation.findNavController(binding.getRoot())
+                                    .navigate(R.id.authFragment, null, opts);
+                        })
+                        .setNegativeButton("Cancelar", null)
                         .show();
                 return true;
             }

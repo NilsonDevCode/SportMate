@@ -2,30 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Acción directa: Gestionar eventos -->
-    <item
-        android:id="@+id/action_gestion_eventos_mas_plazas"
-        android:title="@string/gestionar_eventos"
-        android:icon="@android:drawable/ic_menu_agenda"
-        app:showAsAction="ifRoom" />
-
-    <!-- Grupo de edición (solo cambiar foto) -->
+    <!-- Botón LÁPIZ con submenú -->
     <item
         android:id="@+id/action_editar_info_usuario"
         android:title="@string/editar_informacion_del_usuario"
         android:icon="@android:drawable/ic_menu_edit"
         app:showAsAction="ifRoom">
+
         <menu>
             <item
                 android:id="@+id/action_cambiar_foto_perfil"
                 android:title="@string/cambiar_foto_de_perfil" />
+            <item
+                android:id="@+id/action_gestion_eventos_mas_plazas"
+                android:title="@string/gestionar_eventos" />
         </menu>
     </item>
 
-    <!-- Salir -->
+    <!-- Botón APAGAR -->
     <item
         android:id="@+id/action_cerrarSesion"
         android:title="@string/logout"
         android:icon="@android:drawable/ic_lock_power_off"
         app:showAsAction="ifRoom" />
+
 </menu>

@@ -22,38 +22,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentMenuAyuntamientoBinding;
-
-import android.widget.TextView;
-
 import com.google.android.material.button.MaterialButton;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Menú principal del ayuntamiento:
- * - Título "Inicio"
- * - Logo (imagen)
- * - Nombre del ayuntamiento (cabecera)
- * - Lista de eventos creados (resumen)
- * - Botón para ir a Gestión de Deportes
- * - Menú superior: cambiar foto, gestionar eventos de más plazas, salir
- */
 public class menuAyuntamientoFragment extends Fragment {
 
     private FragmentMenuAyuntamientoBinding binding;
     private MenuAyuntamientoViewModel vm;
-
-    // Lista de eventos para el adapter
     private final List<Map<String, Object>> listaEventos = new ArrayList<>();
     private EventosResumenAdapter adapter;
 
-    // Picker de imagen para “Cambiar foto de perfil”
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
@@ -69,10 +54,9 @@ public class menuAyuntamientoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         vm = new ViewModelProvider(this).get(MenuAyuntamientoViewModel.class);
 
-        // ===== Toolbar (sin "cambiar ayuntamiento") =====
+        /* ==== Toolbar (solo lápiz con 2 opciones + botón de apagar) ==== */
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
@@ -92,18 +76,18 @@ public class menuAyuntamientoFragment extends Fragment {
             return false;
         });
 
-        // ===== RecyclerView (adapter resumen) =====
+        /* ==== RecyclerView ==== */
         binding.rvEventos.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new EventosResumenAdapter();
         binding.rvEventos.setAdapter(adapter);
 
-        // ===== Botón: ir a Gestión de Deportes =====
+        /* ==== Botón principal ==== */
         binding.btnGestionDeportes.setOnClickListener(v ->
                 Navigation.findNavController(v)
                         .navigate(R.id.action_global_gestionDeportesAyuntamientoFragment)
         );
 
-        // ===== Observers =====
+        /* ==== Observers ==== */
         vm.getAyuntamientoNombre().observe(getViewLifecycleOwner(),
                 nombre -> binding.tvAytoNombre.setText(
                         TextUtils.isEmpty(nombre) ? "Sin ayuntamiento asignado" : nombre));
@@ -112,19 +96,15 @@ public class menuAyuntamientoFragment extends Fragment {
             listaEventos.clear();
             if (evs != null) listaEventos.addAll(evs);
             adapter.notifyDataSetChanged();
-
             binding.tvEmpty.setVisibility(listaEventos.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
         vm.getMensaje().observe(getViewLifecycleOwner(),
                 msg -> { if (!TextUtils.isEmpty(msg)) Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show(); });
 
-        // ===== Cargar datos =====
         vm.cargarDatosAyuntamiento(requireContext());
         vm.cargarEventos(requireContext());
     }
-
-    /* ============================ Menú: acciones ============================ */
 
     private void onImagePicked(@Nullable Uri uri) {
         if (!isAdded()) return;
@@ -134,7 +114,6 @@ public class menuAyuntamientoFragment extends Fragment {
         }
         binding.imgLogo.setImageURI(uri);
         Toast.makeText(requireContext(), "Imagen seleccionada.", Toast.LENGTH_SHORT).show();
-        // Aquí podrías subirla a Storage si quieres.
     }
 
     private void confirmarLogout() {
@@ -154,31 +133,27 @@ public class menuAyuntamientoFragment extends Fragment {
                 .show();
     }
 
-    /* ======================== Adapter resumen interno ======================== */
+    /* ==== Adapter de resumen ==== */
     private class EventosResumenAdapter extends RecyclerView.Adapter<EventosResumenAdapter.VH> {
 
         class VH extends RecyclerView.ViewHolder {
             TextView tvTitulo, tvSub, tvPlazas, tvInscritos;
-            // Reutilizamos ids del layout item_evento_gestion
             MaterialButton btnMas, btnMenos, btnEditar, btnBorrar, btnInscritos;
             VH(@NonNull View itemView) {
                 super(itemView);
                 tvTitulo    = itemView.findViewById(R.id.tvTitulo);
-                tvSub       = itemView.findViewById(R.id.tvUbicacion);      // aquí pondremos la fecha
+                tvSub       = itemView.findViewById(R.id.tvUbicacion);
                 tvPlazas    = itemView.findViewById(R.id.tvPlazas);
                 tvInscritos = itemView.findViewById(R.id.tvInscritosCount);
-
-                btnMas      = itemView.findViewById(R.id.btnMas);
-                btnMenos    = itemView.findViewById(R.id.btnMenos);
-                btnEditar   = itemView.findViewById(R.id.btnEditar);
-                btnBorrar   = itemView.findViewById(R.id.btnBorrar);
-                btnInscritos= itemView.findViewById(R.id.btnInscritos);
-
-                // Ocultamos todos los botones en esta pantalla
-                if (btnMas != null)       btnMas.setVisibility(View.GONE);
-                if (btnMenos != null)     btnMenos.setVisibility(View.GONE);
-                if (btnEditar != null)    btnEditar.setVisibility(View.GONE);
-                if (btnBorrar != null)    btnBorrar.setVisibility(View.GONE);
+                btnMas = itemView.findViewById(R.id.btnMas);
+                btnMenos = itemView.findViewById(R.id.btnMenos);
+                btnEditar = itemView.findViewById(R.id.btnEditar);
+                btnBorrar = itemView.findViewById(R.id.btnBorrar);
+                btnInscritos = itemView.findViewById(R.id.btnInscritos);
+                if (btnMas != null) btnMas.setVisibility(View.GONE);
+                if (btnMenos != null) btnMenos.setVisibility(View.GONE);
+                if (btnEditar != null) btnEditar.setVisibility(View.GONE);
+                if (btnBorrar != null) btnBorrar.setVisibility(View.GONE);
                 if (btnInscritos != null) btnInscritos.setVisibility(View.GONE);
             }
         }
@@ -193,24 +168,19 @@ public class menuAyuntamientoFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull VH h, int position) {
             Map<String, Object> ev = listaEventos.get(position);
-
-            String idDoc   = String.valueOf(ev.get("idDoc"));
-            String nombre  = safe(ev.get("nombre"));
-            String fecha   = safe(ev.get("fecha"));
-            String hora    = safe(ev.get("hora"));
-            long plazas    = toLong(ev.get("plazasDisponibles"));
+            String idDoc = String.valueOf(ev.get("idDoc"));
+            String nombre = safe(ev.get("nombre"));
+            String fecha = safe(ev.get("fecha"));
+            String hora = safe(ev.get("hora"));
+            long plazas = toLong(ev.get("plazasDisponibles"));
 
             h.tvTitulo.setText(nombre.isEmpty() ? "-" : nombre);
-
-            // Solo fecha (y hora si existe)
             String sub = fecha;
             if (!hora.isEmpty()) sub = sub.isEmpty() ? hora : (sub + " " + hora);
             h.tvSub.setText(sub.isEmpty() ? "-" : sub);
-
             h.tvPlazas.setText("Plazas disponibles: " + plazas);
             h.tvInscritos.setText("Inscritos: —");
 
-            // Contador de inscritos
             CollectionReference ref = vm.getInscritosRef(idDoc);
             if (ref != null) {
                 ref.get()
@@ -226,14 +196,10 @@ public class menuAyuntamientoFragment extends Fragment {
         private long toLong(Object o) {
             if (o instanceof Long) return (Long) o;
             if (o instanceof Integer) return ((Integer) o).longValue();
-            if (o instanceof String) {
-                try { return Long.parseLong((String) o); } catch (Exception ignored) {}
-            }
+            if (o instanceof String) { try { return Long.parseLong((String) o); } catch (Exception ignored) {} }
             return 0L;
         }
     }
-
-    /* ======================================================================= */
 
     @Override
     public void onDestroyView() {
