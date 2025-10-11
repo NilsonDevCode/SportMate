@@ -27,7 +27,9 @@ public class InscritosDialogFragment extends DialogFragment {
 
     public interface Host {
         void onDialogShown(String idDoc, String titulo);
+
         void onDialogDismissRequested();
+
         void onExpulsarClicked(String idDoc, String uid);
     }
 
@@ -64,7 +66,8 @@ public class InscritosDialogFragment extends DialogFragment {
         // ⬇️ Cambio: confirmación antes de expulsar
         adapter = new InscritosAdapter(new ArrayList<>(), new ArrayList<>(), (uid) -> {
             Host host = getHostFromParent();
-            if (host == null) return;
+            if (host == null)
+                return;
 
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Confirmar expulsión")
