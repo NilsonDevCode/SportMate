@@ -25,7 +25,5 @@
 
         <item name="colorError">@color/colorError</item>
         <item name="colorOnError">@color/colorOnError</item>
-
-        <item name="textInputFilledStyle">@style/Theme.AppSportMate.TextInputLayout</item>
     </style>
 </resources>
