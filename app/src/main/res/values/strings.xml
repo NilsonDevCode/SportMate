@@ -77,6 +77,17 @@
     <string name="sign_in_fragment_label">Login Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="inicio">Inicio</string>
+    <string name="foto_de_perfil">Foto de perfil</string>
+    <string name="ver_deportes_disponibles">Ver deportes disponibles</string>
+    <string name="deporte">Deporte</string>
+    <string name="ayuntamiento">Ayuntamiento</string>
+
+    <!-- Menú -->
+    <string name="editar_informacion_del_usuario">Editar información del usuario</string>
+    <string name="cambiar_foto_de_perfil">Cambiar foto de perfil</string>
+    <string name="cambiar_ayuntamiento">Cambiar ayuntamiento</string>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -116,4 +127,5 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="inicio_ayuntamiento">inicio_ayuntamiento</string>
 </resources>

@@ -12,28 +12,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nilson.appsportmate.R;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDisponiblesAdapter.VH> {
 
     public interface Listener {
         void onApuntarse(Map<String, Object> deporte);
-        void onDesapuntarse(Map<String, Object> deporte);
     }
 
     private final List<Map<String, Object>> data;
     private final Listener listener;
-    private final boolean esListaDeMisDeportes; // true => mostrar "Desapuntarse"; false => "Apuntarse"
 
-    public DeportesDisponiblesAdapter(List<Map<String, Object>> data, boolean esListaDeMisDeportes, Listener listener) {
+    // IDs marcados como "apuntado" tras éxito (para pintar el estado sin reconsultar)
+    private final Set<String> apuntados = new HashSet<>();
+
+    public DeportesDisponiblesAdapter(List<Map<String, Object>> data, Listener listener) {
         this.data = data;
-        this.esListaDeMisDeportes = esListaDeMisDeportes;
         this.listener = listener;
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_deporte_disponible, parent, false);
         return new VH(v);
@@ -43,6 +44,7 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
     public void onBindViewHolder(@NonNull VH h, int position) {
         Map<String, Object> d = data.get(position);
 
+        String idDoc       = str(d.get("idDoc"));
         String nombre      = str(d.get("nombre"));
         String fecha       = str(d.get("fecha"));
         String hora        = str(d.get("hora"));
@@ -50,9 +52,8 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
         String descripcion = str(d.get("descripcion"));
         String reglas      = str(d.get("reglas"));
 
-        // Compatibilidad de claves
         String material    = firstNonEmpty(str(d.get("materiales")), str(d.get("material")));
-        String url         = firstNonEmpty(str(d.get("urlPueblo")), str(d.get("url")));
+        String url         = firstNonEmpty(str(d.get("urlPueblo")),  str(d.get("url")));
 
         h.tvNombre.setText(nonEmpty(nombre, "(Sin nombre)"));
         h.tvFecha.setText("Fecha: " + nonEmpty(fecha, "—"));
@@ -61,30 +62,24 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
         h.tvDescripcion.setText("Descripción: " + nonEmpty(descripcion, "—"));
         h.tvReglas.setText("Reglas: " + nonEmpty(reglas, "—"));
         h.tvMaterial.setText("Material: " + nonEmpty(material, "—"));
-
-        // Para autoLink, mejor solo la URL si existe
         h.tvUrl.setText(TextUtils.isEmpty(url) ? "—" : url);
 
-        if (esListaDeMisDeportes) {
-            h.btnApuntarse.setVisibility(View.GONE);
-            h.btnDesapuntarse.setVisibility(View.VISIBLE);
-        } else {
-            h.btnApuntarse.setVisibility(View.VISIBLE);
-            h.btnDesapuntarse.setVisibility(View.GONE);
-        }
+        boolean yaApuntado = apuntados.contains(idDoc);
+        h.btnApuntarse.setText(yaApuntado ? "Apuntado" : "Apuntarse");
+        h.btnApuntarse.setEnabled(!yaApuntado);
 
         h.btnApuntarse.setOnClickListener(v -> {
             if (listener != null) listener.onApuntarse(d);
         });
-
-        h.btnDesapuntarse.setOnClickListener(v -> {
-            if (listener != null) listener.onDesapuntarse(d);
-        });
     }
 
-    @Override
-    public int getItemCount() {
-        return data.size();
+    @Override public int getItemCount() { return data.size(); }
+
+    /** Llamar desde el Fragment tras éxito para reflejar el estado en el botón. */
+    public void markApuntado(String idDoc) {
+        if (idDoc == null) return;
+        apuntados.add(idDoc);
+        notifyDataSetChanged();
     }
 
     /* ===== Helpers ===== */
@@ -93,19 +88,13 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
         String s = String.valueOf(o);
         return "null".equalsIgnoreCase(s) ? "" : s;
     }
-
-    private static String nonEmpty(String s, String def) {
-        return TextUtils.isEmpty(s) ? def : s;
-    }
-
-    private static String firstNonEmpty(String a, String b) {
-        return !TextUtils.isEmpty(a) ? a : (!TextUtils.isEmpty(b) ? b : "");
-    }
+    private static String nonEmpty(String s, String def) { return TextUtils.isEmpty(s) ? def : s; }
+    private static String firstNonEmpty(String a, String b) { return !TextUtils.isEmpty(a) ? a : (!TextUtils.isEmpty(b) ? b : ""); }
 
     /* ===== ViewHolder ===== */
     static class VH extends RecyclerView.ViewHolder {
         TextView tvNombre, tvFecha, tvPlazas, tvDescripcion, tvReglas, tvMaterial, tvUrl, tvHora;
-        Button btnApuntarse, btnDesapuntarse;
+        Button btnApuntarse;
         VH(@NonNull View itemView) {
             super(itemView);
             tvNombre      = itemView.findViewById(R.id.tvNombre);
@@ -116,8 +105,7 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
             tvReglas      = itemView.findViewById(R.id.tvReglas);
             tvMaterial    = itemView.findViewById(R.id.tvMaterial);
             tvUrl         = itemView.findViewById(R.id.tvUrl);
-            btnApuntarse    = itemView.findViewById(R.id.btnApuntarse);
-            btnDesapuntarse = itemView.findViewById(R.id.btnDesapuntarse);
+            btnApuntarse  = itemView.findViewById(R.id.btnApuntarse);
         }
     }
 }

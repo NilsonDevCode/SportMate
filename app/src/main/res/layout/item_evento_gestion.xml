@@ -19,17 +19,17 @@
             android:id="@+id/tvTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fútbol - 12/05/2025 19:00"
+            android:text="Nombre deporte"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Ubicación -->
+        <!-- Subtítulo: fecha hora • ubicación -->
         <TextView
             android:id="@+id/tvUbicacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Ciudad, Provincia · Pueblo" />
+            android:text="12/10/2025 18:30 • Madrid, Madrid · Pueblo" />
 
         <!-- Plazas -->
         <TextView

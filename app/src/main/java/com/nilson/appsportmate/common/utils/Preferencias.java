@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 public class Preferencias {
 
+    /* ==== Alias / UID / Tipo ==== */
+
     public static void guardarAlias(Context context, String alias) {
         SharedPreferences prefs = context.getSharedPreferences(Constantes.PREFS_FILE, Context.MODE_PRIVATE);
         prefs.edit().putString(Constantes.PREFS_ALIAS, alias).apply();
@@ -40,6 +42,8 @@ public class Preferencias {
         prefs.edit().clear().apply();
     }
 
+    /* ==== Rol / App prefs ==== */
+
     public static void guardarRol(Context context, String rol) {
         SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         prefs.edit().putString("rol", rol).apply();
@@ -50,7 +54,7 @@ public class Preferencias {
         return prefs.getString("rol", null);
     }
 
-
+    /* ==== Ayuntamiento (ID + NUEVO: nombre) ==== */
 
     public static void guardarAyuntamientoId(Context context, String ayuntamientoId) {
         SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
@@ -63,7 +67,41 @@ public class Preferencias {
         return prefs.getString("ayuntamiento_id", null);
     }
 
+    // NUEVO: guardar/obtener nombre del ayuntamiento
+    public static void guardarAyuntamientoNombre(Context context, String ayuntamientoNombre) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
+        editor.putString("ayuntamiento_nombre", ayuntamientoNombre);
+        editor.apply();
+    }
 
+    public static String obtenerAyuntamientoNombre(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("ayuntamiento_nombre", null);
+    }
 
+    /* ==== Pueblo (NUEVOS métodos) ==== */
+
+    // NUEVO: guardar/obtener puebloId
+    public static void guardarPuebloId(Context context, String puebloId) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
+        editor.putString("pueblo_id", puebloId);
+        editor.apply();
+    }
+
+    public static String obtenerPuebloId(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("pueblo_id", null);
+    }
+
+    // NUEVO: guardar/obtener puebloNombre
+    public static void guardarPuebloNombre(Context context, String puebloNombre) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
+        editor.putString("pueblo_nombre", puebloNombre);
+        editor.apply();
+    }
+
+    public static String obtenerPuebloNombre(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("pueblo_nombre", null);
+    }
 }
-

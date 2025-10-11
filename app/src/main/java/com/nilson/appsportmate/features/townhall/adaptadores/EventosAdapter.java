@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * Adapter de gestión de eventos del ayuntamiento.
- * Pinta los datos y delega acciones a la Activity a través de EventoActions.
+ * Pinta los datos y delega acciones al host a través de EventoActions.
  */
 public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
 
@@ -26,7 +26,7 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
         void onDecrementar(String idDoc);
         void onEditar(Map<String, Object> evento);
         void onBorrar(Map<String, Object> evento);
-        void onVerInscritos(String idDoc, String tituloMostrado); // NUEVO: pulsar "Inscritos"
+        void onVerInscritos(String idDoc, String tituloMostrado);
         CollectionReference getInscritosRef(String idDoc);
     }
 
@@ -36,17 +36,18 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
 
         public VH(@NonNull View itemView) {
             super(itemView);
-            tvTitulo        = itemView.findViewById(R.id.tvTitulo);
-            tvUbicacion     = itemView.findViewById(R.id.tvUbicacion);
-            tvPlazas        = itemView.findViewById(R.id.tvPlazas);
-            tvInscritosCount= itemView.findViewById(R.id.tvInscritosCount);
-            btnMas          = itemView.findViewById(R.id.btnMas);
-            btnMenos        = itemView.findViewById(R.id.btnMenos);
-            btnEditar       = itemView.findViewById(R.id.btnEditar);
-            btnBorrar       = itemView.findViewById(R.id.btnBorrar);
-            btnInscritos    = itemView.findViewById(R.id.btnInscritos);
+            tvTitulo         = itemView.findViewById(R.id.tvTitulo);
+            tvUbicacion      = itemView.findViewById(R.id.tvUbicacion);
+            tvPlazas         = itemView.findViewById(R.id.tvPlazas);
+            tvInscritosCount = itemView.findViewById(R.id.tvInscritosCount);
+            btnMas           = itemView.findViewById(R.id.btnMas);
+            btnMenos         = itemView.findViewById(R.id.btnMenos);
+            btnEditar        = itemView.findViewById(R.id.btnEditar);
+            btnBorrar        = itemView.findViewById(R.id.btnBorrar);
+            btnInscritos     = itemView.findViewById(R.id.btnInscritos);
         }
     }
+
     private final List<Map<String, Object>> data;
     private final EventoActions actions;
 
@@ -79,11 +80,11 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
 
         long plazas = toLong(ev.get("plazasDisponibles"));
 
-        // Título (solo el nombre) y subtítulo con fecha/hora/ubicación
+        // Título y subtítulo
         h.tvTitulo.setText(nombre);
         String ubicacion = buildUbicacion(ciudad, provincia, pueblo);
         String sub = buildSub(fecha, hora, ubicacion);
-        h.tvUbicacion.setText(ubicacion);
+        h.tvUbicacion.setText(sub); // <<< muestra fecha hora • ubicación
         h.tvPlazas.setText("Plazas disponibles: " + plazas);
         h.tvInscritosCount.setText("Inscritos: —");
 
@@ -106,9 +107,7 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
     }
 
     @Override
-    public int getItemCount() {
-        return data.size();
-    }
+    public int getItemCount() { return data.size(); }
 
     /* ==================== helpers ==================== */
 
@@ -153,7 +152,4 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.VH> {
         }
         return sb.toString();
     }
-
-
-
 }

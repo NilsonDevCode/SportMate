@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nilson.appsportmate">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".SportMate"
         android:allowBackup="true"
@@ -14,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSportMate"
         tools:targetApi="31">
+
+        <!-- ÚNICO LAUNCHER: MainActivity con NavHost (Splash/Auth/Login/SignUp como Fragments) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -23,48 +27,5 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
 
-<!--
-        <activity
-            android:name=".ui.auth.AuthActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppSportMate" /> <!- Launcher
-<activity
-android:name=".features.main.SplashActivity"
-android:exported="true"
-android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-<intent-filter>
-    <action android:name="android.intent.action.MAIN" />
-
-    <category android:name="android.intent.category.LAUNCHER" />
-</intent-filter>
-</activity> <!- Autentificación
-                <action android:name="android.intent.action.MAIN" />
-<activity
-android:name=".features.auth.ui.LoginActivity"
-android:exported="false" />
-<activity
-android:name=".features.auth.ui.RegisterActivity"
-android:exported="false" /> <!- Principal / Usuario
-<activity
-android:name=".MainActivity"
-android:exported="false" />
-<activity
-android:name=".features.user.ui.DeportesDisponiblesActivity"
-android:exported="false" />
-<activity
-android:name=".features.user.ui.FormularioUsuarioAyuntamientoActivity"
-android:exported="false" /> <!- Ayuntamiento
-<activity
-android:name=".features.townhall.ui.FormularioAyuntamientoActivity"
-android:exported="false" />
-<activity
-android:name=".features.townhall.ui.GestionDeportesAyuntamientoActivity"
-android:exported="false" />
-<activity
-android:name=".features.townhall.ui.GestionEventosMasPlazasActivity"
-android:exported="false" />
-
--->
