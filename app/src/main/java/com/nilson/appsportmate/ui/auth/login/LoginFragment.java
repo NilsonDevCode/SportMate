@@ -1,43 +1,34 @@
 package com.nilson.appsportmate.ui.auth.login;
 
-import static com.nilson.appsportmate.common.utils.NavControllerExtensions.navigateWithAnimation;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.nilson.appsportmate.R;
-import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 import com.nilson.appsportmate.databinding.FragmentLoginBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
-
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
 
-    private TextInputEditText etAlias, etPassword;
-    private MaterialButton btnLogin, btnNavRegister;
-    private boolean aliasUpdating = false;
+    private TextInputEditText aliasTI, passwordTI;
+    private MaterialButton loginBtn, navRegisterBtn;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -45,82 +36,59 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        final NavController navController = Navigation.findNavController(view);
+        initViews();
+        setupClickListeners();
+        setupListeners();
+    }
 
-        etAlias = binding.etAlias;
-        etPassword = binding.etPassword;
-        btnLogin = binding.btnLogin;
-        btnNavRegister = binding.btnNavRegister;
+    private void initViews() {
+        aliasTI = binding.etAlias;
+        passwordTI = binding.etPassword;
+        loginBtn = binding.btnLogin;
+        navRegisterBtn = binding.btnNavRegister;
+    }
 
-        // Validación y normalización del alias (primera letra mayúscula)
-        etAlias.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override public void afterTextChanged(Editable s) {
-                if (aliasUpdating) return;
-                aliasUpdating = true;
+    private void setupListeners() {
+        aliasTI.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-                String input = s.toString();
-                if (!input.isEmpty()) {
-                    String fixed = input.substring(0, 1).toUpperCase() + input.substring(1);
-                    if (!fixed.equals(input)) {
-                        etAlias.setText(fixed);
-                        etAlias.setSelection(fixed.length());
-                    }
-                }
-                String err = AuthAliasHelper.getAliasValidationError(getText(etAlias));
-                etAlias.setError(err);
-
-                aliasUpdating = false;
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                viewModel.onAliasChanged(s.toString());
+                Log.d("LoginFragment", "Alias: " + s.toString());
             }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
         });
 
-        // Acción: login
-        btnLogin.setOnClickListener(v ->
-                viewModel.onLoginClicked(getText(etAlias), getText(etPassword), requireContext())
-        );
+        passwordTI.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        // Acción: ir a registro
-        btnNavRegister.setOnClickListener(v ->
-                navigateWithAnimation(navController, R.id.action_loginFragment_to_signInFragment)
-        );
-
-        // Observadores ViewModel
-        viewModel.getErrorAlias().observe(getViewLifecycleOwner(), err -> {
-            if (err != null) etAlias.setError(err);
-        });
-
-        viewModel.getErrorPassword().observe(getViewLifecycleOwner(), err -> {
-            if (err != null) etPassword.setError(err);
-        });
-
-        viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
-            if (msg != null && isAdded()) {
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                viewModel.consumeMessage();
             }
-        });
 
-        // Navegación tras login correcto (sea usuario o ayuntamiento)
-        // 👉 Como pediste: navegar al fragment de Deportes Disponibles
-        viewModel.getNavUser().observe(getViewLifecycleOwner(), aytoId -> {
-            if (aytoId != null && isAdded()) {
-                navController.navigate(R.id.inicioFragment);
-                viewModel.consumeNavUser();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.onPasswordChanged(s.toString());
+                Log.d("LoginFragment", "Password: " + s.toString());
             }
-        });
-        viewModel.getNavTownhall().observe(getViewLifecycleOwner(), uid -> {
-            if (uid != null && isAdded()) {
-                navController.navigate(R.id.menuAyuntamientoFragment);
-                viewModel.consumeNavTownhall();
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
 
-    private String getText(TextInputEditText t) {
-        return t.getText() == null ? "" : t.getText().toString().trim();
+    private void setupClickListeners() {
+        loginBtn.setOnClickListener(v -> {
+            viewModel.onLoginClicked();
+        });
     }
 
     @Override

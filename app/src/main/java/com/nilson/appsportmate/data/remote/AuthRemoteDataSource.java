@@ -49,7 +49,7 @@ public class AuthRemoteDataSource {
         }
     }
 
-    public Result<User> signUp(String email, String password) {
+    public Result<User> signUp(String email, String password, AuthRole role) {
         try {
             AuthResult result = auth.createUserWithEmailAndPassword(email, password).getResult();
 
@@ -57,7 +57,7 @@ public class AuthRemoteDataSource {
                     .map(FirebaseUser::getUid)
                     .orElseThrow();
 
-            User newUser = new User(uid, "", AuthRole.USER);
+            User newUser = new User(uid, "", role);
 
             firestore.collection("users")
                     .document(uid)

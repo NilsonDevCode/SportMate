@@ -3,6 +3,7 @@ package com.nilson.appsportmate.data.repository;
 import com.nilson.appsportmate.common.utils.Result;
 import com.nilson.appsportmate.data.local.AuthLocalDataSource;
 import com.nilson.appsportmate.data.remote.AuthRemoteDataSource;
+import com.nilson.appsportmate.domain.models.AuthRole;
 import com.nilson.appsportmate.domain.models.User;
 import com.nilson.appsportmate.domain.repository.AuthRepository;
 
@@ -25,7 +26,7 @@ public class AuthRepositoryImpl implements AuthRepository {
 
     @Override
     public Result<User> signUp(String email, String password) {
-        Result<User> remoteResult = remoteDataSource.signUp(email, password);
+        Result<User> remoteResult = remoteDataSource.signUp(email, password, AuthRole.USER);
 
         return handleAuthResult(remoteResult);
     }
