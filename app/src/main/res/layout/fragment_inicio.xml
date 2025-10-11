@@ -6,8 +6,9 @@
     android:id="@+id/rootInicio"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#5F93C8"
     android:padding="16dp"
-    tools:context=".features.user.ui.menuPrincipal.OpcionesMenuFragment">
+    tools:context=".features.user.ui.menuPrincipal.InicioFragment">
 
     <!-- Toolbar con menú (sin avatar) -->
     <com.google.android.material.appbar.MaterialToolbar

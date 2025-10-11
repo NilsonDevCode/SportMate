@@ -6,6 +6,9 @@
     <color name="primary">#1976D2</color> <!-- Azul SportMate -->
     <color name="primary_dark">#0D47A1</color>
     <color name="primary_light">#63A4FF</color>
+    <color name="stripLeft">#0F2E47</color>   <!-- azul oscuro -->
+    <color name="stripRight">#5F93C8</color>  <!-- azul claro -->
+
 
     <!-- 🔹 Colores secundarios -->
     <color name="secondary">#0288D1</color>
