@@ -1,24 +1,29 @@
 package com.nilson.appsportmate.ui.auth;
 
+import static com.nilson.appsportmate.common.utils.NavControllerExtensions.navigateWithAnimation;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentAuthBinding;
+import com.nilson.appsportmate.ui.shared.BaseFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AuthFragment extends Fragment {
+public class AuthFragment extends BaseFragment {
     private FragmentAuthBinding binding;
 
     private NavController nav;
@@ -29,11 +34,13 @@ public class AuthFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAuthBinding.inflate(inflater, container, false);
         return binding.getRoot();
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setStatusBarIconsLight(false);
 
         nav = Navigation.findNavController(view);
 
@@ -48,11 +55,11 @@ public class AuthFragment extends Fragment {
 
     private void setupClickListeners() {
         logInBtn.setOnClickListener(view -> {
-            nav.navigate(R.id.action_authFragment_to_loginFragment);
+            navigateWithAnimation(nav,R.id.action_authFragment_to_loginFragment);
         });
 
         signInBtn.setOnClickListener(view -> {
-            nav.navigate(R.id.action_authFragment_to_signInFragment);
+            navigateWithAnimation(nav,R.id.action_authFragment_to_signInFragment);
         });
     }
 }

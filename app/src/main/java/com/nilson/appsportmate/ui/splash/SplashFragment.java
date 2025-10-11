@@ -1,5 +1,7 @@
 package com.nilson.appsportmate.ui.splash;
 
+import static com.nilson.appsportmate.common.utils.NavControllerExtensions.navigateWithAnimation;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,7 @@ public class SplashFragment extends Fragment {
         if (!isAdded() || navigated) return;
         NavController nav = Navigation.findNavController(view);
         try {
-            nav.navigate(R.id.action_splashFragment_to_authFragment);
+            navigateWithAnimation(nav, R.id.action_splashFragment_to_authFragment);
             navigated = true;
         } catch (IllegalArgumentException ignore) {
             // acción no existe en el grafo → evita crash

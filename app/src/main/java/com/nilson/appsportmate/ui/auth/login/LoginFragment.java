@@ -1,5 +1,7 @@
 package com.nilson.appsportmate.ui.auth.login;
 
+import static com.nilson.appsportmate.common.utils.NavControllerExtensions.navigateWithAnimation;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -82,7 +84,7 @@ public class LoginFragment extends Fragment {
 
         // Acción: ir a registro
         btnNavRegister.setOnClickListener(v ->
-                navController.navigate(R.id.action_loginFragment_to_signInFragment)
+                navigateWithAnimation(navController, R.id.action_loginFragment_to_signInFragment)
         );
 
         // Observadores ViewModel

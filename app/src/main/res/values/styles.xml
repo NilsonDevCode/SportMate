@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AppSportMate.TextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <!-- <item name="boxStrokeColor">@color/textinput_outline_colors</item> -->
+        <!-- <item name="hintTextColor">@color/colorOnPrimary</item> -->
+    </style>
+</resources>
