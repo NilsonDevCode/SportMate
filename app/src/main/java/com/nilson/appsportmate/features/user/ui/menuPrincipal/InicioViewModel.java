@@ -46,21 +46,32 @@ public class InicioViewModel extends ViewModel {
                         base.put("docId", d.getId());
                         base.put("aytoId", str(d.get("ayuntamientoId")));
 
-                        base.put("nombre", firstNonEmpty(d.get("nombre"), d.get("deporteNombre"), d.get("nombreDeporte"), d.get("deporte"), d.get("titulo")));
+                        // Valores base desde la inscripción
+                        base.put("nombre", firstNonEmpty(
+                                d.get("nombre"), d.get("deporteNombre"), d.get("nombreDeporte"),
+                                d.get("deporte"), d.get("titulo")));
+
                         base.put("descripcion", firstNonEmpty(d.get("descripcion"), d.get("desc")));
                         base.put("fecha", firstNonEmpty(d.get("fecha"), d.get("date")));
-                        base.put("hora", firstNonEmpty(d.get("hora"), d.get("time")));
-                        base.put("lugar", firstNonEmpty(d.get("lugar"), d.get("ubicacion"), d.get("pistaNombre")));
+                        base.put("hora",  firstNonEmpty(d.get("hora"),  d.get("time")));
+
+                        // ⬅️ AÑADIDO urlPueblo como opción para "lugar"
+                        base.put("lugar", firstNonEmpty(
+                                d.get("lugar"), d.get("ubicacion"), d.get("pistaNombre"), d.get("urlPueblo")));
+
                         base.put("aytoNombre", firstNonEmpty(d.get("ayuntamientoNombre"), d.get("ayuntamiento")));
 
-                        Integer plazasMax = intOrNull(d.get("plazasMax"), d.get("cupoMax"), d.get("plazas"));
-                        if (plazasMax != null) base.put("plazasMax", plazasMax);
+                        // ⬅️ AÑADIDO plazasDisponibles como source principal
+                        Integer plazas = intOrNull(d.get("plazasDisponibles"), d.get("plazasMax"),
+                                d.get("cupoMax"), d.get("plazas"));
+                        if (plazas != null) base.put("plazasMax", plazas);
 
                         rows.add(base);
 
                         String aytoId = str(d.get("ayuntamientoId"));
                         String docId = d.getId();
 
+                        // Completar con datos del evento si faltan
                         boolean needEvento = (isEmpty((String) base.get("nombre")) ||
                                 isEmpty((String) base.get("fecha")) ||
                                 isEmpty((String) base.get("hora")) ||
@@ -76,19 +87,30 @@ public class InicioViewModel extends ViewModel {
                                     .get(Source.SERVER)
                                     .addOnSuccessListener(ev -> {
                                         if (!ev.exists()) return;
-                                        putIfEmpty(base, "nombre", firstNonEmpty(ev.get("nombre"), ev.get("deporteNombre"), ev.get("nombreDeporte"), ev.get("deporte"), ev.get("titulo")));
+
+                                        putIfEmpty(base, "nombre", firstNonEmpty(
+                                                ev.get("nombre"), ev.get("deporteNombre"),
+                                                ev.get("nombreDeporte"), ev.get("deporte"), ev.get("titulo")));
+
                                         putIfEmpty(base, "descripcion", firstNonEmpty(ev.get("descripcion"), ev.get("desc")));
                                         putIfEmpty(base, "fecha", firstNonEmpty(ev.get("fecha"), ev.get("date")));
-                                        putIfEmpty(base, "hora", firstNonEmpty(ev.get("hora"), ev.get("time")));
-                                        putIfEmpty(base, "lugar", firstNonEmpty(ev.get("lugar"), ev.get("ubicacion"), ev.get("pistaNombre")));
+                                        putIfEmpty(base, "hora",  firstNonEmpty(ev.get("hora"),  ev.get("time")));
+
+                                        // ⬅️ AÑADIDO urlPueblo también desde el evento
+                                        putIfEmpty(base, "lugar", firstNonEmpty(
+                                                ev.get("lugar"), ev.get("ubicacion"),
+                                                ev.get("pistaNombre"), ev.get("urlPueblo")));
+
                                         if (base.get("plazasMax") == null) {
-                                            Integer p = intOrNull(ev.get("plazasMax"), ev.get("cupoMax"), ev.get("plazas"));
+                                            Integer p = intOrNull(ev.get("plazasDisponibles"), ev.get("plazasMax"),
+                                                    ev.get("cupoMax"), ev.get("plazas"));
                                             if (p != null) base.put("plazasMax", p);
                                         }
                                     });
                             pending.add(tEv);
                         }
 
+                        // Nombre del ayuntamiento si falta
                         if (isEmpty((String) base.get("aytoNombre")) && !isEmpty(aytoId)) {
                             Task<DocumentSnapshot> tAy = db.collection("ayuntamientos")
                                     .document(aytoId)
@@ -102,6 +124,7 @@ public class InicioViewModel extends ViewModel {
                             pending.add(tAy);
                         }
 
+                        // Contar inscritos
                         if (!isEmpty(aytoId)) {
                             CollectionReference inscritosRef = db.collection("deportes_ayuntamiento")
                                     .document(aytoId)
@@ -114,7 +137,10 @@ public class InicioViewModel extends ViewModel {
                         }
                     }
 
-                    if (rows.isEmpty()) { _uiState.setValue(InicioUiState.success(new ArrayList<>())); return; }
+                    if (rows.isEmpty()) {
+                        _uiState.setValue(InicioUiState.success(new ArrayList<>()));
+                        return;
+                    }
 
                     Tasks.whenAllComplete(pending).addOnCompleteListener(done -> {
                         List<InicioUiState.DeporteUi> out = new ArrayList<>();
@@ -128,10 +154,15 @@ public class InicioViewModel extends ViewModel {
                             ui.hora  = str(r.get("hora"));
                             ui.lugar = str(r.get("lugar"));
                             ui.ayuntamiento = str(r.get("aytoNombre"));
+
                             Object p = r.get("plazasMax");
-                            ui.plazasMax = p instanceof Integer ? (Integer)p : (p instanceof Long ? ((Long)p).intValue() : 0);
+                            ui.plazasMax = p instanceof Integer ? (Integer) p :
+                                    (p instanceof Long ? ((Long) p).intValue() : 0);
+
                             Object ins = r.get("inscritos");
-                            ui.inscritos = ins instanceof Integer ? (Integer) ins : (ins instanceof Long ? ((Long) ins).intValue() : 0);
+                            ui.inscritos = ins instanceof Integer ? (Integer) ins :
+                                    (ins instanceof Long ? ((Long) ins).intValue() : 0);
+
                             out.add(ui);
                         }
                         _uiState.setValue(InicioUiState.success(out));
@@ -139,11 +170,11 @@ public class InicioViewModel extends ViewModel {
 
                 })
                 .addOnFailureListener(e ->
-                        _uiState.setValue(InicioUiState.error("Error cargando deportes: " + (e!=null?e.getMessage():"")))
+                        _uiState.setValue(InicioUiState.error("Error cargando deportes: " + (e != null ? e.getMessage() : "")))
                 );
     }
 
-    /** Desapuntarse con transacción: +1 plaza, borra inscripción y refresca. */
+    /** Desapuntarse con transacción: +1 plazaDisponible, borra inscripción y refresca. */
     public void desapuntarse(@NonNull String docId, @NonNull String aytoId) {
         if (uid == null) { _uiState.setValue(InicioUiState.error("Usuario no autenticado")); return; }
 
@@ -155,22 +186,22 @@ public class InicioViewModel extends ViewModel {
 
         db.runTransaction(tx -> {
             DocumentSnapshot dep = tx.get(refDeporte);
-            Long plazas = dep.getLong("plazasDisponibles");
-            if (plazas == null) plazas = 0L;
+            Long plazasDisp = dep.getLong("plazasDisponibles");
+            if (plazasDisp == null) plazasDisp = 0L;
 
             DocumentSnapshot ins = tx.get(refInscrito);
             if (!ins.exists()) throw new IllegalStateException("NO_ESTABA_INSCRITO");
 
-            tx.update(refDeporte, "plazasDisponibles", plazas + 1);
+            tx.update(refDeporte, "plazasDisponibles", plazasDisp + 1);
             tx.delete(refInscrito);
             tx.delete(refUser);
             return null;
         }).addOnSuccessListener(unused -> {
-            _uiState.setValue(_uiState.getValue()==null ? InicioUiState.loading() :
-                    _uiState.getValue().withMessage("Te has desapuntado"));
+            _uiState.setValue(_uiState.getValue() == null ? InicioUiState.loading()
+                    : _uiState.getValue().withMessage("Te has desapuntado"));
             cargarDeportesApuntados();
         }).addOnFailureListener(e -> {
-            String msg = e!=null && e.getMessage()!=null ? e.getMessage() : "";
+            String msg = e != null && e.getMessage() != null ? e.getMessage() : "";
             if (msg.contains("NO_ESTABA_INSCRITO")) {
                 _uiState.setValue(InicioUiState.error("No estabas inscrito en esta actividad."));
             } else {
@@ -179,23 +210,36 @@ public class InicioViewModel extends ViewModel {
         });
     }
 
-    // Helpers ----------
-    private static void putIfEmpty(Map<String,Object> map, String key, String value){
-        if (map.get(key)==null || str(map.get(key)).isEmpty()){
+    // ===== Helpers =====
+    private static void putIfEmpty(Map<String, Object> map, String key, String value) {
+        if (map.get(key) == null || str(map.get(key)).isEmpty()) {
             if (!isEmpty(value)) map.put(key, value);
         }
     }
-    private static boolean isEmpty(String x){ return x==null || x.trim().isEmpty(); }
-    private static String str(Object o){ if (o==null) return ""; String s=String.valueOf(o).trim(); return "null".equalsIgnoreCase(s)?"":s; }
-    private static String firstNonEmpty(Object... opts){
-        for (Object o: opts){ String v=str(o); if(!isEmpty(v)) return v; }
+
+    private static boolean isEmpty(String x) { return x == null || x.trim().isEmpty(); }
+
+    private static String str(Object o) {
+        if (o == null) return "";
+        String s = String.valueOf(o).trim();
+        return "null".equalsIgnoreCase(s) ? "" : s;
+    }
+
+    private static String firstNonEmpty(Object... opts) {
+        for (Object o : opts) {
+            String v = str(o);
+            if (!isEmpty(v)) return v;
+        }
         return "";
     }
-    private static Integer intOrNull(Object... opts){
-        for (Object o: opts){
+
+    private static Integer intOrNull(Object... opts) {
+        for (Object o : opts) {
             if (o instanceof Integer) return (Integer) o;
-            if (o instanceof Long) return ((Long)o).intValue();
-            try { if (o!=null){ return Integer.parseInt(String.valueOf(o)); } } catch (Exception ignored){}
+            if (o instanceof Long) return ((Long) o).intValue();
+            try {
+                if (o != null) return Integer.parseInt(String.valueOf(o));
+            } catch (Exception ignored) {}
         }
         return null;
     }
