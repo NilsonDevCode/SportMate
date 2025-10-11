@@ -9,7 +9,7 @@
     android:padding="16dp"
     tools:context=".features.user.ui.menuPrincipal.OpcionesMenuFragment">
 
-    <!-- Toolbar con menú -->
+    <!-- Toolbar con menú (sin avatar) -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -20,29 +20,60 @@
         android:title="@string/title_activity_main"
         app:menu="@menu/menu_inicio" />
 
-    <!-- Caja grande: título -->
+    <!-- Foto de perfil ARRIBA a la IZQUIERDA -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTitulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/cardFotoPerfil"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="12dp"
         app:cardCornerRadius="16dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imgFotoPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/foto_de_perfil"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Caja grande: título A LA DERECHA de la foto -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toEndOf="@id/cardFotoPerfil"
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/tvInicio"
-            android:layout_width="379dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp"
-            android:text="@string/title_activity_main"
+            android:text="Bienvenido, Usuario"
             android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/primary_dark"
+            android:gravity="center_vertical" />
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 💠 Caja con el nombre del ayuntamiento -->
+    <!-- Barrier para alinear lo de abajo bajo la fila (foto + título) -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barTopRowBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="cardFotoPerfil,cardTitulo" />
+
+    <!-- 💠 Caja con el nombre del ayuntamiento (a todo el ancho) -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardAyuntamiento"
         android:layout_width="0dp"
@@ -50,7 +81,7 @@
         android:layout_marginTop="12dp"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardTitulo"
+        app:layout_constraintTop_toBottomOf="@id/barTopRowBottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -78,36 +109,15 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Caja pequeña para foto de perfil -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardFotoPerfil"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/cardAyuntamiento"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imgFotoPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/foto_de_perfil"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Lista de deportes apuntados -->
+    <!-- Lista de deportes apuntados (AHORA a TODO el ancho) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDeportesApuntados"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintTop_toBottomOf="@id/cardAyuntamiento"
-        app:layout_constraintStart_toEndOf="@id/cardFotoPerfil"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnVerDeportes"
         tools:listitem="@layout/item_deporte_apuntado" />
@@ -119,7 +129,8 @@
         android:layout_height="wrap_content"
         android:text="@string/sin_eventos"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/cardFotoPerfil"
+        app:layout_constraintTop_toTopOf="@id/rvDeportesApuntados"
+        app:layout_constraintBottom_toBottomOf="@id/rvDeportesApuntados"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

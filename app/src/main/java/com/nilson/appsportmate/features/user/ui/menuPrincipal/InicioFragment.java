@@ -1,19 +1,24 @@
 package com.nilson.appsportmate.features.user.ui.menuPrincipal;
 
 import android.app.AlertDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
@@ -28,10 +33,13 @@ public class InicioFragment extends Fragment {
     private InicioViewModel viewModel;
     private DeporteApuntadoAdapter adapter;
 
-    // 🔹 Añadido para mostrar el nombre del ayuntamiento
     private FirebaseFirestore db;
     private String ayuntamientoId;
     private String lastAyuntamientoId;
+
+    // Selector de imagen (cambiar foto de perfil)
+    private final ActivityResultLauncher<String> pickImage =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
     @Nullable
     @Override
@@ -39,7 +47,6 @@ public class InicioFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
-        // 🔹 init Firestore
         db = FirebaseFirestore.getInstance();
         return binding.getRoot();
     }
@@ -50,12 +57,36 @@ public class InicioFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
+        // Toolbar: menú
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_cambiar_foto_perfil) {
+                pickImage.launch("image/*");
+                return true;
+            } else if (id == R.id.action_cambiar_ayuntamiento) {
+                Navigation.findNavController(binding.getRoot())
+                        .navigate(R.id.action_global_seleccionarNuevoAyuntamientoFragment);
+                return true;
+            } else if (id == R.id.action_cerrarSesion) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Cerrar sesión")
+                        .setMessage("¿Seguro que quieres cerrar sesión?")
+                        .setPositiveButton("Sí, salir", (d, w) -> cerrarSesion())
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+                return true;
+            }
+            return false;
+        });
+
+        // Saludo
+        pintarSaludo();
+
         // RecyclerView
         binding.rvDeportesApuntados.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new DeporteApuntadoAdapter(new DeporteApuntadoAdapter.Listener() {
             @Override
             public void onItemClick(InicioUiState.DeporteUi item) {
-                // Click corto (opcional)
                 Toast.makeText(requireContext(),
                         item.nombreDeporte + " - " + item.ayuntamiento,
                         Toast.LENGTH_SHORT).show();
@@ -63,7 +94,6 @@ public class InicioFragment extends Fragment {
 
             @Override
             public void onItemLongClick(InicioUiState.DeporteUi item) {
-                // Long-press -> confirmar desapuntarse
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Desapuntarse")
                         .setMessage("¿Quieres desapuntarte de \"" + item.nombreDeporte + "\"?")
@@ -74,9 +104,7 @@ public class InicioFragment extends Fragment {
         });
         binding.rvDeportesApuntados.setAdapter(adapter);
 
-        binding.rvDeportesApuntados.setAdapter(adapter);
-
-        // Ir a deportes disponibles
+        // Botón: Ver deportes disponibles
         binding.btnVerDeportes.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_global_deportesDisponiblesFragment)
         );
@@ -98,21 +126,21 @@ public class InicioFragment extends Fragment {
             );
         });
 
-        // 🔹 NUEVO: leer ayuntamientoId de Preferencias y mostrar nombre
+        // Ayto actual
         if (getContext() != null) {
             ayuntamientoId = Preferencias.obtenerAyuntamientoId(getContext());
             lastAyuntamientoId = ayuntamientoId;
         }
-        cargarNombreAyuntamiento(); // pinta título+nombre
+        cargarNombreAyuntamiento();
 
         // Cargar datos
         viewModel.cargarDeportesApuntados();
     }
 
-    // 🔹 NUEVO: refrescar si cambia el ayuntamiento (por ejemplo, al volver de otro fragment)
     @Override
     public void onResume() {
         super.onResume();
+        pintarSaludo();
         if (getContext() != null) {
             String nuevo = Preferencias.obtenerAyuntamientoId(getContext());
             if (nuevo == null ? lastAyuntamientoId != null : !nuevo.equals(lastAyuntamientoId)) {
@@ -123,7 +151,64 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    // 🔹 NUEVO: carga el nombre del ayuntamiento y lo pinta en tvAytoTitulo/tvAytoNombre
+    /** Cambiar imagen seleccionada */
+    private void onImagePicked(@Nullable Uri uri) {
+        if (!isAdded()) return;
+        if (uri == null) {
+            Toast.makeText(requireContext(), "No se seleccionó imagen.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.imgFotoPerfil.setImageURI(uri);
+        Toast.makeText(requireContext(), "Foto seleccionada.", Toast.LENGTH_SHORT).show();
+    }
+
+    /** Cerrar sesión + limpiar back stack y prefs */
+    private void cerrarSesion() {
+        FirebaseAuth.getInstance().signOut();
+        if (getContext() != null) Preferencias.borrarTodo(getContext());
+        NavOptions opts = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build();
+        Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.authFragment, null, opts);
+    }
+
+    /** Pinta "Inicio\nBienvenido, <nombre>" desde prefs o Firestore si no existe */
+    private void pintarSaludo() {
+        if (binding == null || getContext() == null) return;
+
+        String nombre = Preferencias.obtenerNombreUsuario(getContext());
+
+        if (nombre == null || nombre.trim().isEmpty() || "usuario".equalsIgnoreCase(nombre)) {
+            String uid = FirebaseAuth.getInstance().getUid();
+            if (uid != null) {
+                FirebaseFirestore.getInstance().collection("usuarios")
+                        .document(uid)
+                        .get()
+                        .addOnSuccessListener(doc -> {
+                            String n = null;
+                            if (doc.exists()) {
+                                Object nom = doc.get("nombre") != null ? doc.get("nombre") : doc.get("alias");
+                                n = nom != null ? nom.toString().trim() : null;
+                            }
+                            if (n != null && !n.isEmpty()) {
+                                Preferencias.guardarNombreUsuario(requireContext(), n);
+                                binding.tvInicio.setText("Inicio\nBienvenido, " + n);
+                            } else {
+                                binding.tvInicio.setText("Inicio\nBienvenido, usuario");
+                            }
+                        })
+                        .addOnFailureListener(e ->
+                                binding.tvInicio.setText("Inicio\nBienvenido, usuario"));
+            } else {
+                binding.tvInicio.setText("Inicio\nBienvenido, usuario");
+            }
+        } else {
+            binding.tvInicio.setText("Inicio\nBienvenido, " + nombre);
+        }
+    }
+
+    /** Carga y pinta nombre del ayuntamiento actual */
     private void cargarNombreAyuntamiento() {
         if (!isAdded()) return;
 
@@ -133,20 +218,13 @@ public class InicioFragment extends Fragment {
             return;
         }
 
-        // título fijo cuando hay ayto configurado
         binding.tvAytoTitulo.setText("Ayuntamiento actual");
 
-        // 1) prefill desde cache si lo tienes guardado
         if (getContext() != null) {
             String cache = Preferencias.obtenerAyuntamientoNombre(getContext());
-            if (cache != null && !cache.trim().isEmpty()) {
-                binding.tvAytoNombre.setText(cache);
-            } else {
-                binding.tvAytoNombre.setText("—");
-            }
+            binding.tvAytoNombre.setText(cache != null && !cache.trim().isEmpty() ? cache : "—");
         }
 
-        // 2) refresco online (o cache Firestore) y guardado en preferencias
         db.collection("ayuntamientos")
                 .document(ayuntamientoId)
                 .get(Source.DEFAULT)
@@ -154,8 +232,6 @@ public class InicioFragment extends Fragment {
                     if (!isAdded()) return;
                     String nombre = extraerNombreAyuntamiento(doc);
                     binding.tvAytoNombre.setText(nombre);
-
-                    // guardamos en prefs para futuras aperturas rápidas
                     if (getContext() != null && nombre != null && !nombre.trim().isEmpty()
                             && !"(desconocido)".equals(nombre)) {
                         Preferencias.guardarAyuntamientoNombre(getContext(), nombre);

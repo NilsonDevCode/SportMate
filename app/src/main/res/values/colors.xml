@@ -2,4 +2,26 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 🔹 Colores principales -->
+    <color name="primary">#1976D2</color> <!-- Azul SportMate -->
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#63A4FF</color>
+
+    <!-- 🔹 Colores secundarios -->
+    <color name="secondary">#0288D1</color>
+    <color name="secondary_dark">#01579B</color>
+    <color name="secondary_light">#81D4FA</color>
+
+    <!-- 🔹 Fondo y textos -->
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- 🔹 Cinta inferior -->
+    <color name="cinta_fondo">@color/primary</color>
+    <color name="cinta_texto">@android:color/white</color>
+
+    <!-- 🔹 Bordes y detalles -->
+    <color name="stroke_color">@color/primary_dark</color>
 </resources>

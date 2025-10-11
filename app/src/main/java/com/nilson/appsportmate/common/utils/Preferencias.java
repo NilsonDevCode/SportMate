@@ -12,6 +12,15 @@ public class Preferencias {
         prefs.edit().putString(Constantes.PREFS_ALIAS, alias).apply();
     }
 
+    public static void guardarNombreUsuario(Context context, String nombre) {
+        SharedPreferences p = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        p.edit().putString("nombreUsuario", nombre).apply();
+    }
+    public static String obtenerNombreUsuario(Context context) {
+        SharedPreferences p = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        return p.getString("nombreUsuario", "");
+    }
+
     public static String obtenerAlias(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constantes.PREFS_FILE, Context.MODE_PRIVATE);
         return prefs.getString(Constantes.PREFS_ALIAS, null);
