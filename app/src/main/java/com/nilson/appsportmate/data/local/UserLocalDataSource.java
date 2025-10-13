@@ -3,7 +3,7 @@ package com.nilson.appsportmate.data.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class AuthLocalDataSource {
+public class UserLocalDataSource {
     private static final String PREF_NAME = "auth_prefs";
     private static final String KEY_UID = "uid";
     private static final String KEY_ALIAS = "alias";
@@ -11,7 +11,7 @@ public class AuthLocalDataSource {
 
     private final SharedPreferences sharedPreferences;
 
-    public AuthLocalDataSource(Context context) {
+    public UserLocalDataSource(Context context) {
         this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
