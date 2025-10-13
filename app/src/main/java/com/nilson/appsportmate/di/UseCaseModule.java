@@ -1,6 +1,7 @@
 package com.nilson.appsportmate.di;
 
 import com.nilson.appsportmate.domain.repository.AuthRepository;
+import com.nilson.appsportmate.domain.repository.UserRepository;
 import com.nilson.appsportmate.domain.usecase.LoginUserUseCase;
 import com.nilson.appsportmate.domain.usecase.SignUpUserUseCase;
 
@@ -14,12 +15,12 @@ import dagger.hilt.components.SingletonComponent;
 public class UseCaseModule {
 
     @Provides
-    public LoginUserUseCase provideLoginUserUseCase(AuthRepository repo) {
-        return new LoginUserUseCase(repo);
+    public LoginUserUseCase provideLoginUserUseCase(AuthRepository authRepo, UserRepository userRepo) {
+        return new LoginUserUseCase(authRepo, userRepo);
     }
 
     @Provides
-    public SignUpUserUseCase provideSignUpUserUseCase(AuthRepository repo) {
-        return new SignUpUserUseCase(repo);
+    public SignUpUserUseCase provideSignUpUserUseCase(AuthRepository authRepo, UserRepository userRepo) {
+        return new SignUpUserUseCase(authRepo, userRepo);
     }
 }
