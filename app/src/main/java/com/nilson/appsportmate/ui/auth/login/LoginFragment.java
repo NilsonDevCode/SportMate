@@ -1,5 +1,7 @@
 package com.nilson.appsportmate.ui.auth.login;
 
+import static com.nilson.appsportmate.common.utils.NavControllerExtensions.navigateWithAnimation;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,9 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentLoginBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -27,8 +32,10 @@ public class LoginFragment extends Fragment {
     private TextInputEditText aliasTI, passwordTI;
     private MaterialButton loginBtn, navRegisterBtn;
 
+    private NavController navController;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -38,6 +45,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        navController = Navigation.findNavController(view);
 
         initViews();
         setupClickListeners();
@@ -88,6 +96,11 @@ public class LoginFragment extends Fragment {
     private void setupClickListeners() {
         loginBtn.setOnClickListener(v -> {
             viewModel.onLoginClicked();
+        });
+
+        navRegisterBtn.setOnClickListener(v -> {
+            navigateWithAnimation(navController, R.id.action_loginFragment_to_signInFragment);
+            Log.d("LoginFragment", "Navigate to Register Fragment");
         });
     }
 
