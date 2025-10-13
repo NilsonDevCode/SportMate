@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.nilson.appsportmate.domain.usecase.LoginUserUseCase;
+import com.nilson.appsportmate.domain.usecase.params.LoginUserParams;
 
 import javax.inject.Inject;
 
@@ -63,7 +64,7 @@ public class LoginViewModel extends ViewModel {
 
         Log.d("LoginViewModel", "onLoginClicked");
 
-        loginUserUseCase.execute(currentState.getAlias(), currentState.getPassword());
+        loginUserUseCase.execute(new LoginUserParams(currentState.getAlias(), currentState.getPassword()));
     }
 
     private LoginUiState getCurrentState() {
