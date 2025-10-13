@@ -1,5 +1,7 @@
 package com.nilson.appsportmate.common.utils;
 
+import android.util.Log;
+
 import java.text.Normalizer;
 
 public final class AuthAliasHelper {
@@ -43,7 +45,10 @@ public final class AuthAliasHelper {
         a = a.replaceAll("\\.+", ".");     // colapsa '...'
         a = a.replaceAll("^\\.|\\.$", ""); // sin '.' al inicio/fin
         if (a.isEmpty()) a = "user";
-        return a + DOMAIN;
+
+        String finalString = a + DOMAIN;
+        Log.d("AuthAliasHelper", "aliasToEmail: " + finalString);
+        return finalString;
     }
 
     /** Elimina diacríticos: á→a, é→e, ñ→n, etc. */
