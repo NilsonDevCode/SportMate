@@ -18,10 +18,9 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentInicioBinding;
@@ -37,7 +36,6 @@ public class InicioFragment extends Fragment {
     private String ayuntamientoId;
     private String lastAyuntamientoId;
 
-    // Selector de imagen (cambiar foto de perfil)
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
@@ -57,7 +55,8 @@ public class InicioFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
-        // Toolbar: menú
+        cargarFotoPerfil();
+
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.action_cambiar_foto_perfil) {
@@ -79,10 +78,8 @@ public class InicioFragment extends Fragment {
             return false;
         });
 
-        // Saludo
         pintarSaludo();
 
-        // RecyclerView
         binding.rvDeportesApuntados.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new DeporteApuntadoAdapter(new DeporteApuntadoAdapter.Listener() {
             @Override
@@ -104,36 +101,29 @@ public class InicioFragment extends Fragment {
         });
         binding.rvDeportesApuntados.setAdapter(adapter);
 
-        // Botón: Ver deportes disponibles
         binding.btnVerDeportes.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_global_deportesDisponiblesFragment)
         );
 
-        // Observers
         viewModel.uiState.observe(getViewLifecycleOwner(), state -> {
             binding.progressBar.setVisibility(state.loading ? View.VISIBLE : View.GONE);
-
             if (state.error != null && !state.error.isEmpty()) {
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show();
             }
             if (state.message != null && !state.message.isEmpty()) {
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
             }
-
             adapter.submit(state.deportes);
             binding.tvEmpty.setVisibility(
                     state.deportes == null || state.deportes.isEmpty() ? View.VISIBLE : View.GONE
             );
         });
 
-        // Ayto actual
         if (getContext() != null) {
             ayuntamientoId = Preferencias.obtenerAyuntamientoId(getContext());
             lastAyuntamientoId = ayuntamientoId;
         }
         cargarNombreAyuntamiento();
-
-        // Cargar datos
         viewModel.cargarDeportesApuntados();
     }
 
@@ -151,7 +141,6 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    /** Cambiar imagen seleccionada */
     private void onImagePicked(@Nullable Uri uri) {
         if (!isAdded()) return;
         if (uri == null) {
@@ -159,10 +148,11 @@ public class InicioFragment extends Fragment {
             return;
         }
         binding.imgFotoPerfil.setImageURI(uri);
-        Toast.makeText(requireContext(), "Foto seleccionada.", Toast.LENGTH_SHORT).show();
+        viewModel.subirFotoPerfilUsuario(uri,
+                () -> Toast.makeText(requireContext(), "Foto subida correctamente.", Toast.LENGTH_SHORT).show(),
+                error -> Toast.makeText(requireContext(), "Error: " + error, Toast.LENGTH_LONG).show());
     }
 
-    /** Cerrar sesión + limpiar back stack y prefs */
     private void cerrarSesion() {
         FirebaseAuth.getInstance().signOut();
         if (getContext() != null) Preferencias.borrarTodo(getContext());
@@ -173,7 +163,6 @@ public class InicioFragment extends Fragment {
                 .navigate(R.id.authFragment, null, opts);
     }
 
-    /** Pinta "Inicio\nBienvenido, <nombre>" desde prefs o Firestore si no existe */
     private void pintarSaludo() {
         if (binding == null || getContext() == null) return;
 
@@ -208,7 +197,35 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    /** Carga y pinta nombre del ayuntamiento actual */
+    private void cargarFotoPerfil() {
+        if (!isAdded() || getContext() == null) return;
+
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null) return;
+
+        String fotoUrl = Preferencias.obtenerFotoUrlUsuario(requireContext());
+
+        if (fotoUrl != null && !fotoUrl.trim().isEmpty()) {
+            Glide.with(this).load(fotoUrl).into(binding.imgFotoPerfil);
+        } else {
+            FirebaseFirestore.getInstance().collection("usuarios")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            Object urlObj = doc.get("fotoUrl");
+                            if (urlObj != null) {
+                                String url = urlObj.toString().trim();
+                                if (!url.isEmpty()) {
+                                    Glide.with(this).load(url).into(binding.imgFotoPerfil);
+                                    Preferencias.guardarFotoUrlUsuario(requireContext(), url);
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
     private void cargarNombreAyuntamiento() {
         if (!isAdded()) return;
 
@@ -227,7 +244,7 @@ public class InicioFragment extends Fragment {
 
         db.collection("ayuntamientos")
                 .document(ayuntamientoId)
-                .get(Source.DEFAULT)
+                .get()
                 .addOnSuccessListener(doc -> {
                     if (!isAdded()) return;
                     String nombre = extraerNombreAyuntamiento(doc);
@@ -244,7 +261,7 @@ public class InicioFragment extends Fragment {
                 });
     }
 
-    private String extraerNombreAyuntamiento(DocumentSnapshot doc) {
+    private String extraerNombreAyuntamiento(com.google.firebase.firestore.DocumentSnapshot doc) {
         if (doc == null || !doc.exists()) return "(desconocido)";
         Object n1 = doc.get("nombre");
         Object n2 = doc.get("razonSocial");

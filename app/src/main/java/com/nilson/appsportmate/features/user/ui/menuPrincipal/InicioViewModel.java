@@ -1,5 +1,7 @@
 package com.nilson.appsportmate.features.user.ui.menuPrincipal;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,6 +212,27 @@ public class InicioViewModel extends ViewModel {
             }
         });
     }
+    public void subirFotoPerfilUsuario(@NonNull Uri uri, @NonNull Runnable onSuccess, @NonNull java.util.function.Consumer<String> onError) {
+        if (uid == null) {
+            onError.accept("Usuario no autenticado.");
+            return;
+        }
+
+        FirebaseStorage.getInstance().getReference("logos_usuarios/" + uid + ".jpg")
+                .putFile(uri)
+                .addOnSuccessListener(taskSnapshot ->
+                        taskSnapshot.getStorage().getDownloadUrl()
+                                .addOnSuccessListener(downloadUri -> {
+                                    db.collection("usuarios").document(uid)
+                                            .update("fotoUrl", downloadUri.toString())
+                                            .addOnSuccessListener(aVoid -> onSuccess.run())
+                                            .addOnFailureListener(e -> onError.accept("Error guardando URL: " + e.getMessage()));
+                                })
+                                .addOnFailureListener(e -> onError.accept("Error obteniendo URL: " + e.getMessage()))
+                )
+                .addOnFailureListener(e -> onError.accept("Error subiendo imagen: " + e.getMessage()));
+    }
+
 
     // ===== Helpers =====
     private static void putIfEmpty(Map<String, Object> map, String key, String value) {

@@ -16,6 +16,7 @@ public class Preferencias {
         SharedPreferences p = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         p.edit().putString("nombreUsuario", nombre).apply();
     }
+
     public static String obtenerNombreUsuario(Context context) {
         SharedPreferences p = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         return p.getString("nombreUsuario", "");
@@ -49,6 +50,8 @@ public class Preferencias {
     public static void borrarTodo(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constantes.PREFS_FILE, Context.MODE_PRIVATE);
         prefs.edit().clear().apply();
+        SharedPreferences appPrefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        appPrefs.edit().clear().apply();
     }
 
     /* ==== Rol / App prefs ==== */
@@ -63,7 +66,7 @@ public class Preferencias {
         return prefs.getString("rol", null);
     }
 
-    /* ==== Ayuntamiento (ID + NUEVO: nombre) ==== */
+    /* ==== Ayuntamiento (ID + nombre) ==== */
 
     public static void guardarAyuntamientoId(Context context, String ayuntamientoId) {
         SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
@@ -76,7 +79,6 @@ public class Preferencias {
         return prefs.getString("ayuntamiento_id", null);
     }
 
-    // NUEVO: guardar/obtener nombre del ayuntamiento
     public static void guardarAyuntamientoNombre(Context context, String ayuntamientoNombre) {
         SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
         editor.putString("ayuntamiento_nombre", ayuntamientoNombre);
@@ -88,9 +90,8 @@ public class Preferencias {
         return prefs.getString("ayuntamiento_nombre", null);
     }
 
-    /* ==== Pueblo (NUEVOS métodos) ==== */
+    /* ==== Pueblo ==== */
 
-    // NUEVO: guardar/obtener puebloId
     public static void guardarPuebloId(Context context, String puebloId) {
         SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
         editor.putString("pueblo_id", puebloId);
@@ -102,7 +103,6 @@ public class Preferencias {
         return prefs.getString("pueblo_id", null);
     }
 
-    // NUEVO: guardar/obtener puebloNombre
     public static void guardarPuebloNombre(Context context, String puebloNombre) {
         SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
         editor.putString("pueblo_nombre", puebloNombre);
@@ -112,5 +112,18 @@ public class Preferencias {
     public static String obtenerPuebloNombre(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         return prefs.getString("pueblo_nombre", null);
+    }
+
+    /* ==== NUEVO: Foto de perfil del usuario ==== */
+
+    public static void guardarFotoUrlUsuario(Context context, String url) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit();
+        editor.putString("foto_url_usuario", url);
+        editor.apply();
+    }
+
+    public static String obtenerFotoUrlUsuario(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("foto_url_usuario", null);
     }
 }
