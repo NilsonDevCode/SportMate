@@ -14,15 +14,26 @@ import com.nilson.appsportmate.common.utils.Preferencias;
 
 public class LoginViewModel extends ViewModel {
 
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth auth;
+    private final FirebaseFirestore db;
+
+    // 🧠 Constructor testable (para tests unitarios con mocks)
+    public LoginViewModel(FirebaseAuth auth, FirebaseFirestore db) {
+        this.auth = auth;
+        this.db = db;
+    }
+
+    // ⚙️ Constructor normal (para uso real en la app)
+    public LoginViewModel() {
+        this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
+    }
 
     private final MutableLiveData<String> errorAlias = new MutableLiveData<>(null);
     private final MutableLiveData<String> errorPassword = new MutableLiveData<>(null);
     private final MutableLiveData<String> message = new MutableLiveData<>(null);
 
-    private final MutableLiveData<String> navTownhall = new MutableLiveData<>(null); // uid ayuntamiento
-    private final MutableLiveData<String> navUser = new MutableLiveData<>(null);     // ayuntamientoId
+    private final MutableLiveData<String> navTownhall = new MutableLiveData<>(null);
+    private final MutableLiveData<String> navUser = new MutableLiveData<>(null);
 
     public LiveData<String> getErrorAlias() { return errorAlias; }
     public LiveData<String> getErrorPassword() { return errorPassword; }
@@ -31,10 +42,19 @@ public class LoginViewModel extends ViewModel {
     public LiveData<String> getNavUser() { return navUser; }
 
     public void onLoginClicked(String aliasInput, String password, Context appContext) {
-        if (aliasInput == null || aliasInput.trim().isEmpty()) { errorAlias.setValue("Alias requerido"); return; }
+        if (aliasInput == null || aliasInput.trim().isEmpty()) {
+            errorAlias.setValue("Alias requerido");
+            return;
+        }
         String aliasErr = AuthAliasHelper.getAliasValidationError(aliasInput);
-        if (aliasErr != null) { errorAlias.setValue(aliasErr); return; }
-        if (password == null || password.trim().isEmpty()) { errorPassword.setValue("Contraseña requerida"); return; }
+        if (aliasErr != null) {
+            errorAlias.setValue(aliasErr);
+            return;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            errorPassword.setValue("Contraseña requerida");
+            return;
+        }
 
         errorAlias.setValue(null);
         errorPassword.setValue(null);
@@ -43,15 +63,21 @@ public class LoginViewModel extends ViewModel {
 
         auth.signInWithEmailAndPassword(emailSintetico, password)
                 .addOnSuccessListener(result -> {
-                    if (result.getUser() == null) { message.setValue("No se pudo obtener el usuario"); return; }
+                    if (result.getUser() == null) {
+                        message.setValue("No se pudo obtener el usuario");
+                        return;
+                    }
                     String uid = result.getUser().getUid();
 
                     FirestoreManager.resolveRolOrRepair(uid, aliasInput.trim(), new FirestoreManager.RoleCallback() {
-                        @Override public void onResolved(String rol) {
-                            if (rol == null) { message.setValue("Perfil no encontrado"); return; }
+                        @Override
+                        public void onResolved(String rol) {
+                            if (rol == null) {
+                                message.setValue("Perfil no encontrado");
+                                return;
+                            }
                             String r = rol.trim().toLowerCase();
 
-                            // Preferencias comunes
                             Preferencias.guardarUid(appContext, uid);
                             Preferencias.guardarAlias(appContext, aliasInput.trim());
                             Preferencias.guardarRol(appContext, r);
@@ -73,7 +99,9 @@ public class LoginViewModel extends ViewModel {
                                         .addOnFailureListener(e -> message.setValue("Error leyendo perfil de usuario"));
                             }
                         }
-                        @Override public void onError(Exception e) {
+
+                        @Override
+                        public void onError(Exception e) {
                             message.setValue("Error perfil: " + e.getMessage());
                         }
                     });
