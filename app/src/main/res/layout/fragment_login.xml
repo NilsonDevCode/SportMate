@@ -11,7 +11,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/img_fondo_login"
-        android:background="#000000"/> <!-- opcional: color de relleno -->
+        android:background="#000000" />
 
     <!-- Contenido encima -->
     <ScrollView
@@ -26,6 +26,7 @@
             android:padding="24dp"
             android:gravity="center_vertical">
 
+            <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,9 +34,11 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
 
+            <!-- Campo Alias -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilAlias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Alias"
@@ -47,10 +50,12 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"/>
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo Contraseña -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
@@ -63,15 +68,17 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"/>
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Botón de Login -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Entrar" />
 
+            <!-- Botón de Crear cuenta -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNavRegister"
                 style="?attr/materialButtonOutlinedStyle"
