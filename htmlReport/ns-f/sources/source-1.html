@@ -1,0 +1,481 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestionEventosMasPlazasFragment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.gestioneventos</a>
+</div>
+
+<h1>Coverage Summary for Class: GestionEventosMasPlazasFragment (com.nilson.appsportmate.features.townhall.ui.gestioneventos)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestionEventosMasPlazasFragment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/35)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/58)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/162)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.gestioneventos;
+&nbsp;
+&nbsp;import android.app.AlertDialog;
+&nbsp;import android.os.Bundle;
+&nbsp;import android.text.TextUtils;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.ProgressBar;
+&nbsp;import android.widget.TextView;
+&nbsp;import android.widget.Toast;
+&nbsp;import android.app.DatePickerDialog;
+&nbsp;import android.app.TimePickerDialog;
+&nbsp;import com.google.android.material.textfield.TextInputEditText;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.fragment.app.Fragment;
+&nbsp;import androidx.lifecycle.ViewModelProvider;
+&nbsp;import androidx.navigation.NavController;
+&nbsp;import androidx.navigation.Navigation;
+&nbsp;import androidx.recyclerview.widget.LinearLayoutManager;
+&nbsp;import androidx.recyclerview.widget.RecyclerView;
+&nbsp;
+&nbsp;import com.google.android.material.button.MaterialButton;
+&nbsp;import com.google.firebase.firestore.CollectionReference;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;import com.nilson.appsportmate.common.utils.ValidacionesEvento;
+&nbsp;import com.nilson.appsportmate.features.townhall.adaptadores.EventosAdapter;
+&nbsp;import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFragment;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * Lista/gestión de eventos (MVVM).
+&nbsp; * Mantiene IDs/keys y layouts existentes.
+&nbsp; */
+&nbsp;public class GestionEventosMasPlazasFragment extends Fragment
+&nbsp;        implements EventosAdapter.EventoActions, InscritosDialogFragment.Host {
+&nbsp;
+&nbsp;    // UI
+&nbsp;    private RecyclerView rvEventos;
+&nbsp;    private TextView tvEmpty;
+&nbsp;    private ProgressBar progress;
+&nbsp;    private MaterialButton btnVolver;
+&nbsp;
+&nbsp;    // Estado
+&nbsp;    private String ayuntamientoId;
+<b class="nc">&nbsp;    private final List&lt;Map&lt;String, Object&gt;&gt; listaEventos = new ArrayList&lt;&gt;();</b>
+&nbsp;    private EventosAdapter adapter;
+&nbsp;
+&nbsp;    // VM
+&nbsp;    private GestionEventosMasPlazasViewModel vm;
+&nbsp;
+&nbsp;    // Diálogo inscritos
+&nbsp;    private InscritosDialogFragment inscritosDialog;
+&nbsp;
+<b class="nc">&nbsp;    public GestionEventosMasPlazasFragment() { }</b>
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Lifecycle
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    @Nullable
+&nbsp;    @Override
+&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater,
+&nbsp;                             @Nullable ViewGroup container,
+&nbsp;                             @Nullable Bundle savedInstanceState) {
+&nbsp;        // Se usa tu layout existente tal cual
+<b class="nc">&nbsp;        return inflater.inflate(R.layout.activity_gestion_eventos_mas_plazas, container, false);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        super.onViewCreated(v, savedInstanceState);</b>
+<b class="nc">&nbsp;        bindViews(v);</b>
+<b class="nc">&nbsp;        setupRecycler();</b>
+&nbsp;
+&nbsp;        // ayuntamientoId: arg o Preferencias
+<b class="nc">&nbsp;        Bundle args = getArguments();</b>
+<b class="nc">&nbsp;        String extra = args != null ? args.getString(&quot;ayuntamientoId&quot;, &quot;&quot;) : &quot;&quot;;</b>
+<b class="nc">&nbsp;        ayuntamientoId = !TextUtils.isEmpty(extra) ? extra : Preferencias.obtenerAyuntamientoId(requireContext());</b>
+&nbsp;
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            Toast.makeText(requireContext(), &quot;ayuntamientoId no encontrado&quot;, Toast.LENGTH_LONG).show();</b>
+<b class="nc">&nbsp;            Navigation.findNavController(v).popBackStack();</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        vm = new ViewModelProvider(this).get(GestionEventosMasPlazasViewModel.class);</b>
+<b class="nc">&nbsp;        vm.setAyuntamientoId(ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;        observeVm();</b>
+<b class="nc">&nbsp;        setupClicks();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onStart() {
+<b class="nc">&nbsp;        super.onStart();</b>
+<b class="nc">&nbsp;        vm.suscribirTiempoRealEventos();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onStop() {
+<b class="nc">&nbsp;        vm.desuscribirTiempoRealEventos();</b>
+<b class="nc">&nbsp;        vm.dejarDeEscucharInscritos();</b>
+<b class="nc">&nbsp;        super.onStop();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Bind / Observers / Clicks
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private void bindViews(View v) {
+<b class="nc">&nbsp;        rvEventos = v.findViewById(R.id.rvEventos);</b>
+<b class="nc">&nbsp;        tvEmpty   = v.findViewById(R.id.tvEmpty);</b>
+<b class="nc">&nbsp;        progress  = v.findViewById(R.id.progress);</b>
+<b class="nc">&nbsp;        btnVolver = v.findViewById(R.id.btnVolver);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setupRecycler() {
+<b class="nc">&nbsp;        rvEventos.setLayoutManager(new LinearLayoutManager(requireContext()));</b>
+<b class="nc">&nbsp;        adapter = new EventosAdapter(listaEventos, this);</b>
+<b class="nc">&nbsp;        rvEventos.setAdapter(adapter);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void observeVm() {
+<b class="nc">&nbsp;        vm.getLoading().observe(getViewLifecycleOwner(), show -&gt;</b>
+<b class="nc">&nbsp;                progress.setVisibility(show != null &amp;&amp; show ? View.VISIBLE : View.GONE));</b>
+&nbsp;
+<b class="nc">&nbsp;        vm.getEmpty().observe(getViewLifecycleOwner(), show -&gt;</b>
+<b class="nc">&nbsp;                tvEmpty.setVisibility(show != null &amp;&amp; show ? View.VISIBLE : View.GONE));</b>
+&nbsp;
+<b class="nc">&nbsp;        vm.getMensaje().observe(getViewLifecycleOwner(), msg -&gt; {</b>
+<b class="nc">&nbsp;            if (msg != null &amp;&amp; !msg.isEmpty()) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        vm.getEventos().observe(getViewLifecycleOwner(), eventos -&gt; {</b>
+<b class="nc">&nbsp;            listaEventos.clear();</b>
+<b class="nc">&nbsp;            if (eventos != null) listaEventos.addAll(eventos);</b>
+<b class="nc">&nbsp;            adapter.notifyDataSetChanged();</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        // Señal para abrir diálogo de inscritos
+<b class="nc">&nbsp;        vm.getOpenInscritosEvent().observe(getViewLifecycleOwner(), pair -&gt; {</b>
+<b class="nc">&nbsp;            if (pair == null) return;</b>
+<b class="nc">&nbsp;            abrirInscritosDialog(pair.first, pair.second);</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        // Datos en tiempo real de inscritos (aliases + uids a la vez)
+<b class="nc">&nbsp;        vm.getInscritosData().observe(getViewLifecycleOwner(), pair -&gt; {</b>
+<b class="nc">&nbsp;            if (inscritosDialog != null &amp;&amp; pair != null) {</b>
+<b class="nc">&nbsp;                inscritosDialog.updateData(pair.first, pair.second);</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setupClicks() {
+<b class="nc">&nbsp;        btnVolver.setOnClickListener(view -&gt; {</b>
+<b class="nc">&nbsp;            NavController nav = Navigation.findNavController(view);</b>
+<b class="nc">&nbsp;            nav.popBackStack();</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Adapter actions
+&nbsp;    // ---------------------------
+&nbsp;
+<b class="nc">&nbsp;    @Override public void onIncrementar(String idDoc) { vm.incrementarPlazas(idDoc); }</b>
+<b class="nc">&nbsp;    @Override public void onDecrementar(String idDoc) { vm.decrementarPlazas(idDoc); }</b>
+<b class="nc">&nbsp;    @Override public void onBorrar(Map&lt;String, Object&gt; evento) { pedirConfirmacionBorrar(evento); }</b>
+<b class="nc">&nbsp;    @Override public void onEditar(Map&lt;String, Object&gt; evento) { mostrarDialogoEditar(evento); }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onVerInscritos(String idDoc, String tituloMostrado) {
+<b class="nc">&nbsp;        vm.abrirInscritosTiempoReal(idDoc, tituloMostrado);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public com.google.firebase.firestore.CollectionReference getInscritosRef(String idDoc) {
+<b class="nc">&nbsp;        return vm.getInscritosRef(idDoc);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Diálogos y helpers UI
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private void pedirConfirmacionBorrar(Map&lt;String, Object&gt; evento) {
+<b class="nc">&nbsp;        new AlertDialog.Builder(requireContext())</b>
+<b class="nc">&nbsp;                .setTitle(&quot;Borrar evento&quot;)</b>
+<b class="nc">&nbsp;                .setMessage(&quot;¿Seguro que quieres borrar este evento? Se perderán inscripciones.&quot;)</b>
+<b class="nc">&nbsp;                .setPositiveButton(&quot;Borrar&quot;, (d, w) -&gt; {</b>
+<b class="nc">&nbsp;                    String idDoc = String.valueOf(evento.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;                    vm.borrarEvento(idDoc);</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .setNegativeButton(&quot;Cancelar&quot;, null)</b>
+<b class="nc">&nbsp;                .show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void mostrarDialogoEditar(Map&lt;String, Object&gt; evento) {
+<b class="nc">&nbsp;        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_editar_deporte, null);</b>
+&nbsp;
+<b class="nc">&nbsp;        TextInputEditText etNombre    = view.findViewById(R.id.etNombreDeporte);</b>
+<b class="nc">&nbsp;        TextInputEditText etPlazas    = view.findViewById(R.id.etCantidadJugadores);</b>
+<b class="nc">&nbsp;        TextInputEditText etFecha     = view.findViewById(R.id.etFecha);</b>
+<b class="nc">&nbsp;        TextInputEditText etHora      = view.findViewById(R.id.etHora);</b>
+<b class="nc">&nbsp;        TextInputEditText etDesc      = view.findViewById(R.id.etDescripcionEvento);</b>
+<b class="nc">&nbsp;        TextInputEditText etReglas    = view.findViewById(R.id.etReglasEvento);</b>
+<b class="nc">&nbsp;        TextInputEditText etMaterial  = view.findViewById(R.id.etMateriales);</b>
+<b class="nc">&nbsp;        TextInputEditText etUrl       = view.findViewById(R.id.etUrlPueblo);</b>
+&nbsp;
+&nbsp;        // Precarga segura (evita &quot;null&quot; en UI)
+<b class="nc">&nbsp;        etNombre.setText(String.valueOf(evento.get(&quot;nombre&quot;)));</b>
+<b class="nc">&nbsp;        etPlazas.setText(String.valueOf(evento.get(&quot;plazasDisponibles&quot;)));</b>
+<b class="nc">&nbsp;        etFecha.setText(String.valueOf(evento.get(&quot;fecha&quot;)));</b>
+<b class="nc">&nbsp;        etHora.setText(String.valueOf(evento.get(&quot;hora&quot;)));</b>
+&nbsp;        // Pickers al tocar los campos
+<b class="nc">&nbsp;        etFecha.setOnClickListener(v -&gt; mostrarDatePickerPara(etFecha));</b>
+<b class="nc">&nbsp;        etHora.setOnClickListener(v -&gt; mostrarTimePickerPara(etHora));</b>
+<b class="nc">&nbsp;        etDesc.setText(evento.get(&quot;descripcion&quot;) == null ? &quot;&quot; : String.valueOf(evento.get(&quot;descripcion&quot;)));</b>
+<b class="nc">&nbsp;        etReglas.setText(evento.get(&quot;reglas&quot;) == null ? &quot;&quot; : String.valueOf(evento.get(&quot;reglas&quot;)));</b>
+<b class="nc">&nbsp;        etMaterial.setText(evento.get(&quot;materiales&quot;) == null ? &quot;&quot; : String.valueOf(evento.get(&quot;materiales&quot;)));</b>
+<b class="nc">&nbsp;        etUrl.setText(evento.get(&quot;urlPueblo&quot;) == null ? &quot;&quot; : String.valueOf(evento.get(&quot;urlPueblo&quot;)));</b>
+&nbsp;
+<b class="nc">&nbsp;        AlertDialog dialog = new AlertDialog.Builder(requireContext())</b>
+<b class="nc">&nbsp;                .setTitle(&quot;Editar evento&quot;)</b>
+<b class="nc">&nbsp;                .setView(view)</b>
+<b class="nc">&nbsp;                .setPositiveButton(&quot;Guardar&quot;, null)</b>
+<b class="nc">&nbsp;                .setNegativeButton(&quot;Cancelar&quot;, null)</b>
+<b class="nc">&nbsp;                .create();</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.setOnShowListener(dlg -&gt; dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -&gt; {</b>
+<b class="nc">&nbsp;            String nombre    = String.valueOf(etNombre.getText()).trim();</b>
+<b class="nc">&nbsp;            String plazasTx  = String.valueOf(etPlazas.getText()).trim();</b>
+<b class="nc">&nbsp;            String fecha     = String.valueOf(etFecha.getText()).trim();</b>
+<b class="nc">&nbsp;            String hora      = String.valueOf(etHora.getText()).trim();</b>
+<b class="nc">&nbsp;            String desc      = String.valueOf(etDesc.getText()).trim();</b>
+<b class="nc">&nbsp;            String reglas    = String.valueOf(etReglas.getText()).trim();</b>
+<b class="nc">&nbsp;            String material  = String.valueOf(etMaterial.getText()).trim();</b>
+<b class="nc">&nbsp;            String url       = String.valueOf(etUrl.getText()).trim();</b>
+&nbsp;
+<b class="nc">&nbsp;            if (nombre.isEmpty())  { etNombre.setError(&quot;Obligatorio&quot;); return; }</b>
+<b class="nc">&nbsp;            if (desc.isEmpty())    { etDesc.setError(&quot;Obligatorio&quot;); return; }</b>
+<b class="nc">&nbsp;            if (reglas.isEmpty())  { etReglas.setError(&quot;Obligatorio&quot;); return; }</b>
+<b class="nc">&nbsp;            if (material.isEmpty()){ etMaterial.setError(&quot;Obligatorio&quot;); return; }</b>
+<b class="nc">&nbsp;            if (url.isEmpty())     { etUrl.setError(&quot;Obligatorio&quot;); return; }</b>
+&nbsp;
+<b class="nc">&nbsp;            String errPlazas = ValidacionesEvento.validarPlazas(plazasTx, 1, 200);</b>
+<b class="nc">&nbsp;            if (errPlazas != null) { etPlazas.setError(errPlazas); return; }</b>
+&nbsp;
+<b class="nc">&nbsp;            String errFechaHora = ValidacionesEvento.validarFechaHoraFuturas(fecha, hora);</b>
+<b class="nc">&nbsp;            if (errFechaHora != null) { etFecha.setError(errFechaHora); return; }</b>
+&nbsp;
+&nbsp;            int plazas;
+<b class="nc">&nbsp;            try { plazas = Integer.parseInt(plazasTx); }</b>
+<b class="nc">&nbsp;            catch (Exception e) { etPlazas.setError(&quot;Número inválido&quot;); return; }</b>
+&nbsp;
+<b class="nc">&nbsp;            Map&lt;String, Object&gt; nuevos = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;nombre&quot;, nombre);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;plazasDisponibles&quot;, plazas);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;fecha&quot;, fecha);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;hora&quot;, hora);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;descripcion&quot;, desc);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;reglas&quot;, reglas);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;materiales&quot;, material);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;urlPueblo&quot;, url);</b>
+<b class="nc">&nbsp;            nuevos.put(&quot;ayuntamientoId&quot;, ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;            String oldId = String.valueOf(evento.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;            String newId = GestionEventosMasPlazasViewModel.generarDocId(nombre, fecha, hora);</b>
+&nbsp;
+<b class="nc">&nbsp;            vm.guardarEdicion(oldId, newId, nuevos);</b>
+<b class="nc">&nbsp;            dialog.dismiss();</b>
+&nbsp;        }));
+&nbsp;
+<b class="nc">&nbsp;        dialog.show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void mostrarDatePickerPara(TextInputEditText target) {
+<b class="nc">&nbsp;        java.util.Calendar c = java.util.Calendar.getInstance();</b>
+<b class="nc">&nbsp;        String f = target.getText() != null ? target.getText().toString().trim() : &quot;&quot;;</b>
+<b class="nc">&nbsp;        if (!f.isEmpty()) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                String[] p = f.split(&quot;/&quot;);</b>
+<b class="nc">&nbsp;                int day = Integer.parseInt(p[0]);</b>
+<b class="nc">&nbsp;                int mon = Integer.parseInt(p[1]) - 1;</b>
+<b class="nc">&nbsp;                int yr  = Integer.parseInt(p[2]);</b>
+<b class="nc">&nbsp;                c.set(yr, mon, day);</b>
+&nbsp;            } catch (Exception ignored) {}
+&nbsp;        }
+<b class="nc">&nbsp;        new DatePickerDialog(</b>
+<b class="nc">&nbsp;                requireContext(),</b>
+&nbsp;                (view, year, month, dayOfMonth) -&gt;
+<b class="nc">&nbsp;                        target.setText(String.format(java.util.Locale.getDefault(),</b>
+<b class="nc">&nbsp;                                &quot;%02d/%02d/%04d&quot;, dayOfMonth, month + 1, year)),</b>
+<b class="nc">&nbsp;                c.get(java.util.Calendar.YEAR),</b>
+<b class="nc">&nbsp;                c.get(java.util.Calendar.MONTH),</b>
+<b class="nc">&nbsp;                c.get(java.util.Calendar.DAY_OF_MONTH)</b>
+<b class="nc">&nbsp;        ).show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void mostrarTimePickerPara(TextInputEditText target) {
+<b class="nc">&nbsp;        java.util.Calendar c = java.util.Calendar.getInstance();</b>
+<b class="nc">&nbsp;        String h = target.getText() != null ? target.getText().toString().trim() : &quot;&quot;;</b>
+<b class="nc">&nbsp;        if (!h.isEmpty()) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                String[] p = h.split(&quot;:&quot;);</b>
+<b class="nc">&nbsp;                int hr = Integer.parseInt(p[0]);</b>
+<b class="nc">&nbsp;                int mi = Integer.parseInt(p[1]);</b>
+<b class="nc">&nbsp;                c.set(java.util.Calendar.HOUR_OF_DAY, hr);</b>
+<b class="nc">&nbsp;                c.set(java.util.Calendar.MINUTE, mi);</b>
+&nbsp;            } catch (Exception ignored) {}
+&nbsp;        }
+<b class="nc">&nbsp;        new TimePickerDialog(</b>
+<b class="nc">&nbsp;                requireContext(),</b>
+&nbsp;                (view, hourOfDay, minute) -&gt;
+<b class="nc">&nbsp;                        target.setText(String.format(java.util.Locale.getDefault(),</b>
+<b class="nc">&nbsp;                                &quot;%02d:%02d&quot;, hourOfDay, minute)),</b>
+<b class="nc">&nbsp;                c.get(java.util.Calendar.HOUR_OF_DAY),</b>
+<b class="nc">&nbsp;                c.get(java.util.Calendar.MINUTE),</b>
+&nbsp;                true
+<b class="nc">&nbsp;        ).show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Helpers diálogo inscritos
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private void abrirInscritosDialog(String idDoc, String titulo) {
+<b class="nc">&nbsp;        inscritosDialog = InscritosDialogFragment.newInstance(idDoc, titulo);</b>
+&nbsp;        // ⬅️ Importante: usar el CHILD FragmentManager para que el parent sea ESTE fragment
+<b class="nc">&nbsp;        inscritosDialog.show(getChildFragmentManager(), &quot;inscritos_dialog&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cerrarInscritosDialog() {
+<b class="nc">&nbsp;        if (inscritosDialog != null) {</b>
+<b class="nc">&nbsp;            inscritosDialog.dismissAllowingStateLoss();</b>
+<b class="nc">&nbsp;            inscritosDialog = null;</b>
+&nbsp;        }
+&nbsp;        // El listener se corta desde onDialogDismissRequested()
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Host callbacks del diálogo
+&nbsp;    // ---------------------------
+&nbsp;
+<b class="nc">&nbsp;    @Override public void onDialogShown(String idDoc, String titulo) { /* VM ya escuchando */ }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onDialogDismissRequested() {
+<b class="nc">&nbsp;        vm.cerrarInscritosTiempoReal(); // detiene listener</b>
+<b class="nc">&nbsp;        cerrarInscritosDialog();        // cierra UI por si acaso</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onExpulsarClicked(String idDoc, String uid) {
+<b class="nc">&nbsp;        vm.expulsarInscrito(idDoc, uid);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

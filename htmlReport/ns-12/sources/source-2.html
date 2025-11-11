@@ -1,0 +1,204 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > InicioUiState</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.user.ui.menuPrincipal</a>
+</div>
+
+<h1>Coverage Summary for Class: InicioUiState (com.nilson.appsportmate.features.user.ui.menuPrincipal)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InicioUiState</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">InicioUiState$DeporteUi</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.user.ui.menuPrincipal;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class InicioUiState {
+&nbsp;    public final boolean loading;
+&nbsp;    public final String error;
+&nbsp;    public final String message;
+&nbsp;    public final List&lt;DeporteUi&gt; deportes;
+&nbsp;
+<b class="nc">&nbsp;    public InicioUiState(boolean loading, String error, String message, List&lt;DeporteUi&gt; deportes) {</b>
+<b class="nc">&nbsp;        this.loading = loading;</b>
+<b class="nc">&nbsp;        this.error = error;</b>
+<b class="nc">&nbsp;        this.message = message;</b>
+<b class="nc">&nbsp;        this.deportes = deportes == null ? new ArrayList&lt;&gt;() : deportes;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public static InicioUiState loading() { return new InicioUiState(true, null, null, null); }</b>
+<b class="nc">&nbsp;    public static InicioUiState success(List&lt;DeporteUi&gt; items) { return new InicioUiState(false, null, null, items); }</b>
+<b class="nc">&nbsp;    public static InicioUiState error(String msg) { return new InicioUiState(false, msg, null, null); }</b>
+&nbsp;
+&nbsp;    public InicioUiState withMessage(String msg) {
+<b class="nc">&nbsp;        return new InicioUiState(this.loading, this.error, msg, this.deportes);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class DeporteUi {
+&nbsp;        public String docId;
+&nbsp;        public String aytoId;
+&nbsp;
+&nbsp;        public String nombreDeporte;
+&nbsp;        public String descripcion;
+&nbsp;        public String fecha;   // dd/MM/yyyy
+&nbsp;        public String hora;    // HH:mm
+&nbsp;        public String lugar;
+&nbsp;
+&nbsp;        public int plazasMax;
+&nbsp;        public int inscritos;
+&nbsp;
+&nbsp;        public String ayuntamiento; // nombre visible
+&nbsp;
+<b class="nc">&nbsp;        public DeporteUi() {}</b>
+&nbsp;
+&nbsp;        public DeporteUi(String nombreDeporte, String fecha, String hora, String ayuntamiento,
+<b class="nc">&nbsp;                         String docId, String aytoId) {</b>
+<b class="nc">&nbsp;            this.nombreDeporte = nombreDeporte;</b>
+<b class="nc">&nbsp;            this.fecha = fecha;</b>
+<b class="nc">&nbsp;            this.hora = hora;</b>
+<b class="nc">&nbsp;            this.ayuntamiento = ayuntamiento;</b>
+<b class="nc">&nbsp;            this.docId = docId;</b>
+<b class="nc">&nbsp;            this.aytoId = aytoId;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

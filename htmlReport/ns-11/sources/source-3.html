@@ -1,0 +1,405 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeportesDisponiblesViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.user.ui.deportesdisponibles</a>
+</div>
+
+<h1>Coverage Summary for Class: DeportesDisponiblesViewModel (com.nilson.appsportmate.features.user.ui.deportesdisponibles)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeportesDisponiblesViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/82)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/169)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.user.ui.deportesdisponibles;
+&nbsp;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.android.gms.tasks.Tasks;
+&nbsp;import com.google.firebase.firestore.DocumentReference;
+&nbsp;import com.google.firebase.firestore.DocumentSnapshot;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.google.firebase.firestore.Source;
+&nbsp;import com.google.firebase.firestore.WriteBatch;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="nc">&nbsp;public class DeportesDisponiblesViewModel extends ViewModel {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+&nbsp;
+<b class="nc">&nbsp;    private final MutableLiveData&lt;DeportesDisponiblesUiState&gt; _uiState =</b>
+<b class="nc">&nbsp;            new MutableLiveData&lt;&gt;(DeportesDisponiblesUiState.loading());</b>
+<b class="nc">&nbsp;    public final LiveData&lt;DeportesDisponiblesUiState&gt; uiState = _uiState;</b>
+&nbsp;
+&nbsp;    private @Nullable String ayuntamientoId;
+&nbsp;    private @Nullable String uid;
+&nbsp;    private @Nullable String alias;
+&nbsp;
+<b class="nc">&nbsp;    private final List&lt;Map&lt;String, Object&gt;&gt; cacheDisponibles = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    private final List&lt;Map&lt;String, Object&gt;&gt; cacheMis = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;    public void init(String ayuntamientoId, String uid, String alias) {
+<b class="nc">&nbsp;        this.ayuntamientoId = emptyToNull(ayuntamientoId);</b>
+<b class="nc">&nbsp;        this.uid = emptyToNull(uid);</b>
+<b class="nc">&nbsp;        this.alias = emptyToNull(alias);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void ensureAyuntamientoId(@Nullable String nuevoId) {
+<b class="nc">&nbsp;        nuevoId = emptyToNull(nuevoId);</b>
+<b class="nc">&nbsp;        if ((nuevoId == null &amp;&amp; ayuntamientoId != null) ||</b>
+<b class="nc">&nbsp;                (nuevoId != null &amp;&amp; !nuevoId.equals(ayuntamientoId))) {</b>
+<b class="nc">&nbsp;            this.ayuntamientoId = nuevoId;</b>
+<b class="nc">&nbsp;            loadAll();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void loadAll() {
+<b class="nc">&nbsp;        _uiState.setValue(DeportesDisponiblesUiState.loading());</b>
+<b class="nc">&nbsp;        Tasks.whenAll(</b>
+<b class="nc">&nbsp;                Tasks.call(() -&gt; { cargarDisponiblesInternal(); return null; }),</b>
+<b class="nc">&nbsp;                Tasks.call(() -&gt; { cargarMisInternal(); return null; })</b>
+<b class="nc">&nbsp;        ).addOnSuccessListener(v -&gt; {</b>
+<b class="nc">&nbsp;            _uiState.setValue(DeportesDisponiblesUiState.success(</b>
+&nbsp;                    new ArrayList&lt;&gt;(cacheDisponibles),
+&nbsp;                    new ArrayList&lt;&gt;(cacheMis)
+&nbsp;            ));
+<b class="nc">&nbsp;        }).addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;            _uiState.setValue(DeportesDisponiblesUiState.message(</b>
+<b class="nc">&nbsp;                    DeportesDisponiblesUiState.success(new ArrayList&lt;&gt;(cacheDisponibles), new ArrayList&lt;&gt;(cacheMis)),</b>
+<b class="nc">&nbsp;                    &quot;Error cargando datos: &quot; + (e != null ? e.getMessage() : &quot;&quot;)</b>
+&nbsp;            ));
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cargarDisponiblesInternal() throws Exception {
+<b class="nc">&nbsp;        cacheDisponibles.clear();</b>
+<b class="nc">&nbsp;        if (ayuntamientoId == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;DocumentSnapshot&gt; docs = Tasks.await(</b>
+<b class="nc">&nbsp;                db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                        .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                        .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                        .get(Source.SERVER)</b>
+<b class="nc">&nbsp;        ).getDocuments();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (DocumentSnapshot d : docs) {</b>
+<b class="nc">&nbsp;            Map&lt;String, Object&gt; m = d.getData();</b>
+<b class="nc">&nbsp;            if (m == null) continue;</b>
+<b class="nc">&nbsp;            m = new HashMap&lt;&gt;(m);</b>
+<b class="nc">&nbsp;            m.put(&quot;idDoc&quot;, d.getId());</b>
+<b class="nc">&nbsp;            cacheDisponibles.add(m);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cargarMisInternal() throws Exception {
+<b class="nc">&nbsp;        cacheMis.clear();</b>
+<b class="nc">&nbsp;        if (uid == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;DocumentSnapshot&gt; snaps = Tasks.await(</b>
+<b class="nc">&nbsp;                db.collection(&quot;usuarios&quot;)</b>
+<b class="nc">&nbsp;                        .document(uid)</b>
+<b class="nc">&nbsp;                        .collection(&quot;inscripciones&quot;)</b>
+<b class="nc">&nbsp;                        .get(Source.SERVER)</b>
+<b class="nc">&nbsp;        ).getDocuments();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (snaps.isEmpty()) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Map&lt;String, Object&gt;&gt; tmp = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        WriteBatch batchDelete = db.batch();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (DocumentSnapshot d : snaps) {</b>
+<b class="nc">&nbsp;            Map&lt;String, Object&gt; m = d.getData();</b>
+<b class="nc">&nbsp;            if (m == null) continue;</b>
+&nbsp;
+<b class="nc">&nbsp;            String idDoc = d.getId();</b>
+<b class="nc">&nbsp;            String aytoIdInscripcion = valueOf(m.get(&quot;ayuntamientoId&quot;));</b>
+<b class="nc">&nbsp;            if (aytoIdInscripcion == null || aytoIdInscripcion.isEmpty()) {</b>
+<b class="nc">&nbsp;                aytoIdInscripcion = ayuntamientoId;</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            m = new HashMap&lt;&gt;(m);</b>
+<b class="nc">&nbsp;            m.put(&quot;idDoc&quot;, idDoc);</b>
+&nbsp;
+<b class="nc">&nbsp;            DocumentSnapshot evSnap = Tasks.await(</b>
+<b class="nc">&nbsp;                    db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                            .document(aytoIdInscripcion)</b>
+<b class="nc">&nbsp;                            .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                            .document(idDoc)</b>
+<b class="nc">&nbsp;                            .get(Source.SERVER)</b>
+&nbsp;            );
+&nbsp;
+<b class="nc">&nbsp;            if (evSnap.exists()) {</b>
+<b class="nc">&nbsp;                tmp.add(m);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                batchDelete.delete(d.getReference());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Tasks.await(batchDelete.commit());</b>
+&nbsp;
+<b class="nc">&nbsp;        cacheMis.clear();</b>
+<b class="nc">&nbsp;        cacheMis.addAll(tmp);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void apuntarse(Map&lt;String, Object&gt; deporte) {
+<b class="nc">&nbsp;        if (uid == null || ayuntamientoId == null || alias == null) {</b>
+<b class="nc">&nbsp;            postMessage(&quot;Inicia sesión para inscribirte.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        setActionInProgress(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        String docId = valueOf(deporte.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;        DocumentReference refDeporte = db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                .document(docId);</b>
+&nbsp;
+<b class="nc">&nbsp;        DocumentReference refInscrito = refDeporte.collection(&quot;inscritos&quot;).document(uid);</b>
+<b class="nc">&nbsp;        DocumentReference refUser = db.collection(&quot;usuarios&quot;)</b>
+<b class="nc">&nbsp;                .document(uid)</b>
+<b class="nc">&nbsp;                .collection(&quot;inscripciones&quot;).document(docId);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.runTransaction(tx -&gt; {</b>
+<b class="nc">&nbsp;            DocumentSnapshot snapDeporte = tx.get(refDeporte);</b>
+<b class="nc">&nbsp;            Long plazas = snapDeporte.getLong(&quot;plazasDisponibles&quot;);</b>
+<b class="nc">&nbsp;            if (plazas == null) plazas = 0L;</b>
+<b class="nc">&nbsp;            if (plazas &lt;= 0) throw new IllegalStateException(&quot;NO_PLAZAS&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            DocumentSnapshot snapInscrito = tx.get(refInscrito);</b>
+<b class="nc">&nbsp;            if (snapInscrito.exists()) throw new IllegalStateException(&quot;YA_INSCRITO&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            tx.update(refDeporte, &quot;plazasDisponibles&quot;, plazas - 1);</b>
+&nbsp;
+<b class="nc">&nbsp;            Map&lt;String, Object&gt; ins = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;            ins.put(&quot;uid&quot;, uid);</b>
+<b class="nc">&nbsp;            ins.put(&quot;alias&quot;, alias);</b>
+<b class="nc">&nbsp;            ins.put(&quot;ts&quot;, System.currentTimeMillis());</b>
+<b class="nc">&nbsp;            tx.set(refInscrito, ins);</b>
+&nbsp;
+<b class="nc">&nbsp;            Map&lt;String, Object&gt; copia = new HashMap&lt;&gt;(deporte);</b>
+<b class="nc">&nbsp;            copia.put(&quot;idDoc&quot;, docId);</b>
+<b class="nc">&nbsp;            copia.put(&quot;ayuntamientoId&quot;, ayuntamientoId);</b>
+<b class="nc">&nbsp;            tx.set(refUser, copia);</b>
+&nbsp;
+<b class="nc">&nbsp;            return null;</b>
+<b class="nc">&nbsp;        }).addOnSuccessListener(unused -&gt; {</b>
+<b class="nc">&nbsp;            postMessage(&quot;Inscripción realizada&quot;);</b>
+<b class="nc">&nbsp;            reloadAfterAction();</b>
+<b class="nc">&nbsp;        }).addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;            String code = e != null &amp;&amp; e.getMessage() != null ? e.getMessage() : &quot;&quot;;</b>
+<b class="nc">&nbsp;            if (code.contains(&quot;YA_INSCRITO&quot;)) {</b>
+<b class="nc">&nbsp;                postMessage(&quot;Solo puedes apuntarte una vez a esta actividad.&quot;);</b>
+<b class="nc">&nbsp;            } else if (code.contains(&quot;NO_PLAZAS&quot;)) {</b>
+<b class="nc">&nbsp;                postMessage(&quot;No hay plazas disponibles.&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                postMessage(&quot;No se pudo inscribir: &quot; + code);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            setActionInProgress(false);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    public void desapuntarse(Map&lt;String, Object&gt; deporte) {
+<b class="nc">&nbsp;        if (uid == null || ayuntamientoId == null) {</b>
+<b class="nc">&nbsp;            postMessage(&quot;Inicia sesión para continuar.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        setActionInProgress(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        String docId = valueOf(deporte.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;        DocumentReference refDeporte = db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                .document(docId);</b>
+&nbsp;
+<b class="nc">&nbsp;        DocumentReference refInscrito = refDeporte.collection(&quot;inscritos&quot;).document(uid);</b>
+<b class="nc">&nbsp;        DocumentReference refUser = db.collection(&quot;usuarios&quot;)</b>
+<b class="nc">&nbsp;                .document(uid)</b>
+<b class="nc">&nbsp;                .collection(&quot;inscripciones&quot;).document(docId);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.runTransaction(tx -&gt; {</b>
+<b class="nc">&nbsp;            DocumentSnapshot snapDep = tx.get(refDeporte);</b>
+<b class="nc">&nbsp;            Long plazas = snapDep.getLong(&quot;plazasDisponibles&quot;);</b>
+<b class="nc">&nbsp;            if (plazas == null) plazas = 0L;</b>
+&nbsp;
+<b class="nc">&nbsp;            DocumentSnapshot snapIns = tx.get(refInscrito);</b>
+<b class="nc">&nbsp;            if (!snapIns.exists()) throw new IllegalStateException(&quot;NO_ESTABA_INSCRITO&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            tx.update(refDeporte, &quot;plazasDisponibles&quot;, plazas + 1);</b>
+<b class="nc">&nbsp;            tx.delete(refInscrito);</b>
+<b class="nc">&nbsp;            tx.delete(refUser);</b>
+&nbsp;
+<b class="nc">&nbsp;            return null;</b>
+<b class="nc">&nbsp;        }).addOnSuccessListener(unused -&gt; {</b>
+<b class="nc">&nbsp;            postMessage(&quot;Te has desapuntado&quot;);</b>
+<b class="nc">&nbsp;            reloadAfterAction();</b>
+<b class="nc">&nbsp;        }).addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;            String code = e != null &amp;&amp; e.getMessage() != null ? e.getMessage() : &quot;&quot;;</b>
+<b class="nc">&nbsp;            if (code.contains(&quot;NO_ESTABA_INSCRITO&quot;)) {</b>
+<b class="nc">&nbsp;                postMessage(&quot;No estabas inscrito en esta actividad.&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                postMessage(&quot;Error al desapuntarte: &quot; + code);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            setActionInProgress(false);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void reloadAfterAction() {
+<b class="nc">&nbsp;        Tasks.whenAll(</b>
+<b class="nc">&nbsp;                Tasks.call(() -&gt; { cargarDisponiblesInternal(); return null; }),</b>
+<b class="nc">&nbsp;                Tasks.call(() -&gt; { cargarMisInternal(); return null; })</b>
+<b class="nc">&nbsp;        ).addOnSuccessListener(v -&gt; {</b>
+<b class="nc">&nbsp;            _uiState.setValue(DeportesDisponiblesUiState.success(</b>
+&nbsp;                    new ArrayList&lt;&gt;(cacheDisponibles),
+&nbsp;                    new ArrayList&lt;&gt;(cacheMis)
+&nbsp;            ));
+<b class="nc">&nbsp;            setActionInProgress(false);</b>
+<b class="nc">&nbsp;        }).addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;            _uiState.setValue(DeportesDisponiblesUiState.message(</b>
+<b class="nc">&nbsp;                    DeportesDisponiblesUiState.success(new ArrayList&lt;&gt;(cacheDisponibles), new ArrayList&lt;&gt;(cacheMis)),</b>
+<b class="nc">&nbsp;                    &quot;Error recargando: &quot; + (e != null ? e.getMessage() : &quot;&quot;)</b>
+&nbsp;            ));
+<b class="nc">&nbsp;            setActionInProgress(false);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setActionInProgress(boolean inProgress) {
+<b class="nc">&nbsp;        DeportesDisponiblesUiState prev = _uiState.getValue();</b>
+<b class="nc">&nbsp;        if (prev == null) prev = DeportesDisponiblesUiState.loading();</b>
+<b class="nc">&nbsp;        _uiState.setValue(DeportesDisponiblesUiState.withAction(prev, inProgress));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void postMessage(String msg) {
+<b class="nc">&nbsp;        DeportesDisponiblesUiState prev = _uiState.getValue();</b>
+<b class="nc">&nbsp;        if (prev == null) prev = DeportesDisponiblesUiState.loading();</b>
+<b class="nc">&nbsp;        _uiState.setValue(DeportesDisponiblesUiState.message(prev, msg));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void consumeMessage() {
+<b class="nc">&nbsp;        DeportesDisponiblesUiState prev = _uiState.getValue();</b>
+<b class="nc">&nbsp;        if (prev != null &amp;&amp; prev.message != null) {</b>
+<b class="nc">&nbsp;            _uiState.setValue(prev.clearMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static @Nullable String emptyToNull(@Nullable String s) {
+<b class="nc">&nbsp;        if (s == null) return null;</b>
+<b class="nc">&nbsp;        s = s.trim();</b>
+<b class="nc">&nbsp;        return s.isEmpty() ? null : s;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static @Nullable String valueOf(@Nullable Object o) {
+<b class="nc">&nbsp;        if (o == null) return null;</b>
+<b class="nc">&nbsp;        String s = String.valueOf(o);</b>
+<b class="nc">&nbsp;        return &quot;null&quot;.equalsIgnoreCase(s) ? null : s;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

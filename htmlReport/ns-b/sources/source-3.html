@@ -1,0 +1,264 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeportesDisponiblesAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.adaptadores</a>
+</div>
+
+<h1>Coverage Summary for Class: DeportesDisponiblesAdapter (com.nilson.appsportmate.features.townhall.adaptadores)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeportesDisponiblesAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DeportesDisponiblesAdapter$Listener</td>
+  </tr>
+  <tr>
+    <td class="name">DeportesDisponiblesAdapter$VH</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.adaptadores;
+&nbsp;
+&nbsp;import android.text.TextUtils;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.Button;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.recyclerview.widget.RecyclerView;
+&nbsp;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;public class DeportesDisponiblesAdapter extends RecyclerView.Adapter&lt;DeportesDisponiblesAdapter.VH&gt; {
+&nbsp;
+&nbsp;    public interface Listener {
+&nbsp;        void onApuntarse(Map&lt;String, Object&gt; deporte);
+&nbsp;    }
+&nbsp;
+&nbsp;    private final List&lt;Map&lt;String, Object&gt;&gt; data;
+&nbsp;    private final Listener listener;
+&nbsp;
+&nbsp;    // IDs marcados como &quot;apuntado&quot; tras éxito (para pintar el estado sin reconsultar)
+<b class="nc">&nbsp;    private final Set&lt;String&gt; apuntados = new HashSet&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;    public DeportesDisponiblesAdapter(List&lt;Map&lt;String, Object&gt;&gt; data, Listener listener) {</b>
+<b class="nc">&nbsp;        this.data = data;</b>
+<b class="nc">&nbsp;        this.listener = listener;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @NonNull @Override
+&nbsp;    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<b class="nc">&nbsp;        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_deporte_disponible, parent, false);</b>
+<b class="nc">&nbsp;        return new VH(v);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onBindViewHolder(@NonNull VH h, int position) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; d = data.get(position);</b>
+&nbsp;
+<b class="nc">&nbsp;        String idDoc       = str(d.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;        String nombre      = str(d.get(&quot;nombre&quot;));</b>
+<b class="nc">&nbsp;        String fecha       = str(d.get(&quot;fecha&quot;));</b>
+<b class="nc">&nbsp;        String hora        = str(d.get(&quot;hora&quot;));</b>
+<b class="nc">&nbsp;        String plazas      = str(d.get(&quot;plazasDisponibles&quot;));</b>
+<b class="nc">&nbsp;        String descripcion = str(d.get(&quot;descripcion&quot;));</b>
+<b class="nc">&nbsp;        String reglas      = str(d.get(&quot;reglas&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        String material    = firstNonEmpty(str(d.get(&quot;materiales&quot;)), str(d.get(&quot;material&quot;)));</b>
+<b class="nc">&nbsp;        String url         = firstNonEmpty(str(d.get(&quot;urlPueblo&quot;)),  str(d.get(&quot;url&quot;)));</b>
+&nbsp;
+<b class="nc">&nbsp;        h.tvNombre.setText(nonEmpty(nombre, &quot;(Sin nombre)&quot;));</b>
+<b class="nc">&nbsp;        h.tvFecha.setText(&quot;Fecha: &quot; + nonEmpty(fecha, &quot;—&quot;));</b>
+<b class="nc">&nbsp;        h.tvHora.setText(&quot;Hora: &quot; + nonEmpty(hora, &quot;—&quot;));</b>
+<b class="nc">&nbsp;        h.tvPlazas.setText(&quot;Plazas: &quot; + nonEmpty(plazas, &quot;0&quot;));</b>
+<b class="nc">&nbsp;        h.tvDescripcion.setText(&quot;Descripción: &quot; + nonEmpty(descripcion, &quot;—&quot;));</b>
+<b class="nc">&nbsp;        h.tvReglas.setText(&quot;Reglas: &quot; + nonEmpty(reglas, &quot;—&quot;));</b>
+<b class="nc">&nbsp;        h.tvMaterial.setText(&quot;Material: &quot; + nonEmpty(material, &quot;—&quot;));</b>
+<b class="nc">&nbsp;        h.tvUrl.setText(TextUtils.isEmpty(url) ? &quot;—&quot; : url);</b>
+&nbsp;
+<b class="nc">&nbsp;        boolean yaApuntado = apuntados.contains(idDoc);</b>
+<b class="nc">&nbsp;        h.btnApuntarse.setText(yaApuntado ? &quot;Apuntado&quot; : &quot;Apuntarse&quot;);</b>
+<b class="nc">&nbsp;        h.btnApuntarse.setEnabled(!yaApuntado);</b>
+&nbsp;
+<b class="nc">&nbsp;        h.btnApuntarse.setOnClickListener(v -&gt; {</b>
+<b class="nc">&nbsp;            if (listener != null) listener.onApuntarse(d);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    @Override public int getItemCount() { return data.size(); }</b>
+&nbsp;
+&nbsp;    /** Llamar desde el Fragment tras éxito para reflejar el estado en el botón. */
+&nbsp;    public void markApuntado(String idDoc) {
+<b class="nc">&nbsp;        if (idDoc == null) return;</b>
+<b class="nc">&nbsp;        apuntados.add(idDoc);</b>
+<b class="nc">&nbsp;        notifyDataSetChanged();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /* ===== Helpers ===== */
+&nbsp;    private static String str(Object o) {
+<b class="nc">&nbsp;        if (o == null) return &quot;&quot;;</b>
+<b class="nc">&nbsp;        String s = String.valueOf(o);</b>
+<b class="nc">&nbsp;        return &quot;null&quot;.equalsIgnoreCase(s) ? &quot;&quot; : s;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    private static String nonEmpty(String s, String def) { return TextUtils.isEmpty(s) ? def : s; }</b>
+<b class="nc">&nbsp;    private static String firstNonEmpty(String a, String b) { return !TextUtils.isEmpty(a) ? a : (!TextUtils.isEmpty(b) ? b : &quot;&quot;); }</b>
+&nbsp;
+&nbsp;    /* ===== ViewHolder ===== */
+&nbsp;    static class VH extends RecyclerView.ViewHolder {
+&nbsp;        TextView tvNombre, tvFecha, tvPlazas, tvDescripcion, tvReglas, tvMaterial, tvUrl, tvHora;
+&nbsp;        Button btnApuntarse;
+&nbsp;        VH(@NonNull View itemView) {
+<b class="nc">&nbsp;            super(itemView);</b>
+<b class="nc">&nbsp;            tvNombre      = itemView.findViewById(R.id.tvNombre);</b>
+<b class="nc">&nbsp;            tvFecha       = itemView.findViewById(R.id.tvFecha);</b>
+<b class="nc">&nbsp;            tvHora        = itemView.findViewById(R.id.tvHora);</b>
+<b class="nc">&nbsp;            tvPlazas      = itemView.findViewById(R.id.tvPlazas);</b>
+<b class="nc">&nbsp;            tvDescripcion = itemView.findViewById(R.id.tvDescripcion);</b>
+<b class="nc">&nbsp;            tvReglas      = itemView.findViewById(R.id.tvReglas);</b>
+<b class="nc">&nbsp;            tvMaterial    = itemView.findViewById(R.id.tvMaterial);</b>
+<b class="nc">&nbsp;            tvUrl         = itemView.findViewById(R.id.tvUrl);</b>
+<b class="nc">&nbsp;            btnApuntarse  = itemView.findViewById(R.id.btnApuntarse);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

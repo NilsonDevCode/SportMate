@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FormularioAyuntamientoUiState</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento</a>
+</div>
+
+<h1>Coverage Summary for Class: FormularioAyuntamientoUiState (com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FormularioAyuntamientoUiState</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento;
+&nbsp;
+&nbsp;public class FormularioAyuntamientoUiState {
+&nbsp;    public final boolean loading;
+&nbsp;    public final String message;   // info/ok/error text
+&nbsp;    public final String error;     // validation or save error
+&nbsp;    public final String uid;       // UID mostrado en el campo (solo lectura)
+&nbsp;
+<b class="nc">&nbsp;    public FormularioAyuntamientoUiState(boolean loading, String message, String error, String uid) {</b>
+<b class="nc">&nbsp;        this.loading = loading;</b>
+<b class="nc">&nbsp;        this.message = message;</b>
+<b class="nc">&nbsp;        this.error = error;</b>
+<b class="nc">&nbsp;        this.uid = uid;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static FormularioAyuntamientoUiState idle(String uid) {
+<b class="nc">&nbsp;        return new FormularioAyuntamientoUiState(false, null, null, uid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static FormularioAyuntamientoUiState loading(String uid) {
+<b class="nc">&nbsp;        return new FormularioAyuntamientoUiState(true, null, null, uid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static FormularioAyuntamientoUiState success(String uid, String msg) {
+<b class="nc">&nbsp;        return new FormularioAyuntamientoUiState(false, msg, null, uid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static FormularioAyuntamientoUiState error(String uid, String err) {
+<b class="nc">&nbsp;        return new FormularioAyuntamientoUiState(false, null, err, uid);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

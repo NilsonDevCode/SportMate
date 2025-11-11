@@ -1,0 +1,314 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SignUpViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.ui.auth.signUp</a>
+</div>
+
+<h1>Coverage Summary for Class: SignUpViewModel (com.nilson.appsportmate.ui.auth.signUp)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SignUpViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/106)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.ui.auth.signUp;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.firebase.auth.FirebaseAuth;
+&nbsp;import com.google.firebase.auth.SignInMethodQueryResult;
+&nbsp;import com.google.firebase.firestore.FieldValue;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.google.firebase.firestore.SetOptions;
+&nbsp;import com.google.firebase.firestore.WriteBatch;
+&nbsp;import com.nilson.appsportmate.common.utils.AuthAliasHelper;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.UUID;
+&nbsp;
+<b class="nc">&nbsp;public class SignUpViewModel extends ViewModel {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final FirebaseAuth auth = FirebaseAuth.getInstance();</b>
+<b class="nc">&nbsp;    private final FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+&nbsp;
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; eAlias = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; ePassword = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; eNombre = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; eApellidos = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; eRazon = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; message = new MutableLiveData&lt;&gt;(null);</b>
+&nbsp;
+<b class="nc">&nbsp;    private final MutableLiveData&lt;Boolean&gt; navAyto = new MutableLiveData&lt;&gt;(false);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;Boolean&gt; navUser = new MutableLiveData&lt;&gt;(false);</b>
+&nbsp;
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getEAlias() { return eAlias; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getEPassword() { return ePassword; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getENombre() { return eNombre; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getEApellidos() { return eApellidos; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getERazon() { return eRazon; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getMessage() { return message; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;Boolean&gt; getNavAyto() { return navAyto; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;Boolean&gt; getNavUser() { return navUser; }</b>
+&nbsp;
+&nbsp;    public void onRegisterClicked(
+&nbsp;            Context appContext,
+&nbsp;            String aliasInput,
+&nbsp;            String pass1,
+&nbsp;            String pass2,
+&nbsp;            String nombre,
+&nbsp;            String apellidos,
+&nbsp;            String comunidadNombre,
+&nbsp;            String provinciaNombre,
+&nbsp;            String ciudadNombre,
+&nbsp;            String puebloNombre,
+&nbsp;            String razonSocial,
+&nbsp;            String rol, // &quot;usuario&quot; | &quot;ayuntamiento&quot;
+&nbsp;            String ayuntamientoSeleccionadoId,
+&nbsp;            String comunidadIdSel,
+&nbsp;            String provinciaIdSel,
+&nbsp;            String ciudadIdSel
+&nbsp;    ) {
+&nbsp;        // Reset errores
+<b class="nc">&nbsp;        eAlias.setValue(null); ePassword.setValue(null); eNombre.setValue(null);</b>
+<b class="nc">&nbsp;        eApellidos.setValue(null); eRazon.setValue(null);</b>
+&nbsp;
+<b class="nc">&nbsp;        String aliasErr = AuthAliasHelper.getAliasValidationError(aliasInput);</b>
+<b class="nc">&nbsp;        if (aliasErr != null) { eAlias.setValue(aliasErr); return; }</b>
+<b class="nc">&nbsp;        if (pass1 == null || pass1.isEmpty()) { ePassword.setValue(&quot;Contraseña requerida&quot;); return; }</b>
+<b class="nc">&nbsp;        if (pass1.length() &lt; 6) { ePassword.setValue(&quot;Mínimo 6 caracteres&quot;); return; }</b>
+<b class="nc">&nbsp;        if (!pass1.equals(pass2)) { ePassword.setValue(&quot;Las contraseñas no coinciden&quot;); return; }</b>
+<b class="nc">&nbsp;        if (nombre == null || nombre.trim().isEmpty()) { eNombre.setValue(&quot;Nombre requerido&quot;); return; }</b>
+&nbsp;
+<b class="nc">&nbsp;        if (&quot;usuario&quot;.equals(rol)) {</b>
+<b class="nc">&nbsp;            if (apellidos == null || apellidos.trim().isEmpty()) { eApellidos.setValue(&quot;Apellidos requeridos&quot;); return; }</b>
+<b class="nc">&nbsp;            if (puebloNombre == null || puebloNombre.trim().isEmpty()) { message.setValue(&quot;Selecciona un pueblo&quot;); return; }</b>
+<b class="nc">&nbsp;            if (ayuntamientoSeleccionadoId == null || ayuntamientoSeleccionadoId.trim().isEmpty()) {</b>
+<b class="nc">&nbsp;                message.setValue(&quot;No se pudo resolver el ayuntamiento del pueblo seleccionado&quot;);</b>
+&nbsp;                return;
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            if (razonSocial == null || razonSocial.trim().isEmpty()) { eRazon.setValue(&quot;Razón social requerida&quot;); return; }</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String emailSintetico = AuthAliasHelper.aliasToEmail(aliasInput.trim());</b>
+&nbsp;
+<b class="nc">&nbsp;        auth.fetchSignInMethodsForEmail(emailSintetico)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener((SignInMethodQueryResult r) -&gt; {</b>
+<b class="nc">&nbsp;                    boolean existe = r.getSignInMethods() != null &amp;&amp; !r.getSignInMethods().isEmpty();</b>
+<b class="nc">&nbsp;                    if (existe) { eAlias.setValue(&quot;Alias en uso. Inicia sesión o elige otro.&quot;); return; }</b>
+<b class="nc">&nbsp;                    crearUsuario(</b>
+&nbsp;                            appContext,
+<b class="nc">&nbsp;                            emailSintetico, pass1, aliasInput.trim(), rol,</b>
+&nbsp;                            nombre, apellidos, comunidadNombre, provinciaNombre, ciudadNombre,
+&nbsp;                            puebloNombre, razonSocial,
+&nbsp;                            ayuntamientoSeleccionadoId, comunidadIdSel, provinciaIdSel, ciudadIdSel
+&nbsp;                    );
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; message.setValue(&quot;Error comprobando alias: &quot; + e.getMessage()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void crearUsuario(
+&nbsp;            Context appContext,
+&nbsp;            String email, String pass1, String aliasInput, String rol,
+&nbsp;            String nombre, String apellidos, String comunidadNombre, String provinciaNombre,
+&nbsp;            String ciudadNombre, String puebloNombre, String razonSocial,
+&nbsp;            String ayuntamientoSeleccionadoId,
+&nbsp;            String comunidadIdSel, String provinciaIdSel, String ciudadIdSel
+&nbsp;    ) {
+<b class="nc">&nbsp;        auth.createUserWithEmailAndPassword(email, pass1)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(result -&gt; {</b>
+<b class="nc">&nbsp;                    if (result.getUser() == null) { message.setValue(&quot;Sin UID&quot;); return; }</b>
+<b class="nc">&nbsp;                    String uid = result.getUser().getUid();</b>
+<b class="nc">&nbsp;                    String id = UUID.randomUUID().toString();</b>
+&nbsp;
+<b class="nc">&nbsp;                    Map&lt;String, Object&gt; perfil = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;id&quot;, id);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;uid&quot;, uid);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;alias&quot;, aliasInput);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;rol&quot;, rol);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;nombre&quot;, nombre);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;comunidad&quot;, comunidadNombre);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;provincia&quot;, provinciaNombre);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;ciudad&quot;, ciudadNombre);</b>
+<b class="nc">&nbsp;                    perfil.put(&quot;pueblo&quot;, puebloNombre);</b>
+&nbsp;
+<b class="nc">&nbsp;                    Map&lt;String, Object&gt; authDoc = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;                    authDoc.put(&quot;alias&quot;, aliasInput);</b>
+<b class="nc">&nbsp;                    authDoc.put(&quot;uid&quot;, uid);</b>
+<b class="nc">&nbsp;                    authDoc.put(&quot;rol&quot;, rol);</b>
+&nbsp;
+<b class="nc">&nbsp;                    WriteBatch batch1 = db.batch();</b>
+&nbsp;
+<b class="nc">&nbsp;                    if (&quot;ayuntamiento&quot;.equals(rol)) {</b>
+<b class="nc">&nbsp;                        Map&lt;String, Object&gt; perfilAyto = new HashMap&lt;&gt;(perfil);</b>
+<b class="nc">&nbsp;                        perfilAyto.put(&quot;razonSocial&quot;, razonSocial);</b>
+<b class="nc">&nbsp;                        perfilAyto.put(&quot;ayuntamientoId&quot;, uid);</b>
+<b class="nc">&nbsp;                        batch1.set(db.collection(&quot;ayuntamientos&quot;).document(uid), perfilAyto, SetOptions.merge());</b>
+&nbsp;                    } else {
+<b class="nc">&nbsp;                        Map&lt;String, Object&gt; perfilUsuario = new HashMap&lt;&gt;(perfil);</b>
+<b class="nc">&nbsp;                        perfilUsuario.put(&quot;apellidos&quot;, apellidos);</b>
+<b class="nc">&nbsp;                        perfilUsuario.put(&quot;ayuntamientoId&quot;, ayuntamientoSeleccionadoId);</b>
+<b class="nc">&nbsp;                        batch1.set(db.collection(&quot;usuarios&quot;).document(uid), perfilUsuario, SetOptions.merge());</b>
+&nbsp;                    }
+&nbsp;
+<b class="nc">&nbsp;                    batch1.set(db.collection(&quot;usuariosAuth&quot;).document(uid), authDoc, SetOptions.merge());</b>
+&nbsp;
+<b class="nc">&nbsp;                    batch1.commit()</b>
+<b class="nc">&nbsp;                            .addOnSuccessListener(unused -&gt; {</b>
+&nbsp;                                // Si es ayuntamiento: crear pueblo si viene relleno
+<b class="nc">&nbsp;                                if (&quot;ayuntamiento&quot;.equals(rol)</b>
+<b class="nc">&nbsp;                                        &amp;&amp; puebloNombre != null &amp;&amp; !puebloNombre.trim().isEmpty()</b>
+<b class="nc">&nbsp;                                        &amp;&amp; comunidadIdSel != null &amp;&amp; !comunidadIdSel.isEmpty()</b>
+<b class="nc">&nbsp;                                        &amp;&amp; provinciaIdSel != null &amp;&amp; !provinciaIdSel.isEmpty()</b>
+<b class="nc">&nbsp;                                        &amp;&amp; ciudadIdSel != null &amp;&amp; !ciudadIdSel.isEmpty()) {</b>
+&nbsp;
+<b class="nc">&nbsp;                                    Map&lt;String, Object&gt; puebloDoc = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;nombre&quot;, puebloNombre.trim());</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;comunidadId&quot;, comunidadIdSel);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;provinciaId&quot;, provinciaIdSel);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;ciudadId&quot;, ciudadIdSel);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;createdByUid&quot;, uid);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;createdAt&quot;, FieldValue.serverTimestamp());</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;comunidadNombre&quot;, comunidadNombre);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;provinciaNombre&quot;, provinciaNombre);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;ciudadNombre&quot;, ciudadNombre);</b>
+&nbsp;
+&nbsp;                                    // 👉 Bonus: guardar también el ayuntamiento en el pueblo
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;ayuntamientoId&quot;, uid);</b>
+<b class="nc">&nbsp;                                    puebloDoc.put(&quot;ayuntamientoNombre&quot;, nombre);</b>
+&nbsp;
+<b class="nc">&nbsp;                                    db.collection(&quot;pueblos&quot;).add(puebloDoc)</b>
+<b class="nc">&nbsp;                                            .addOnFailureListener(e -&gt; message.setValue(&quot;Perfil OK pero falló crear pueblo: &quot; + e.getMessage()));</b>
+&nbsp;                                }
+&nbsp;
+&nbsp;                                // Preferencias y navegación
+<b class="nc">&nbsp;                                Preferencias.guardarUid(appContext, uid);</b>
+<b class="nc">&nbsp;                                Preferencias.guardarAlias(appContext, aliasInput);</b>
+<b class="nc">&nbsp;                                Preferencias.guardarRol(appContext, rol);</b>
+<b class="nc">&nbsp;                                if (&quot;ayuntamiento&quot;.equals(rol)) {</b>
+<b class="nc">&nbsp;                                    Preferencias.guardarAyuntamientoId(appContext, uid);</b>
+<b class="nc">&nbsp;                                    navAyto.setValue(true);</b>
+&nbsp;                                } else {
+<b class="nc">&nbsp;                                    Preferencias.guardarAyuntamientoId(appContext, ayuntamientoSeleccionadoId);</b>
+<b class="nc">&nbsp;                                    navUser.setValue(true);</b>
+&nbsp;                                }
+<b class="nc">&nbsp;                                message.setValue(&quot;Registro exitoso.&quot;);</b>
+&nbsp;                            })
+<b class="nc">&nbsp;                            .addOnFailureListener(e -&gt; message.setValue(&quot;Error guardando perfil: &quot; + e.getMessage()));</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; message.setValue(&quot;Registro fallido: &quot; + e.getMessage()));</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void consumeMessage() { message.setValue(null); }</b>
+<b class="nc">&nbsp;    public void consumeNavAyto() { navAyto.setValue(false); }</b>
+<b class="nc">&nbsp;    public void consumeNavUser() { navUser.setValue(false); }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

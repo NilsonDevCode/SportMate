@@ -1,0 +1,294 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MenuAyuntamientoViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.menuTownhall</a>
+</div>
+
+<h1>Coverage Summary for Class: MenuAyuntamientoViewModel (com.nilson.appsportmate.features.townhall.ui.menuTownhall)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MenuAyuntamientoViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/96)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.menuTownhall;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;import android.net.Uri;
+&nbsp;import android.text.TextUtils;
+&nbsp;import android.util.Log;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.firebase.firestore.CollectionReference;
+&nbsp;import com.google.firebase.firestore.DocumentSnapshot;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.google.firebase.firestore.Source;
+&nbsp;import com.google.firebase.storage.FirebaseStorage;
+&nbsp;import com.google.firebase.storage.StorageReference;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="nc">&nbsp;public class MenuAyuntamientoViewModel extends ViewModel {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+<b class="nc">&nbsp;    private final FirebaseStorage storage = FirebaseStorage.getInstance();</b>
+&nbsp;    private String ayuntamientoId;
+&nbsp;
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; ayuntamientoNombre = new MutableLiveData&lt;&gt;(&quot;—&quot;);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; logoUrl = new MutableLiveData&lt;&gt;(null);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; eventos = new MutableLiveData&lt;&gt;(new ArrayList&lt;&gt;());</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt; mensaje = new MutableLiveData&lt;&gt;(&quot;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getAyuntamientoNombre() { return ayuntamientoNombre; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getLogoUrl() { return logoUrl; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; getEventos() { return eventos; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getMensaje() { return mensaje; }</b>
+&nbsp;
+&nbsp;    /* ===== CARGA ===== */
+&nbsp;
+&nbsp;    public void cargarDatosAyuntamiento(@NonNull Context ctx) {
+<b class="nc">&nbsp;        ayuntamientoId = Preferencias.obtenerAyuntamientoId(ctx);</b>
+<b class="nc">&nbsp;        Log.d(&quot;AYTO_DEBUG&quot;, &quot;cargarDatosAyuntamiento() → ID: &quot; + ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            ayuntamientoNombre.postValue(&quot;Sin ayuntamiento asignado&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String cache = Preferencias.obtenerAyuntamientoNombre(ctx);</b>
+<b class="nc">&nbsp;        if (!TextUtils.isEmpty(cache)) ayuntamientoNombre.postValue(cache);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;ayuntamientos&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .get(Source.DEFAULT)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                    Log.d(&quot;AYTO_DEBUG&quot;, &quot;Documento Firestore obtenido correctamente.&quot;);</b>
+<b class="nc">&nbsp;                    String nombre = extraerNombre(doc);</b>
+<b class="nc">&nbsp;                    ayuntamientoNombre.postValue(nombre);</b>
+<b class="nc">&nbsp;                    Preferencias.guardarAyuntamientoNombre(ctx, nombre);</b>
+&nbsp;
+<b class="nc">&nbsp;                    if (doc.contains(&quot;logoUrl&quot;)) {</b>
+<b class="nc">&nbsp;                        String url = doc.getString(&quot;logoUrl&quot;);</b>
+<b class="nc">&nbsp;                        Log.d(&quot;AYTO_DEBUG&quot;, &quot;LogoUrl encontrado: &quot; + url);</b>
+<b class="nc">&nbsp;                        logoUrl.postValue(url);</b>
+&nbsp;                    }
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;                    Log.e(&quot;AYTO_DEBUG&quot;, &quot;Error cargando ayuntamiento: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                    mensaje.postValue(&quot;Error cargando ayuntamiento&quot;);</b>
+&nbsp;                });
+&nbsp;    }
+&nbsp;
+&nbsp;    public void cargarEventos(@NonNull Context ctx) {
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId))</b>
+<b class="nc">&nbsp;            ayuntamientoId = Preferencias.obtenerAyuntamientoId(ctx);</b>
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            mensaje.postValue(&quot;No se encontró ayuntamientoId&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Log.d(&quot;AYTO_DEBUG&quot;, &quot;Cargando eventos para ayuntamientoId=&quot; + ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                .get(Source.DEFAULT)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(q -&gt; {</b>
+<b class="nc">&nbsp;                    List&lt;Map&lt;String, Object&gt;&gt; list = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;                    for (DocumentSnapshot d : q.getDocuments()) {</b>
+<b class="nc">&nbsp;                        Map&lt;String, Object&gt; m = d.getData();</b>
+<b class="nc">&nbsp;                        if (m == null) continue;</b>
+<b class="nc">&nbsp;                        m = new HashMap&lt;&gt;(m);</b>
+<b class="nc">&nbsp;                        m.put(&quot;idDoc&quot;, d.getId());</b>
+<b class="nc">&nbsp;                        list.add(m);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    Log.d(&quot;AYTO_DEBUG&quot;, &quot;Eventos cargados: &quot; + list.size());</b>
+<b class="nc">&nbsp;                    eventos.postValue(list);</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt;</b>
+<b class="nc">&nbsp;                        mensaje.postValue(&quot;Error cargando eventos: &quot; + e.getMessage()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /* ===== GUARDAR LOGO ===== */
+&nbsp;
+&nbsp;    public void subirLogoAyuntamiento(@NonNull Uri uri, @NonNull Context ctx) {
+<b class="nc">&nbsp;        ayuntamientoId = Preferencias.obtenerAyuntamientoId(ctx);</b>
+<b class="nc">&nbsp;        Log.d(&quot;AYTO_DEBUG&quot;, &quot;Intentando subir logo para ID=&quot; + ayuntamientoId + &quot; URI=&quot; + uri);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            mensaje.postValue(&quot;Error: ayuntamientoId no encontrado.&quot;);</b>
+<b class="nc">&nbsp;            Log.e(&quot;AYTO_DEBUG&quot;, &quot;Error: ayuntamientoId nulo o vacío&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        StorageReference ref = storage.getReference()</b>
+<b class="nc">&nbsp;                .child(&quot;logos_ayuntamientos/&quot; + ayuntamientoId + &quot;.jpg&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Log.d(&quot;AYTO_DEBUG&quot;, &quot;Subiendo archivo a ruta Storage: logos_ayuntamientos/&quot; + ayuntamientoId + &quot;.jpg&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ref.putFile(uri)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(taskSnapshot -&gt; {</b>
+<b class="nc">&nbsp;                    Log.d(&quot;AYTO_DEBUG&quot;, &quot;Subida exitosa, obteniendo URL...&quot;);</b>
+<b class="nc">&nbsp;                    ref.getDownloadUrl()</b>
+<b class="nc">&nbsp;                            .addOnSuccessListener(downloadUri -&gt; {</b>
+<b class="nc">&nbsp;                                String url = downloadUri.toString();</b>
+<b class="nc">&nbsp;                                Log.d(&quot;AYTO_DEBUG&quot;, &quot;URL obtenida: &quot; + url);</b>
+&nbsp;
+<b class="nc">&nbsp;                                db.collection(&quot;ayuntamientos&quot;)</b>
+<b class="nc">&nbsp;                                        .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                                        .update(&quot;logoUrl&quot;, url)</b>
+<b class="nc">&nbsp;                                        .addOnSuccessListener(v -&gt; {</b>
+<b class="nc">&nbsp;                                            logoUrl.postValue(url);</b>
+<b class="nc">&nbsp;                                            mensaje.postValue(&quot;Logo actualizado correctamente&quot;);</b>
+<b class="nc">&nbsp;                                            Log.d(&quot;AYTO_DEBUG&quot;, &quot;URL guardada en Firestore correctamente.&quot;);</b>
+&nbsp;                                        })
+<b class="nc">&nbsp;                                        .addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;                                            Log.e(&quot;AYTO_DEBUG&quot;, &quot;Error guardando URL en Firestore: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                                            mensaje.postValue(&quot;Error guardando URL en Firestore&quot;);</b>
+&nbsp;                                        });
+&nbsp;                            })
+<b class="nc">&nbsp;                            .addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;                                Log.e(&quot;AYTO_DEBUG&quot;, &quot;Error obteniendo URL: &quot; + e.getMessage());</b>
+&nbsp;                            });
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;                    Log.e(&quot;AYTO_DEBUG&quot;, &quot;Error subiendo imagen: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                    mensaje.postValue(&quot;Error subiendo imagen: &quot; + e.getMessage());</b>
+&nbsp;                });
+&nbsp;    }
+&nbsp;
+&nbsp;    /* ===== ACCESOS ===== */
+&nbsp;
+&nbsp;    public CollectionReference getInscritosRef(@NonNull String idDoc) {
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) return null;</b>
+<b class="nc">&nbsp;        return db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                .document(idDoc)</b>
+<b class="nc">&nbsp;                .collection(&quot;inscritos&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /* ===== HELPERS ===== */
+&nbsp;
+&nbsp;    private String extraerNombre(DocumentSnapshot doc) {
+<b class="nc">&nbsp;        if (doc == null || !doc.exists()) return &quot;(desconocido)&quot;;</b>
+<b class="nc">&nbsp;        Object n1 = doc.get(&quot;nombre&quot;);</b>
+<b class="nc">&nbsp;        Object n2 = doc.get(&quot;razonSocial&quot;);</b>
+<b class="nc">&nbsp;        String nom = n1 != null ? String.valueOf(n1) : null;</b>
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(nom) || &quot;null&quot;.equalsIgnoreCase(nom)) {</b>
+<b class="nc">&nbsp;            nom = n2 != null ? String.valueOf(n2) : &quot;(desconocido)&quot;;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return nom;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

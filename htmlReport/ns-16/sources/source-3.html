@@ -1,0 +1,316 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LoginUiState</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.ui.auth.login</a>
+</div>
+
+<h1>Coverage Summary for Class: LoginUiState (com.nilson.appsportmate.ui.auth.login)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoginUiState</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">LoginUiState$Builder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/49)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.ui.auth.login;
+&nbsp;
+&nbsp;public class LoginUiState {
+&nbsp;
+&nbsp;    private String alias;
+&nbsp;
+&nbsp;    private String password;
+&nbsp;
+&nbsp;    private boolean isLoading;
+&nbsp;
+&nbsp;    private boolean isLoadingEnabled;
+&nbsp;
+&nbsp;    private String aliasError;
+&nbsp;    private String passwordError;
+&nbsp;    private String generalError;
+&nbsp;
+&nbsp;    private boolean showPassword;
+&nbsp;
+&nbsp;    private boolean loginSuccess;
+&nbsp;
+&nbsp;    private boolean rememberMe;
+&nbsp;
+<b class="nc">&nbsp;    private LoginUiState(Builder builder) {</b>
+<b class="nc">&nbsp;        this.alias = builder.alias != null ? builder.alias : &quot;&quot;;</b>
+<b class="nc">&nbsp;        this.password = builder.password != null ? builder.password : &quot;&quot;;</b>
+<b class="nc">&nbsp;        this.isLoading = builder.isLoading;</b>
+<b class="nc">&nbsp;        this.aliasError = builder.aliasError;</b>
+<b class="nc">&nbsp;        this.passwordError = builder.passwordError;</b>
+<b class="nc">&nbsp;        this.generalError = builder.generalError;</b>
+<b class="nc">&nbsp;        this.showPassword = builder.showPassword;</b>
+<b class="nc">&nbsp;        this.loginSuccess = builder.loginSuccess;</b>
+<b class="nc">&nbsp;        this.rememberMe = builder.rememberMe;</b>
+&nbsp;
+<b class="nc">&nbsp;        this.isLoadingEnabled = isValidForm() &amp;&amp; !isLoading;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isValidForm() {
+<b class="nc">&nbsp;        return !alias.isEmpty() &amp;&amp;</b>
+<b class="nc">&nbsp;                !password.isEmpty() &amp;&amp;</b>
+&nbsp;                aliasError == null &amp;&amp;
+&nbsp;                passwordError == null;
+&nbsp;    }
+&nbsp;
+&nbsp;    public static LoginUiState initial() {
+<b class="nc">&nbsp;        return new Builder().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static LoginUiState loading() {
+<b class="nc">&nbsp;        return new Builder().loading(true).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static LoginUiState success() {
+<b class="nc">&nbsp;        return new Builder().loginSuccess(true).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static LoginUiState error(String errorMessage) {
+<b class="nc">&nbsp;        return new Builder().generalError(errorMessage).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAlias() {
+<b class="nc">&nbsp;        return alias;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPassword() {
+<b class="nc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isLoading() {
+<b class="nc">&nbsp;        return isLoading;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isLoadingEnabled() {
+<b class="nc">&nbsp;        return isLoadingEnabled;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAliasError() {
+<b class="nc">&nbsp;        return aliasError;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPasswordError() {
+<b class="nc">&nbsp;        return passwordError;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getGeneralError() {
+<b class="nc">&nbsp;        return generalError;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isShowPassword() {
+<b class="nc">&nbsp;        return showPassword;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isLoginSuccess() {
+<b class="nc">&nbsp;        return loginSuccess;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isRememberMe() {
+<b class="nc">&nbsp;        return rememberMe;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public static class Builder {</b>
+&nbsp;        private String alias;
+&nbsp;        private String password;
+&nbsp;        private boolean isLoading;
+&nbsp;        private boolean isLoadingEnabled;
+&nbsp;        private String aliasError;
+&nbsp;        private String passwordError;
+&nbsp;        private String generalError;
+&nbsp;        private boolean showPassword;
+&nbsp;        private boolean loginSuccess;
+&nbsp;        private boolean rememberMe;
+&nbsp;
+&nbsp;        public Builder alias(String alias) {
+<b class="nc">&nbsp;            this.alias = alias;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder password(String password) {
+<b class="nc">&nbsp;            this.password = password;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder loading(boolean loading) {
+<b class="nc">&nbsp;            this.isLoading = loading;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder loadingEnabled(boolean loadingEnabled) {
+<b class="nc">&nbsp;            this.isLoadingEnabled = loadingEnabled;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder aliasError(String aliasError) {
+<b class="nc">&nbsp;            this.aliasError = aliasError;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder passwordError(String passwordError) {
+<b class="nc">&nbsp;            this.passwordError = passwordError;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder generalError(String generalError) {
+<b class="nc">&nbsp;            this.generalError = generalError;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder showPassword(boolean showPassword) {
+<b class="nc">&nbsp;            this.showPassword = showPassword;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder loginSuccess(boolean loginSuccess) {
+<b class="nc">&nbsp;            this.loginSuccess = loginSuccess;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Builder rememberMe(boolean rememberMe) {
+<b class="nc">&nbsp;            this.rememberMe = rememberMe;</b>
+<b class="nc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public LoginUiState build() {
+<b class="nc">&nbsp;            return new LoginUiState(this);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

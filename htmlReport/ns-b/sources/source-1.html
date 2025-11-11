@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AyuntamientoAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.adaptadores</a>
+</div>
+
+<h1>Coverage Summary for Class: AyuntamientoAdapter (com.nilson.appsportmate.features.townhall.adaptadores)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AyuntamientoAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AyuntamientoAdapter$AyuntamientoViewHolder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AyuntamientoAdapter$OnItemClickListener</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.adaptadores;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.ImageButton;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.recyclerview.widget.RecyclerView;
+&nbsp;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.common.modelos.Ayuntamiento;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class AyuntamientoAdapter extends RecyclerView.Adapter&lt;AyuntamientoAdapter.AyuntamientoViewHolder&gt; {
+&nbsp;
+&nbsp;    private Context context;
+&nbsp;    private List&lt;Ayuntamiento&gt; listaAyuntamientos;
+&nbsp;    private OnItemClickListener listener;
+&nbsp;
+&nbsp;    // Interfaz para manejar clics en editar/eliminar
+&nbsp;    public interface OnItemClickListener {
+&nbsp;        void onEdit(Ayuntamiento ayuntamiento);
+&nbsp;        void onDelete(Ayuntamiento ayuntamiento);
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public AyuntamientoAdapter(Context context, List&lt;Ayuntamiento&gt; listaAyuntamientos, OnItemClickListener listener) {</b>
+<b class="nc">&nbsp;        this.context = context;</b>
+<b class="nc">&nbsp;        this.listaAyuntamientos = listaAyuntamientos;</b>
+<b class="nc">&nbsp;        this.listener = listener;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @NonNull
+&nbsp;    @Override
+&nbsp;    public AyuntamientoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<b class="nc">&nbsp;        View view = LayoutInflater.from(context).inflate(R.layout.item_ayuntamiento, parent, false);</b>
+<b class="nc">&nbsp;        return new AyuntamientoViewHolder(view);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onBindViewHolder(@NonNull AyuntamientoViewHolder holder, int position) {
+<b class="nc">&nbsp;        Ayuntamiento ayuntamiento = listaAyuntamientos.get(position);</b>
+&nbsp;
+<b class="nc">&nbsp;        holder.tvNombre.setText(&quot;Nombre: &quot; + ayuntamiento.getNombre());</b>
+<b class="nc">&nbsp;        holder.tvNumero.setText(&quot;Número: &quot; + ayuntamiento.getNumero());</b>
+<b class="nc">&nbsp;        holder.tvComunidad.setText(&quot;Comunidad: &quot; + ayuntamiento.getComunidad());</b>
+<b class="nc">&nbsp;        holder.tvProvincia.setText(&quot;Provincia: &quot; + ayuntamiento.getProvincia());</b>
+<b class="nc">&nbsp;        holder.tvCiudad.setText(&quot;Ciudad: &quot; + ayuntamiento.getCiudad());</b>
+<b class="nc">&nbsp;        holder.tvPueblo.setText(&quot;Pueblo: &quot; + ayuntamiento.getPueblo());</b>
+<b class="nc">&nbsp;        holder.tvLocalidad.setText(&quot;Localidad: &quot; + ayuntamiento.getLocalidad());</b>
+<b class="nc">&nbsp;        holder.tvUid.setText(&quot;UID: &quot; + ayuntamiento.getUid());</b>
+&nbsp;
+&nbsp;        // Botones editar/eliminar
+<b class="nc">&nbsp;        holder.btnEditar.setOnClickListener(v -&gt; listener.onEdit(ayuntamiento));</b>
+<b class="nc">&nbsp;        holder.btnEliminar.setOnClickListener(v -&gt; listener.onDelete(ayuntamiento));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int getItemCount() {
+<b class="nc">&nbsp;        return listaAyuntamientos.size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class AyuntamientoViewHolder extends RecyclerView.ViewHolder {
+&nbsp;        TextView tvNombre, tvNumero, tvComunidad, tvProvincia, tvCiudad, tvPueblo, tvLocalidad, tvUid;
+&nbsp;        ImageButton btnEditar, btnEliminar;
+&nbsp;
+&nbsp;        public AyuntamientoViewHolder(@NonNull View itemView) {
+<b class="nc">&nbsp;            super(itemView);</b>
+&nbsp;
+<b class="nc">&nbsp;            tvNombre = itemView.findViewById(R.id.tvNombre);</b>
+<b class="nc">&nbsp;            tvNumero = itemView.findViewById(R.id.tvNumero);</b>
+<b class="nc">&nbsp;            tvComunidad = itemView.findViewById(R.id.tvComunidad);</b>
+<b class="nc">&nbsp;            tvProvincia = itemView.findViewById(R.id.tvProvincia);</b>
+<b class="nc">&nbsp;            tvCiudad = itemView.findViewById(R.id.tvCiudad);</b>
+<b class="nc">&nbsp;            tvPueblo = itemView.findViewById(R.id.tvPueblo);</b>
+<b class="nc">&nbsp;            tvLocalidad = itemView.findViewById(R.id.tvLocalidad);</b>
+<b class="nc">&nbsp;            tvUid = itemView.findViewById(R.id.tvUid);</b>
+&nbsp;
+<b class="nc">&nbsp;            btnEditar = itemView.findViewById(R.id.btnEditar);</b>
+<b class="nc">&nbsp;            btnEliminar = itemView.findViewById(R.id.btnEliminar);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

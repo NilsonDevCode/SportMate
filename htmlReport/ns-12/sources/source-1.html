@@ -1,0 +1,430 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > InicioFragment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.user.ui.menuPrincipal</a>
+</div>
+
+<h1>Coverage Summary for Class: InicioFragment (com.nilson.appsportmate.features.user.ui.menuPrincipal)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InicioFragment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/112)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/138)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">InicioFragment$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/112)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/147)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.user.ui.menuPrincipal;
+&nbsp;
+&nbsp;import android.app.AlertDialog;
+&nbsp;import android.net.Uri;
+&nbsp;import android.os.Bundle;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.Toast;
+&nbsp;
+&nbsp;import androidx.activity.result.ActivityResultLauncher;
+&nbsp;import androidx.activity.result.contract.ActivityResultContracts;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.fragment.app.Fragment;
+&nbsp;import androidx.lifecycle.ViewModelProvider;
+&nbsp;import androidx.navigation.NavOptions;
+&nbsp;import androidx.navigation.Navigation;
+&nbsp;import androidx.recyclerview.widget.LinearLayoutManager;
+&nbsp;
+&nbsp;import com.bumptech.glide.Glide;
+&nbsp;import com.google.firebase.auth.FirebaseAuth;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;import com.nilson.appsportmate.databinding.FragmentInicioBinding;
+&nbsp;import com.nilson.appsportmate.features.user.ui.menuPrincipal.adaptadores.DeporteApuntadoAdapter;
+&nbsp;
+<b class="nc">&nbsp;public class InicioFragment extends Fragment {</b>
+&nbsp;
+&nbsp;    private FragmentInicioBinding binding;
+&nbsp;    private InicioViewModel viewModel;
+&nbsp;    private DeporteApuntadoAdapter adapter;
+&nbsp;
+&nbsp;    private FirebaseFirestore db;
+&nbsp;    private String ayuntamientoId;
+&nbsp;    private String lastAyuntamientoId;
+&nbsp;
+<b class="nc">&nbsp;    private final ActivityResultLauncher&lt;String&gt; pickImage =</b>
+<b class="nc">&nbsp;            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);</b>
+&nbsp;
+&nbsp;    @Nullable
+&nbsp;    @Override
+&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater,
+&nbsp;                             @Nullable ViewGroup container,
+&nbsp;                             @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        binding = FragmentInicioBinding.inflate(inflater, container, false);</b>
+<b class="nc">&nbsp;        db = FirebaseFirestore.getInstance();</b>
+<b class="nc">&nbsp;        return binding.getRoot();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        super.onViewCreated(view, savedInstanceState);</b>
+&nbsp;
+<b class="nc">&nbsp;        viewModel = new ViewModelProvider(this).get(InicioViewModel.class);</b>
+&nbsp;
+<b class="nc">&nbsp;        cargarFotoPerfil();</b>
+&nbsp;
+<b class="nc">&nbsp;        binding.toolbar.setOnMenuItemClickListener(item -&gt; {</b>
+<b class="nc">&nbsp;            int id = item.getItemId();</b>
+<b class="nc">&nbsp;            if (id == R.id.action_cambiar_foto_perfil) {</b>
+<b class="nc">&nbsp;                pickImage.launch(&quot;image/*&quot;);</b>
+<b class="nc">&nbsp;                return true;</b>
+<b class="nc">&nbsp;            } else if (id == R.id.action_cambiar_ayuntamiento) {</b>
+<b class="nc">&nbsp;                Navigation.findNavController(binding.getRoot())</b>
+<b class="nc">&nbsp;                        .navigate(R.id.action_global_seleccionarNuevoAyuntamientoFragment);</b>
+<b class="nc">&nbsp;                return true;</b>
+<b class="nc">&nbsp;            } else if (id == R.id.action_cerrarSesion) {</b>
+<b class="nc">&nbsp;                new AlertDialog.Builder(requireContext())</b>
+<b class="nc">&nbsp;                        .setTitle(&quot;Cerrar sesión&quot;)</b>
+<b class="nc">&nbsp;                        .setMessage(&quot;¿Seguro que quieres cerrar sesión?&quot;)</b>
+<b class="nc">&nbsp;                        .setPositiveButton(&quot;Sí, salir&quot;, (d, w) -&gt; cerrarSesion())</b>
+<b class="nc">&nbsp;                        .setNegativeButton(&quot;Cancelar&quot;, null)</b>
+<b class="nc">&nbsp;                        .show();</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        pintarSaludo();</b>
+&nbsp;
+<b class="nc">&nbsp;        binding.rvDeportesApuntados.setLayoutManager(new LinearLayoutManager(requireContext()));</b>
+<b class="nc">&nbsp;        adapter = new DeporteApuntadoAdapter(new DeporteApuntadoAdapter.Listener() {</b>
+&nbsp;            @Override
+&nbsp;            public void onItemClick(InicioUiState.DeporteUi item) {
+<b class="nc">&nbsp;                Toast.makeText(requireContext(),</b>
+&nbsp;                        item.nombreDeporte + &quot; - &quot; + item.ayuntamiento,
+<b class="nc">&nbsp;                        Toast.LENGTH_SHORT).show();</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            @Override
+&nbsp;            public void onItemLongClick(InicioUiState.DeporteUi item) {
+<b class="nc">&nbsp;                new AlertDialog.Builder(requireContext())</b>
+<b class="nc">&nbsp;                        .setTitle(&quot;Desapuntarse&quot;)</b>
+<b class="nc">&nbsp;                        .setMessage(&quot;¿Quieres desapuntarte de \&quot;&quot; + item.nombreDeporte + &quot;\&quot;?&quot;)</b>
+<b class="nc">&nbsp;                        .setPositiveButton(&quot;Sí&quot;, (d, w) -&gt; viewModel.desapuntarse(item.docId, item.aytoId))</b>
+<b class="nc">&nbsp;                        .setNegativeButton(&quot;No&quot;, null)</b>
+<b class="nc">&nbsp;                        .show();</b>
+&nbsp;            }
+&nbsp;        });
+<b class="nc">&nbsp;        binding.rvDeportesApuntados.setAdapter(adapter);</b>
+&nbsp;
+<b class="nc">&nbsp;        binding.btnVerDeportes.setOnClickListener(v -&gt;</b>
+<b class="nc">&nbsp;                Navigation.findNavController(v).navigate(R.id.action_global_deportesDisponiblesFragment)</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        viewModel.uiState.observe(getViewLifecycleOwner(), state -&gt; {</b>
+<b class="nc">&nbsp;            binding.progressBar.setVisibility(state.loading ? View.VISIBLE : View.GONE);</b>
+<b class="nc">&nbsp;            if (state.error != null &amp;&amp; !state.error.isEmpty()) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (state.message != null &amp;&amp; !state.message.isEmpty()) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            adapter.submit(state.deportes);</b>
+<b class="nc">&nbsp;            binding.tvEmpty.setVisibility(</b>
+<b class="nc">&nbsp;                    state.deportes == null || state.deportes.isEmpty() ? View.VISIBLE : View.GONE</b>
+&nbsp;            );
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        if (getContext() != null) {</b>
+<b class="nc">&nbsp;            ayuntamientoId = Preferencias.obtenerAyuntamientoId(getContext());</b>
+<b class="nc">&nbsp;            lastAyuntamientoId = ayuntamientoId;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        cargarNombreAyuntamiento();</b>
+<b class="nc">&nbsp;        viewModel.cargarDeportesApuntados();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onResume() {
+<b class="nc">&nbsp;        super.onResume();</b>
+<b class="nc">&nbsp;        pintarSaludo();</b>
+<b class="nc">&nbsp;        if (getContext() != null) {</b>
+<b class="nc">&nbsp;            String nuevo = Preferencias.obtenerAyuntamientoId(getContext());</b>
+<b class="nc">&nbsp;            if (nuevo == null ? lastAyuntamientoId != null : !nuevo.equals(lastAyuntamientoId)) {</b>
+<b class="nc">&nbsp;                ayuntamientoId = nuevo;</b>
+<b class="nc">&nbsp;                lastAyuntamientoId = nuevo;</b>
+<b class="nc">&nbsp;                cargarNombreAyuntamiento();</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void onImagePicked(@Nullable Uri uri) {
+<b class="nc">&nbsp;        if (!isAdded()) return;</b>
+<b class="nc">&nbsp;        if (uri == null) {</b>
+<b class="nc">&nbsp;            Toast.makeText(requireContext(), &quot;No se seleccionó imagen.&quot;, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        binding.imgFotoPerfil.setImageURI(uri);</b>
+<b class="nc">&nbsp;        viewModel.subirFotoPerfilUsuario(uri,</b>
+<b class="nc">&nbsp;                () -&gt; Toast.makeText(requireContext(), &quot;Foto subida correctamente.&quot;, Toast.LENGTH_SHORT).show(),</b>
+<b class="nc">&nbsp;                error -&gt; Toast.makeText(requireContext(), &quot;Error: &quot; + error, Toast.LENGTH_LONG).show());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cerrarSesion() {
+<b class="nc">&nbsp;        FirebaseAuth.getInstance().signOut();</b>
+<b class="nc">&nbsp;        if (getContext() != null) Preferencias.borrarTodo(getContext());</b>
+<b class="nc">&nbsp;        NavOptions opts = new NavOptions.Builder()</b>
+<b class="nc">&nbsp;                .setPopUpTo(R.id.nav_graph, true)</b>
+<b class="nc">&nbsp;                .build();</b>
+<b class="nc">&nbsp;        Navigation.findNavController(binding.getRoot())</b>
+<b class="nc">&nbsp;                .navigate(R.id.authFragment, null, opts);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void pintarSaludo() {
+<b class="nc">&nbsp;        if (binding == null || getContext() == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        String nombre = Preferencias.obtenerNombreUsuario(getContext());</b>
+&nbsp;
+<b class="nc">&nbsp;        if (nombre == null || nombre.trim().isEmpty() || &quot;usuario&quot;.equalsIgnoreCase(nombre)) {</b>
+<b class="nc">&nbsp;            String uid = FirebaseAuth.getInstance().getUid();</b>
+<b class="nc">&nbsp;            if (uid != null) {</b>
+<b class="nc">&nbsp;                FirebaseFirestore.getInstance().collection(&quot;usuarios&quot;)</b>
+<b class="nc">&nbsp;                        .document(uid)</b>
+<b class="nc">&nbsp;                        .get()</b>
+<b class="nc">&nbsp;                        .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                            String n = null;</b>
+<b class="nc">&nbsp;                            if (doc.exists()) {</b>
+<b class="nc">&nbsp;                                Object nom = doc.get(&quot;nombre&quot;) != null ? doc.get(&quot;nombre&quot;) : doc.get(&quot;alias&quot;);</b>
+<b class="nc">&nbsp;                                n = nom != null ? nom.toString().trim() : null;</b>
+&nbsp;                            }
+<b class="nc">&nbsp;                            if (n != null &amp;&amp; !n.isEmpty()) {</b>
+<b class="nc">&nbsp;                                Preferencias.guardarNombreUsuario(requireContext(), n);</b>
+<b class="nc">&nbsp;                                binding.tvInicio.setText(&quot;Inicio\nBienvenido, &quot; + n);</b>
+&nbsp;                            } else {
+<b class="nc">&nbsp;                                binding.tvInicio.setText(&quot;Inicio\nBienvenido, usuario&quot;);</b>
+&nbsp;                            }
+&nbsp;                        })
+<b class="nc">&nbsp;                        .addOnFailureListener(e -&gt;</b>
+<b class="nc">&nbsp;                                binding.tvInicio.setText(&quot;Inicio\nBienvenido, usuario&quot;));</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                binding.tvInicio.setText(&quot;Inicio\nBienvenido, usuario&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            binding.tvInicio.setText(&quot;Inicio\nBienvenido, &quot; + nombre);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cargarFotoPerfil() {
+<b class="nc">&nbsp;        if (!isAdded() || getContext() == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        String uid = FirebaseAuth.getInstance().getUid();</b>
+<b class="nc">&nbsp;        if (uid == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        String fotoUrl = Preferencias.obtenerFotoUrlUsuario(requireContext());</b>
+&nbsp;
+<b class="nc">&nbsp;        if (fotoUrl != null &amp;&amp; !fotoUrl.trim().isEmpty()) {</b>
+<b class="nc">&nbsp;            Glide.with(this).load(fotoUrl).into(binding.imgFotoPerfil);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            FirebaseFirestore.getInstance().collection(&quot;usuarios&quot;)</b>
+<b class="nc">&nbsp;                    .document(uid)</b>
+<b class="nc">&nbsp;                    .get()</b>
+<b class="nc">&nbsp;                    .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                        if (doc.exists()) {</b>
+<b class="nc">&nbsp;                            Object urlObj = doc.get(&quot;fotoUrl&quot;);</b>
+<b class="nc">&nbsp;                            if (urlObj != null) {</b>
+<b class="nc">&nbsp;                                String url = urlObj.toString().trim();</b>
+<b class="nc">&nbsp;                                if (!url.isEmpty()) {</b>
+<b class="nc">&nbsp;                                    Glide.with(this).load(url).into(binding.imgFotoPerfil);</b>
+<b class="nc">&nbsp;                                    Preferencias.guardarFotoUrlUsuario(requireContext(), url);</b>
+&nbsp;                                }
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;                    });
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void cargarNombreAyuntamiento() {
+<b class="nc">&nbsp;        if (!isAdded()) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (ayuntamientoId == null || ayuntamientoId.isEmpty()) {</b>
+<b class="nc">&nbsp;            binding.tvAytoTitulo.setText(&quot;Sin ayuntamiento asignado&quot;);</b>
+<b class="nc">&nbsp;            binding.tvAytoNombre.setText(&quot;—&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        binding.tvAytoTitulo.setText(&quot;Ayuntamiento actual&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (getContext() != null) {</b>
+<b class="nc">&nbsp;            String cache = Preferencias.obtenerAyuntamientoNombre(getContext());</b>
+<b class="nc">&nbsp;            binding.tvAytoNombre.setText(cache != null &amp;&amp; !cache.trim().isEmpty() ? cache : &quot;—&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;ayuntamientos&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .get()</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                    if (!isAdded()) return;</b>
+<b class="nc">&nbsp;                    String nombre = extraerNombreAyuntamiento(doc);</b>
+<b class="nc">&nbsp;                    binding.tvAytoNombre.setText(nombre);</b>
+<b class="nc">&nbsp;                    if (getContext() != null &amp;&amp; nombre != null &amp;&amp; !nombre.trim().isEmpty()</b>
+<b class="nc">&nbsp;                            &amp;&amp; !&quot;(desconocido)&quot;.equals(nombre)) {</b>
+<b class="nc">&nbsp;                        Preferencias.guardarAyuntamientoNombre(getContext(), nombre);</b>
+&nbsp;                    }
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; {</b>
+<b class="nc">&nbsp;                    if (!isAdded()) return;</b>
+<b class="nc">&nbsp;                    binding.tvAytoTitulo.setText(&quot;Error al cargar&quot;);</b>
+<b class="nc">&nbsp;                    binding.tvAytoNombre.setText(&quot;(desconocido)&quot;);</b>
+&nbsp;                });
+&nbsp;    }
+&nbsp;
+&nbsp;    private String extraerNombreAyuntamiento(com.google.firebase.firestore.DocumentSnapshot doc) {
+<b class="nc">&nbsp;        if (doc == null || !doc.exists()) return &quot;(desconocido)&quot;;</b>
+<b class="nc">&nbsp;        Object n1 = doc.get(&quot;nombre&quot;);</b>
+<b class="nc">&nbsp;        Object n2 = doc.get(&quot;razonSocial&quot;);</b>
+<b class="nc">&nbsp;        String nom = n1 != null ? String.valueOf(n1) : null;</b>
+<b class="nc">&nbsp;        if (nom == null || nom.trim().isEmpty() || &quot;null&quot;.equalsIgnoreCase(nom)) {</b>
+<b class="nc">&nbsp;            nom = n2 != null ? String.valueOf(n2) : &quot;(desconocido)&quot;;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return nom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onDestroyView() {
+<b class="nc">&nbsp;        super.onDestroyView();</b>
+<b class="nc">&nbsp;        binding = null;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

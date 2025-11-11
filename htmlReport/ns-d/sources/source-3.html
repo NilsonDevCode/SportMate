@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FormularioAyuntamientoViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento</a>
+</div>
+
+<h1>Coverage Summary for Class: FormularioAyuntamientoViewModel (com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FormularioAyuntamientoViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.formularioayuntamiento;
+&nbsp;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.firebase.auth.FirebaseAuth;
+&nbsp;import com.google.firebase.firestore.FieldValue;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.google.firebase.firestore.SetOptions;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * ViewModel para crear/actualizar los datos del Ayuntamiento.
+&nbsp; * Graba en la colección &quot;ayuntamientos&quot; con documentId = uid del usuario.
+&nbsp; */
+<b class="nc">&nbsp;public class FormularioAyuntamientoViewModel extends ViewModel {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final MutableLiveData&lt;FormularioAyuntamientoUiState&gt; _ui =</b>
+<b class="nc">&nbsp;            new MutableLiveData&lt;&gt;(FormularioAyuntamientoUiState.loading(null));</b>
+<b class="nc">&nbsp;    public LiveData&lt;FormularioAyuntamientoUiState&gt; ui = _ui;</b>
+&nbsp;
+<b class="nc">&nbsp;    private final FirebaseAuth auth = FirebaseAuth.getInstance();</b>
+<b class="nc">&nbsp;    private final FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+&nbsp;
+&nbsp;    /** Llama desde el Fragment en onViewCreated() */
+&nbsp;    public void init() {
+<b class="nc">&nbsp;        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;</b>
+<b class="nc">&nbsp;        _ui.setValue(FormularioAyuntamientoUiState.idle(uid));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Validación mínima de campos obligatorios */
+&nbsp;    private String validate(String nombre, String razonSocial, String comunidad,
+&nbsp;                            String provincia, String ciudad, String pueblo, String localidad) {
+&nbsp;
+<b class="nc">&nbsp;        if (nombre == null || nombre.trim().isEmpty()) return &quot;Nombre requerido&quot;;</b>
+<b class="nc">&nbsp;        if (razonSocial == null || razonSocial.trim().isEmpty()) return &quot;Razón social requerida&quot;;</b>
+<b class="nc">&nbsp;        if (comunidad == null || comunidad.trim().isEmpty()) return &quot;Comunidad requerida&quot;;</b>
+<b class="nc">&nbsp;        if (provincia == null || provincia.trim().isEmpty()) return &quot;Provincia requerida&quot;;</b>
+<b class="nc">&nbsp;        if (ciudad == null || ciudad.trim().isEmpty()) return &quot;Ciudad requerida&quot;;</b>
+<b class="nc">&nbsp;        if (pueblo == null || pueblo.trim().isEmpty()) return &quot;Pueblo requerido&quot;;</b>
+<b class="nc">&nbsp;        if (localidad == null || localidad.trim().isEmpty()) return &quot;Localidad requerida&quot;;</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Guarda/actualiza el ayuntamiento del usuario autenticado.
+&nbsp;     * Campos mapeados a tus IDs de layout.
+&nbsp;     */
+&nbsp;    public void guardar(String nombre,
+&nbsp;                        String razonSocial,            // etNumero
+&nbsp;                        String comunidad,              // etDescripcionEvento
+&nbsp;                        String provincia,              // etReglasEvento
+&nbsp;                        String ciudad,                 // etMateriales
+&nbsp;                        String pueblo,                 // etUrlPueblo
+&nbsp;                        String localidad               // etLocalidad
+&nbsp;    ) {
+<b class="nc">&nbsp;        FormularioAyuntamientoUiState current = _ui.getValue();</b>
+<b class="nc">&nbsp;        String uid = current != null ? current.uid : (auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (uid == null) {</b>
+<b class="nc">&nbsp;            _ui.setValue(FormularioAyuntamientoUiState.error(null, &quot;No hay sesión activa&quot;));</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String v = validate(nombre, razonSocial, comunidad, provincia, ciudad, pueblo, localidad);</b>
+<b class="nc">&nbsp;        if (v != null) {</b>
+<b class="nc">&nbsp;            _ui.setValue(FormularioAyuntamientoUiState.error(uid, v));</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        _ui.setValue(FormularioAyuntamientoUiState.loading(uid));</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        data.put(&quot;uid&quot;, uid);</b>
+<b class="nc">&nbsp;        data.put(&quot;nombre&quot;, nombre.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;razonSocial&quot;, razonSocial.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;comunidad&quot;, comunidad.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;provincia&quot;, provincia.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;ciudad&quot;, ciudad.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;pueblo&quot;, pueblo.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;localidad&quot;, localidad.trim());</b>
+<b class="nc">&nbsp;        data.put(&quot;updatedAt&quot;, FieldValue.serverTimestamp());</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;ayuntamientos&quot;).document(uid)</b>
+<b class="nc">&nbsp;                .set(data, SetOptions.merge())</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(unused -&gt;</b>
+<b class="nc">&nbsp;                        _ui.setValue(FormularioAyuntamientoUiState.success(uid, &quot;Ayuntamiento guardado&quot;)))</b>
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt;</b>
+<b class="nc">&nbsp;                        _ui.setValue(FormularioAyuntamientoUiState.error(uid, &quot;Error al guardar: &quot; + e.getMessage())));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>
