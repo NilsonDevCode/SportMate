@@ -8,7 +8,7 @@
       <SelectionState runConfigName="LoginFragmentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="LoginFragmentTest (1)">
+      <SelectionState runConfigName="ingresarAliasIncorrecto_oPasswordIncorrecta_muestraErrorLogin()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

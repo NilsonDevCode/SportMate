@@ -6,8 +6,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -94,15 +94,25 @@ public class LoginFragment extends Fragment {
             if (err != null) etPassword.setError(err);
         });
 
+        // Accion login correcto o no
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && isAdded()) {
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                binding.tvMensaje.setVisibility(View.VISIBLE);
+                binding.tvMensaje.setText(msg);
+
+                int color = msg.toLowerCase().contains("correcto")
+                        ? R.color.green
+                        : R.color.red;
+
+                binding.tvMensaje.setTextColor(
+                        ContextCompat.getColor(requireContext(), color)
+                );
+
                 viewModel.consumeMessage();
             }
         });
 
-        // Navegación tras login correcto (sea usuario o ayuntamiento)
-        // 👉 Como pediste: navegar al fragment de Deportes Disponibles
+        // Navegación tras login correcto
         viewModel.getNavUser().observe(getViewLifecycleOwner(), aytoId -> {
             if (aytoId != null && isAdded()) {
                 navController.navigate(R.id.inicioFragment);

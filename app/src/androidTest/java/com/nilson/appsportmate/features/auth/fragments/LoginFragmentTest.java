@@ -4,16 +4,17 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static com.nilson.appsportmate.utils.MatchersUtils.hasTextInputLayoutErrorText;
+import androidx.test.core.app.ApplicationProvider;
 
 import androidx.navigation.Navigation;
 import androidx.navigation.testing.TestNavHostController;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -85,7 +86,6 @@ public class LoginFragmentTest {
 
     /**
      * ✅ Verifica que se muestre un error visual si el alias está vacío.
-     * Usa exactamente la misma estructura que el test anterior.
      */
     @Test
     public void ingresarAliasVacio_muestraErrorEnAlias() {
@@ -93,7 +93,7 @@ public class LoginFragmentTest {
                 ActivityScenario.launch(HiltTestActivity.class);
 
         activityScenario.onActivity(activity -> {
-            // mismo setup que el test que funciona
+            // mismo setup que el test anterior
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
             navController.setGraph(R.navigation.nav_graph);
@@ -113,51 +113,48 @@ public class LoginFragmentTest {
         // Click sin escribir nada
         onView(withId(R.id.btnLogin)).perform(click());
 
-        // ✅ Verifica el error en el EditText, no en el TextInputLayout
+        // ✅ Verifica el error en el EditText
         onView(withId(R.id.etAlias))
                 .check(matches(hasErrorText("Alias requerido")));
     }
 
+    /**
+     * ✅ Verifica que se muestre el mensaje en el TextView (tvMensaje)
+     * cuando el alias o la contraseña son incorrectos.
+     */
     @Test
     public void ingresarAliasIncorrecto_oPasswordIncorrecta_muestraErrorLogin() {
         ActivityScenario<HiltTestActivity> activityScenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         activityScenario.onActivity(activity -> {
-            // 1️⃣ Creamos el NavController de prueba
+            // 1️⃣ Configuramos NavController igual que los otros tests
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
             navController.setGraph(R.navigation.nav_graph);
 
-            // 2️⃣ Creamos el fragmento
             LoginFragment fragment = new LoginFragment();
-
-            // 3️⃣ Asignamos el NavController antes de mostrar la vista
             fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
                 if (owner != null && fragment.getView() != null) {
                     Navigation.setViewNavController(fragment.requireView(), navController);
                 }
             });
 
-            // 4️⃣ Insertamos el fragmento en la actividad
+            // 2️⃣ Insertamos el fragmento en la actividad de test
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
         });
 
-        // 5️⃣ Interacción: ingresamos alias o contraseña incorrectos
+        // 3️⃣ Interacción simulada con datos incorrectos
         onView(withId(R.id.etAlias)).perform(typeText("usuarioInvalido"));
         onView(withId(R.id.etPassword)).perform(typeText("wrongpass"), closeSoftKeyboard());
         onView(withId(R.id.btnLogin)).perform(click());
 
-        // 6️⃣ Verificación:
-        // Si tu app muestra un TextView de error:
-        onView(withText("Alias o contraseña incorrectos")) // 👈 cambia el texto exacto si tu error difiere
+        // ✅ 4️⃣ Verifica que aparezca el mensaje en el TextView
+        onView(withId(R.id.tvMensaje))
+                .check(matches(isDisplayed()))
                 .check(matches(withText("Alias o contraseña incorrectos")));
-
-     ;
     }
-
-
 }

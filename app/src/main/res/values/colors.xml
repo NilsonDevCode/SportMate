@@ -8,6 +8,8 @@
     <color name="primary_light">#63A4FF</color>
     <color name="stripLeft">#0F2E47</color>   <!-- azul oscuro -->
     <color name="stripRight">#5F93C8</color>  <!-- azul claro -->
+    <color name="red">#FF0000</color>
+    <color name="green">#00C853</color>
 
 
     <!-- 🔹 Colores secundarios -->

@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // Cambiamos el runner para soportar tests con Hilt
+        // ✅ Runner para tests con Hilt
         testInstrumentationRunner = "com.nilson.appsportmate.HiltTestRunner"
     }
 
@@ -40,9 +40,17 @@ android {
         viewBinding = true
     }
 
-    // 👇 Necesario para que los FragmentScenario puedan acceder a recursos Android
+    // ✅ Necesario para tests instrumentados que acceden a recursos Android
     testOptions {
         unitTests.isIncludeAndroidResources = true
+    }
+}
+
+// ✅ Fuerza versiones modernas y evita conflictos Firestore/Protobuf
+configurations.all {
+    resolutionStrategy {
+        force("com.google.protobuf:protobuf-javalite:3.25.5")
+        force("com.google.firebase:firebase-firestore:25.1.1")
     }
 }
 
@@ -53,10 +61,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.material:material:1.11.0")
 
-    // --- Firebase (alineado con BOM) ---
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    // --- Firebase actualizado y alineado ---
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-storage")
 
     // --- Hilt / Navigation / Lifecycle ---
@@ -72,18 +80,28 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 
-    // ---------- TESTS UNITARIOS (CAJA BLANCA) ----------
+    // --- Forzar protobuf moderno ---
+    implementation("com.google.protobuf:protobuf-javalite:3.25.5")
+
+    // ---------- TESTS UNITARIOS ----------
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+    testImplementation("com.google.protobuf:protobuf-javalite:3.25.5")
 
-    // ---------- TESTS INSTRUMENTADOS (CAJA NEGRA) ----------
+    // ---------- TESTS INSTRUMENTADOS ----------
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.7")
     androidTestImplementation("androidx.fragment:fragment-testing:1.7.1")
+
+    // --- Firebase alineado también en tests ---
+    androidTestImplementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    androidTestImplementation("com.google.firebase:firebase-auth")
+    androidTestImplementation("com.google.firebase:firebase-firestore:25.1.1")
+    androidTestImplementation("com.google.protobuf:protobuf-javalite:3.25.5")
 
     // ---------- HILT TESTING ----------
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")

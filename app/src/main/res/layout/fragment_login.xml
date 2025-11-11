@@ -88,6 +88,17 @@
                 android:text="Crear cuenta"
                 android:textColor="@android:color/black"
                 app:strokeColor="@android:color/black" />
+
+            <!-- ✅ NUEVO TextView para mostrar mensajes -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                android:layout_marginTop="16dp"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
