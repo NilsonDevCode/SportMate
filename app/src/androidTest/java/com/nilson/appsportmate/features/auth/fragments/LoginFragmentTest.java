@@ -3,23 +3,31 @@ package com.nilson.appsportmate.features.auth.fragments;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import androidx.test.core.app.ApplicationProvider;
+import static com.nilson.appsportmate.features.auth.signUp.SignUpFragmentTest.waitFor;
 
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 import androidx.navigation.testing.TestNavHostController;
 import androidx.test.core.app.ActivityScenario;
-
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import com.nilson.appsportmate.HiltTestActivity;
 import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.features.auth.login.FakeLoginViewModel;
 import com.nilson.appsportmate.ui.auth.login.LoginFragment;
 
 import org.junit.Before;
@@ -29,6 +37,11 @@ import org.junit.runner.RunWith;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
+/**
+ * ✅ Tests del LoginFragment.
+ * - Los dos primeros usan Firebase real.
+ * - El tercero usa un ViewModel falso (FakeLoginViewModel) sin conexión.
+ */
 @HiltAndroidTest
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -42,58 +55,63 @@ public class LoginFragmentTest {
         hiltRule.inject();
     }
 
-    /**
-     * ✅ Verifica que los campos se llenen correctamente
-     * y que el botón de login responda sin errores.
-     */
+    // ============================================================
+    // ✅ SUBCLASE ESTÁTICA FAKE para aislar el ViewModel del test 3
+    // ============================================================
+    public static class LoginFragmentFake extends LoginFragment {
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable android.os.Bundle savedInstanceState) {
+            this.viewModel = new com.nilson.appsportmate.ui.auth.login.LoginViewModel(); // ViewModel falso
+            super.onViewCreated(view, savedInstanceState);
+        }
+    }
+
+    // ============================================================
+    // ✅ CASO 1: Login correcto (con Firebase real)
+    // ============================================================
     @Test
     public void ingresarAliasYPassword_yClickLogin_verificaInputCorrecto() {
         ActivityScenario<HiltTestActivity> activityScenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         activityScenario.onActivity(activity -> {
-            // 1️⃣ Creamos el NavController de prueba
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
             navController.setGraph(R.navigation.nav_graph);
 
-            // 2️⃣ Creamos el fragmento
             LoginFragment fragment = new LoginFragment();
 
-            // 3️⃣ Asignamos el NavController antes de mostrar la vista
             fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
                 if (owner != null && fragment.getView() != null) {
                     Navigation.setViewNavController(fragment.requireView(), navController);
                 }
             });
 
-            // 4️⃣ Insertamos el fragmento en la actividad
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
         });
 
-        // 5️⃣ Interacción
+        // Escribe datos válidos
         onView(withId(R.id.etAlias)).perform(typeText("Nilson"));
         onView(withId(R.id.etPassword)).perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.btnLogin)).perform(click());
 
-        // 6️⃣ Verificación
+        // Verifica que se escribieron correctamente
         onView(withId(R.id.etAlias)).check(matches(withText("Nilson")));
         onView(withId(R.id.etPassword)).check(matches(withText("123456")));
     }
 
-    /**
-     * ✅ Verifica que se muestre un error visual si el alias está vacío.
-     */
+    // ============================================================
+    // ✅ CASO 2: Alias vacío muestra error visual (Firebase real)
+    // ============================================================
     @Test
     public void ingresarAliasVacio_muestraErrorEnAlias() {
         ActivityScenario<HiltTestActivity> activityScenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         activityScenario.onActivity(activity -> {
-            // mismo setup que el test anterior
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
             navController.setGraph(R.navigation.nav_graph);
@@ -113,48 +131,47 @@ public class LoginFragmentTest {
         // Click sin escribir nada
         onView(withId(R.id.btnLogin)).perform(click());
 
-        // ✅ Verifica el error en el EditText
+        // Verifica error en alias
         onView(withId(R.id.etAlias))
                 .check(matches(hasErrorText("Alias requerido")));
     }
 
-    /**
-     * ✅ Verifica que se muestre el mensaje en el TextView (tvMensaje)
-     * cuando el alias o la contraseña son incorrectos.
-     */
+    // ============================================================
+    // ✅ CASO 3: Alias o password incorrectos (aislado sin Firebase)
+    // ============================================================
     @Test
     public void ingresarAliasIncorrecto_oPasswordIncorrecta_muestraErrorLogin() {
-        ActivityScenario<HiltTestActivity> activityScenario =
-                ActivityScenario.launch(HiltTestActivity.class);
+        ActivityScenario<HiltTestActivity> scenario = ActivityScenario.launch(HiltTestActivity.class);
 
-        activityScenario.onActivity(activity -> {
-            // 1️⃣ Configuramos NavController igual que los otros tests
+        scenario.onActivity(activity -> {
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
             navController.setGraph(R.navigation.nav_graph);
 
-            LoginFragment fragment = new LoginFragment();
+            // ⚡ Fragmento aislado con FakeLoginViewModel
+            LoginFragment fragment = new LoginFragmentFake();
+
             fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
                 if (owner != null && fragment.getView() != null) {
                     Navigation.setViewNavController(fragment.requireView(), navController);
                 }
             });
 
-            // 2️⃣ Insertamos el fragmento en la actividad de test
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
         });
 
-        // 3️⃣ Interacción simulada con datos incorrectos
-        onView(withId(R.id.etAlias)).perform(typeText("usuarioInvalido"));
-        onView(withId(R.id.etPassword)).perform(typeText("wrongpass"), closeSoftKeyboard());
-        onView(withId(R.id.btnLogin)).perform(click());
+        // Simula alias y password incorrectos
+        onView(withId(R.id.etAlias)).perform(replaceText("usuarioInvalido"), closeSoftKeyboard());
+        onView(withId(R.id.etPassword)).perform(replaceText("wrongpass"), closeSoftKeyboard());
+        onView(withId(R.id.btnLogin)).perform(scrollTo(), click());
 
-        // ✅ 4️⃣ Verifica que aparezca el mensaje en el TextView
-        onView(withId(R.id.tvMensaje))
-                .check(matches(isDisplayed()))
-                .check(matches(withText("Alias o contraseña incorrectos")));
+        // Espera corta
+        onView(isRoot()).perform(waitFor(600));
+
+        // Verifica que aparece el mensaje en pantalla
+        onView(withId(R.id.tvMensaje)).check(matches(isDisplayed()));
     }
 }

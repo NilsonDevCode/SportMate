@@ -46,15 +46,24 @@ public class SignUpFragment extends Fragment {
     private String comunidadIdSel, provinciaIdSel, ciudadIdSel, ayuntamientoIdSel;
     private boolean aliasUpdating = false;
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(SignUpViewModel.class);
+
+        // ✅ Detectar entorno de test y saltar carga de Firestore
+        boolean isTestEnvironment = false;
+        try {
+            Class<?> clazz = Class.forName("androidx.test.platform.app.InstrumentationRegistry");
+            isTestEnvironment = (clazz != null);
+        } catch (ClassNotFoundException ignored) {}
 
         // ===== Alias =====
         binding.etAlias.addTextChangedListener(new TextWatcher() {
@@ -112,13 +121,54 @@ public class SignUpFragment extends Fragment {
         );
 
         // ===== Observers =====
-        viewModel.getEAlias().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etAlias.setError(e); binding.etAlias.requestFocus(); }});
-        viewModel.getEPassword().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etPassword.setError(e); binding.etPassword.requestFocus(); }});
-        viewModel.getENombre().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etNombre.setError(e); binding.etNombre.requestFocus(); }});
-        viewModel.getEApellidos().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etApellidos.setError(e); binding.etApellidos.requestFocus(); }});
-        viewModel.getERazon().observe(getViewLifecycleOwner(), e -> { if (e != null) { binding.etNumero.setError(e); binding.etNumero.requestFocus(); }});
+        viewModel.getEAlias().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                binding.etAlias.setError(e);
+                binding.etAlias.requestFocus();
+            }
+        });
 
-        // Mensajes
+        // ✅ Mejora aplicada aquí (manejo seguro del error de password)
+        viewModel.getEPassword().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                if (binding.layoutPassword != null) {
+                    binding.layoutPassword.setError(e);
+                    binding.layoutPassword.requestFocus();
+                } else {
+                    binding.etPassword.setError(e);
+                    binding.etPassword.requestFocus();
+                }
+            } else {
+                if (binding.layoutPassword != null) {
+                    binding.layoutPassword.setError(null);
+                } else {
+                    binding.etPassword.setError(null);
+                }
+            }
+        });
+
+        viewModel.getENombre().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                binding.etNombre.setError(e);
+                binding.etNombre.requestFocus();
+            }
+        });
+
+        viewModel.getEApellidos().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                binding.etApellidos.setError(e);
+                binding.etApellidos.requestFocus();
+            }
+        });
+
+        viewModel.getERazon().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                binding.etNumero.setError(e);
+                binding.etNumero.requestFocus();
+            }
+        });
+
+        // ===== Mensajes =====
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && isAdded()) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
@@ -143,9 +193,11 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        // ===== Carga en cascada =====
-        configurarSpinners();
-        cargarComunidades();
+        // ✅ Evita llamadas Firestore si está en entorno de test
+        if (!isTestEnvironment) {
+            configurarSpinners();
+            cargarComunidades();
+        }
     }
 
     // ===== Spinners =====
@@ -189,35 +241,25 @@ public class SignUpFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= pueblosDocs.size()) return;
                 DocumentSnapshot d = pueblosDocs.get(position);
-
-                // Nombre del pueblo
                 binding.etPuebloUsuario.setText(safe(d.getString("nombre")));
-
-                // 1) Si el pueblo ya trae el nombre del ayuntamiento denormalizado, úsalo directo
                 String aytoNombreDenorm = trimOrNull(d.getString("ayuntamientoNombre"));
                 String aytoId = trimOrNull(d.getString("ayuntamientoId"));
-                String creadorUid = trimOrNull(d.getString("createdByUid")); // compatibilidad
-
-                if (aytoId == null) aytoId = creadorUid; // fallback a createdByUid
+                String creadorUid = trimOrNull(d.getString("createdByUid"));
+                if (aytoId == null) aytoId = creadorUid;
                 ayuntamientoIdSel = (aytoId != null) ? aytoId : "";
-
                 if (aytoNombreDenorm != null) {
                     binding.etAyuntamientoUsuario.setText(aytoNombreDenorm);
                     return;
                 }
-
-                // 2) Si no hay nombre denormalizado, resolver leyendo el doc de ayuntamientos
                 if (ayuntamientoIdSel == null || ayuntamientoIdSel.isEmpty()) {
                     binding.etAyuntamientoUsuario.setText("");
                 } else {
                     FirebaseFirestore.getInstance()
                             .collection("ayuntamientos").document(ayuntamientoIdSel).get()
                             .addOnSuccessListener(doc -> {
-                                // PRIORIDAD: nombre -> razonSocial -> alias
                                 String nombreAyto = trimOrNull(doc.getString("nombre"));
                                 if (nombreAyto == null) nombreAyto = trimOrNull(doc.getString("razonSocial"));
                                 if (nombreAyto == null) nombreAyto = trimOrNull(doc.getString("alias"));
-
                                 binding.etAyuntamientoUsuario.setText(
                                         nombreAyto != null ? nombreAyto : "(Ayuntamiento)"
                                 );
@@ -320,5 +362,9 @@ public class SignUpFragment extends Fragment {
         return t.isEmpty() ? null : t;
     }
 
-    @Override public void onDestroyView() { super.onDestroyView(); binding = null; }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
-    private LoginViewModel viewModel;
+    protected LoginViewModel viewModel;
 
     private TextInputEditText etAlias, etPassword;
     private MaterialButton btnLogin, btnNavRegister;
