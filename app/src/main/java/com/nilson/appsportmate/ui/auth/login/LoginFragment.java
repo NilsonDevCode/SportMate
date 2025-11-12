@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,9 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     protected LoginViewModel viewModel;
 
+    // ⚡ Nuevo flag global: permite desactivar Firebase solo durante tests
+    public static boolean disableFirebaseForTest = false;
+
     private TextInputEditText etAlias, etPassword;
     private MaterialButton btnLogin, btnNavRegister;
     private boolean aliasUpdating = false;
@@ -43,7 +47,11 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        // ⚡ Solo inicializa Firebase si no estamos en modo test
+        if (!disableFirebaseForTest) {
+            viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        }
 
         final NavController navController = Navigation.findNavController(view);
 
@@ -94,7 +102,7 @@ public class LoginFragment extends Fragment {
             if (err != null) etPassword.setError(err);
         });
 
-        // Accion login correcto o no
+        // Acción login correcto o no
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && isAdded()) {
                 binding.tvMensaje.setVisibility(View.VISIBLE);
@@ -119,6 +127,7 @@ public class LoginFragment extends Fragment {
                 viewModel.consumeNavUser();
             }
         });
+
         viewModel.getNavTownhall().observe(getViewLifecycleOwner(), uid -> {
             if (uid != null && isAdded()) {
                 navController.navigate(R.id.menuAyuntamientoFragment);

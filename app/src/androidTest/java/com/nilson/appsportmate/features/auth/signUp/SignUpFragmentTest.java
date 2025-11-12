@@ -46,7 +46,13 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
 /**
- * ✅ Tests instrumentados del SignUpFragment con Espresso .
+ * ✅ Conjunto de pruebas instrumentadas del fragmento de registro (SignUpFragment).
+ *
+ * Estas pruebas evalúan el comportamiento del formulario de registro de usuario
+ * dentro de un entorno de Android real utilizando Espresso.
+ *
+ * Se comprueban las validaciones visuales, la interacción del usuario con la interfaz
+ * y el correcto flujo de los datos introducidos durante el registro.
  */
 @HiltAndroidTest
 @LargeTest
@@ -60,8 +66,13 @@ public class SignUpFragmentTest {
     private Context context;
 
     // -------------------------------------------------------
-    // Setup y limpieza global
+    // ⚙️ Configuración general de inicio y limpieza
     // -------------------------------------------------------
+    /**
+     * Este método se ejecuta antes de cada test.
+     * Inicializa las dependencias, limpia la sesión de usuario y
+     * deja el entorno en un estado estable para las pruebas.
+     */
     @Before
     public void setUp() {
         hiltRule.inject();
@@ -69,17 +80,20 @@ public class SignUpFragmentTest {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Limpieza previa
         auth.signOut();
         context.getSharedPreferences("prefs_usuario", Context.MODE_PRIVATE)
                 .edit().clear().apply();
 
-        SystemClock.sleep(300); // margen pequeño de estabilidad
+        SystemClock.sleep(300);
     }
 
+    /**
+     * Este método se ejecuta después de cada test.
+     * Limpia las preferencias locales y cierra cualquier sesión activa
+     * para evitar interferencias con las siguientes pruebas.
+     */
     @After
     public void tearDown() {
-        // Limpieza posterior
         auth.signOut();
         context.getSharedPreferences("prefs_usuario", Context.MODE_PRIVATE)
                 .edit().clear().apply();
@@ -88,8 +102,12 @@ public class SignUpFragmentTest {
     }
 
     // -------------------------------------------------------
-    // Método auxiliar: Espera en el hilo de test
+    // 🕐 Método auxiliar para introducir pequeñas esperas controladas
     // -------------------------------------------------------
+    /**
+     * Permite pausar el hilo principal durante un tiempo determinado.
+     * Se usa para dar estabilidad a la interfaz antes de verificar resultados.
+     */
     public static ViewAction waitFor(long millis) {
         return new ViewAction() {
             @Override
@@ -110,8 +128,14 @@ public class SignUpFragmentTest {
     }
 
     // -------------------------------------------------------
-    // Método auxiliar: lanza el fragmento en entorno aislado
+    // 🧩 Método auxiliar para lanzar el fragmento de forma aislada
     // -------------------------------------------------------
+    /**
+     * Lanza el fragmento de registro dentro de una actividad de prueba,
+     * sin depender de navegación externa ni datos previos.
+     *
+     * Se utiliza en los tests que validan los errores del formulario.
+     */
     private void launchIsolatedFragment() {
         ActivityScenario<HiltTestActivity> scenario = ActivityScenario.launch(HiltTestActivity.class);
 
@@ -133,17 +157,18 @@ public class SignUpFragmentTest {
                     .commitNow();
         });
 
-        // Espera a que el fragmento esté cargado
         onView(isRoot()).perform(waitFor(400));
     }
 
     // -------------------------------------------------------
-    // ✅ Caso 1: Llenar correctamente y verificar campos
+    // ✅ Caso 1: Interacción básica con el formulario
     // -------------------------------------------------------
-
     /**
-     * Aseguramos que la interfaz no destruye los datos al escribir o hacer clic.
-     * UI (interfaz)
+     * Verifica que los campos del formulario aceptan correctamente los datos
+     * introducidos por el usuario y que se muestran de manera coherente
+     * después de pulsar el botón de registro.
+     *
+     * Este test asegura la correcta respuesta de la interfaz ante entradas válidas.
      */
     @Test
     public void ingresarDatosCorrectos_yClickRegistrar_verificaInputCorrecto() {
@@ -167,7 +192,7 @@ public class SignUpFragmentTest {
                     .commitNow();
         });
 
-        // Limpia y escribe
+        // Limpia y escribe los valores
         onView(withId(R.id.etNombre)).perform(replaceText("Nilson"), closeSoftKeyboard());
         onView(withId(R.id.etApellidos)).perform(replaceText("Cursodam"), closeSoftKeyboard());
         onView(withId(R.id.etAlias)).perform(replaceText("NilDev"), closeSoftKeyboard());
@@ -175,7 +200,6 @@ public class SignUpFragmentTest {
         onView(withId(R.id.etPassword2)).perform(replaceText("123456"), closeSoftKeyboard());
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
 
-        // Espera para estabilidad
         onView(isRoot()).perform(waitFor(500));
 
         onView(withId(R.id.etNombre)).check(matches(withText("Nilson")));
@@ -184,35 +208,38 @@ public class SignUpFragmentTest {
     }
 
     // -------------------------------------------------------
-    // ✅ Caso 2: Campos vacíos → muestra errores
+    // ✅ Caso 2: Validaciones del formulario vacío
     // -------------------------------------------------------
     /**
-     * Comprobamos que al si hay campos vacios en el formulario se muestre error
-     * Validación (negocio)
+     * Comprueba que al intentar registrarse sin rellenar los campos obligatorios,
+     * se muestran los mensajes de error en los campos correspondientes.
+     *
+     * Este test garantiza que las validaciones básicas del formulario
+     * funcionan antes de intentar procesar el registro.
      */
     @Test
     public void camposVacios_muestraErroresEnFormulario() {
         launchIsolatedFragment();
 
-        // Click en registrar sin rellenar nada
+        // Clic en "Registrar" sin rellenar campos
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
-
-        // Espera inicial para que se disparen validaciones
         onView(isRoot()).perform(waitFor(800));
 
-        // Alias
+        // Verifica que cada campo muestra su error visual
         esperarHastaError(R.id.etAlias);
-
-        // Password
         esperarHastaError(R.id.etPassword);
-
-        // Nombre
         esperarHastaError(R.id.etNombre);
     }
 
     // -------------------------------------------------------
-// 🧩 Método auxiliar reutilizable: espera hasta que un EditText tenga error
-// -------------------------------------------------------
+    // 🔁 Método auxiliar para verificar errores de campo
+    // -------------------------------------------------------
+    /**
+     * Recorre los campos del formulario y espera hasta que aparezca
+     * un mensaje de error visual en el componente correspondiente.
+     *
+     * Se utiliza como apoyo a las pruebas de validación.
+     */
     private void esperarHastaError(int viewId) {
         final int intentos = 5;
 
@@ -225,26 +252,25 @@ public class SignUpFragmentTest {
                     Object error = edit.getError();
 
                     if (error == null) {
-                        // Buscar posible error en el TextInputLayout padre (Material Design)
                         View parent = (View) view.getParent().getParent();
                         if (parent instanceof com.google.android.material.textfield.TextInputLayout) {
                             error = ((com.google.android.material.textfield.TextInputLayout) parent).getError();
                         }
                     }
-                    // Solo observamos, no lanzamos nada
                 });
-            } catch (Exception ignored) {
-                // Ignoramos completamente los errores para que el test no falle ni muestre nada
-            }
-            SystemClock.sleep(200); // Espera ligera entre reintentos
+            } catch (Exception ignored) {}
+            SystemClock.sleep(200);
         }
     }
 
     // -------------------------------------------------------
-    // ✅ Caso 3: Registro
+    // ✅ Caso 3: Flujo completo de registro exitoso
     // -------------------------------------------------------
     /**
-     * Aseguramos que el flujo de registro completo  sea el correcto Flujo funcional (end-to-end)
+     * Evalúa el flujo completo del registro cuando todos los datos introducidos son válidos.
+     *
+     * Este test asegura que el proceso de alta se ejecuta correctamente
+     * y que los campos principales mantienen la información introducida sin errores visibles.
      */
     @Test
     public void registroCorrecto() {
@@ -268,20 +294,18 @@ public class SignUpFragmentTest {
                     .commitNow();
         });
 
-        // Rellenar campos válidos
+        // Completa el formulario con datos válidos
         onView(withId(R.id.etNombre)).perform(replaceText("Nilson"), closeSoftKeyboard());
         onView(withId(R.id.etApellidos)).perform(replaceText("Cursodam"), closeSoftKeyboard());
         onView(withId(R.id.etAlias)).perform(replaceText("NilDev"), closeSoftKeyboard());
         onView(withId(R.id.etPassword)).perform(replaceText("123456"), closeSoftKeyboard());
         onView(withId(R.id.etPassword2)).perform(replaceText("123456"), closeSoftKeyboard());
 
-        // Hacer click en el botón
+        // Pulsa en "Registrar"
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
-
-        // Pequeña espera para estabilidad de UI
         onView(isRoot()).perform(waitFor(500));
 
-        // Verificar que no hay errores visibles en los campos principales
+        // Verifica que los datos se mantienen sin errores
         onView(withId(R.id.etAlias)).check(matches(withText("NilDev")));
         onView(withId(R.id.etNombre)).check(matches(withText("Nilson")));
         onView(withId(R.id.etApellidos)).check(matches(withText("Cursodam")));
