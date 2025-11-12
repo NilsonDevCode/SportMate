@@ -1,0 +1,18 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nilson.appsportmate">
+
+    <application>
+        <!-- Actividad vacía por defecto de FragmentScenario -->
+        <activity
+            android:name="androidx.fragment.app.testing.EmptyFragmentActivity"
+            android:exported="true"
+            tools:ignore="MissingIntentFilter" />
+
+        <!-- NUEVA actividad compatible con Hilt -->
+        <activity
+            android:name=".HiltTestActivity"
+            android:exported="true"
+            tools:ignore="MissingIntentFilter" />
+    </application>
+</manifest>

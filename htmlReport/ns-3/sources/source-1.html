@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Ayuntamiento</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.common.modelos</a>
+</div>
+
+<h1>Coverage Summary for Class: Ayuntamiento (com.nilson.appsportmate.common.modelos)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Ayuntamiento</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.common.modelos;
+&nbsp;
+&nbsp;public class Ayuntamiento {
+&nbsp;    private String uid;        // = documentId en &quot;ayuntamientos&quot;
+&nbsp;    private String nombre;
+&nbsp;    private String numero;
+&nbsp;    private String comunidad;
+&nbsp;    private String provincia;
+&nbsp;    private String ciudad;
+&nbsp;    private String pueblo;
+&nbsp;    private String localidad;
+&nbsp;
+&nbsp;    // Constructor vacío requerido por Firebase
+<b class="nc">&nbsp;    public Ayuntamiento() { }</b>
+&nbsp;
+&nbsp;    public Ayuntamiento(String uid, String nombre, String numero, String comunidad,
+<b class="nc">&nbsp;                        String provincia, String ciudad, String pueblo, String localidad) {</b>
+<b class="nc">&nbsp;        this.uid = uid;</b>
+<b class="nc">&nbsp;        this.nombre = nombre;</b>
+<b class="nc">&nbsp;        this.numero = numero;</b>
+<b class="nc">&nbsp;        this.comunidad = comunidad;</b>
+<b class="nc">&nbsp;        this.provincia = provincia;</b>
+<b class="nc">&nbsp;        this.ciudad = ciudad;</b>
+<b class="nc">&nbsp;        this.pueblo = pueblo;</b>
+<b class="nc">&nbsp;        this.localidad = localidad;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getters y Setters
+<b class="nc">&nbsp;    public String getUid() { return uid; }</b>
+<b class="nc">&nbsp;    public void setUid(String uid) { this.uid = uid; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getNombre() { return nombre; }</b>
+<b class="nc">&nbsp;    public void setNombre(String nombre) { this.nombre = nombre; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getNumero() { return numero; }</b>
+<b class="nc">&nbsp;    public void setNumero(String numero) { this.numero = numero; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getComunidad() { return comunidad; }</b>
+<b class="nc">&nbsp;    public void setComunidad(String comunidad) { this.comunidad = comunidad; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getProvincia() { return provincia; }</b>
+<b class="nc">&nbsp;    public void setProvincia(String provincia) { this.provincia = provincia; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getCiudad() { return ciudad; }</b>
+<b class="nc">&nbsp;    public void setCiudad(String ciudad) { this.ciudad = ciudad; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getPueblo() { return pueblo; }</b>
+<b class="nc">&nbsp;    public void setPueblo(String pueblo) { this.pueblo = pueblo; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public String getLocalidad() { return localidad; }</b>
+<b class="nc">&nbsp;    public void setLocalidad(String localidad) { this.localidad = localidad; }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Ayuntamiento{&quot; +</b>
+&nbsp;                &quot;uid=&#39;&quot; + uid + &#39;\&#39;&#39; +
+&nbsp;                &quot;, nombre=&#39;&quot; + nombre + &#39;\&#39;&#39; +
+&nbsp;                &quot;, numero=&#39;&quot; + numero + &#39;\&#39;&#39; +
+&nbsp;                &quot;, comunidad=&#39;&quot; + comunidad + &#39;\&#39;&#39; +
+&nbsp;                &quot;, provincia=&#39;&quot; + provincia + &#39;\&#39;&#39; +
+&nbsp;                &quot;, ciudad=&#39;&quot; + ciudad + &#39;\&#39;&#39; +
+&nbsp;                &quot;, pueblo=&#39;&quot; + pueblo + &#39;\&#39;&#39; +
+&nbsp;                &quot;, localidad=&#39;&quot; + localidad + &#39;\&#39;&#39; +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

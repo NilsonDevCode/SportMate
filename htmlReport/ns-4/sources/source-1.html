@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AuthAliasHelper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.common.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthAliasHelper (com.nilson.appsportmate.common.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthAliasHelper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (6/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,5%
+  </span>
+  <span class="absValue">
+    (17/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.common.utils;
+&nbsp;
+&nbsp;import java.text.Normalizer;
+&nbsp;
+&nbsp;public final class AuthAliasHelper {
+&nbsp;    private AuthAliasHelper() {}
+&nbsp;
+&nbsp;    // Dominio con TLD real para el email sintético
+&nbsp;    private static final String DOMAIN = &quot;@alias.appsportmate.com&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Valida el alias:
+&nbsp;     * - Sin espacios.
+&nbsp;     * - Debe empezar por MAYÚSCULA (A-Z).
+&nbsp;     * El resto puede ser cualquier cosa.
+&nbsp;     */
+&nbsp;    public static String getAliasValidationError(String aliasRaw) {
+<b class="pc">&nbsp;        if (aliasRaw == null) return &quot;Alias requerido&quot;;</b>
+<b class="fc">&nbsp;        String alias = aliasRaw.trim();</b>
+<b class="pc">&nbsp;        if (alias.isEmpty()) return &quot;Alias requerido&quot;;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (alias.contains(&quot; &quot;))</b>
+<b class="nc">&nbsp;            return &quot;El alias no puede tener espacios&quot;;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!alias.substring(0, 1).matches(&quot;[A-Z]&quot;))</b>
+<b class="nc">&nbsp;            return &quot;El alias debe empezar por letra mayúscula (A-Z)&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        return null; // ✅ válido</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Convierte alias a email sintético válido para Firebase Auth:
+&nbsp;     * - Quita tildes/ñ.
+&nbsp;     * - Minúsculas.
+&nbsp;     * - Sustituye lo no permitido en emails por &#39;.&#39;.
+&nbsp;     * - Añade dominio con TLD.
+&nbsp;     */
+&nbsp;    public static String aliasToEmail(String aliasRaw) {
+<b class="pc">&nbsp;        if (aliasRaw == null) aliasRaw = &quot;&quot;;</b>
+<b class="fc">&nbsp;        String a = stripDiacritics(aliasRaw).trim().toLowerCase();</b>
+&nbsp;        // Solo dejamos letras, números, &#39;.&#39;, &#39;_&#39;, &#39;-&#39; ; lo demás → &#39;.&#39;
+<b class="fc">&nbsp;        a = a.replaceAll(&quot;[^a-z0-9._-]&quot;, &quot;.&quot;);</b>
+<b class="fc">&nbsp;        a = a.replaceAll(&quot;\\.+&quot;, &quot;.&quot;);     // colapsa &#39;...&#39;</b>
+<b class="fc">&nbsp;        a = a.replaceAll(&quot;^\\.|\\.$&quot;, &quot;&quot;); // sin &#39;.&#39; al inicio/fin</b>
+<b class="pc">&nbsp;        if (a.isEmpty()) a = &quot;user&quot;;</b>
+<b class="fc">&nbsp;        return a + DOMAIN;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Elimina diacríticos: á→a, é→e, ñ→n, etc. */
+&nbsp;    private static String stripDiacritics(String input) {
+<b class="fc">&nbsp;        String norm = Normalizer.normalize(input, Normalizer.Form.NFD);</b>
+<b class="fc">&nbsp;        return norm.replaceAll(&quot;\\p{M}&quot;, &quot;&quot;)</b>
+<b class="fc">&nbsp;                .replace(&quot;Ñ&quot;, &quot;N&quot;)</b>
+<b class="fc">&nbsp;                .replace(&quot;ñ&quot;, &quot;n&quot;);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

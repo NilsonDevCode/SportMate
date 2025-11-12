@@ -1,0 +1,308 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EventosAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.adaptadores</a>
+</div>
+
+<h1>Coverage Summary for Class: EventosAdapter (com.nilson.appsportmate.features.townhall.adaptadores)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EventosAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/59)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EventosAdapter$EventoActions</td>
+  </tr>
+  <tr>
+    <td class="name">EventosAdapter$VH</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/69)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.adaptadores;
+&nbsp;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import com.google.android.material.button.MaterialButton;
+&nbsp;import com.google.firebase.firestore.CollectionReference;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.recyclerview.widget.RecyclerView;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * Adapter de gestión de eventos del ayuntamiento.
+&nbsp; * Pinta los datos y delega acciones al host a través de EventoActions.
+&nbsp; */
+&nbsp;public class EventosAdapter extends RecyclerView.Adapter&lt;EventosAdapter.VH&gt; {
+&nbsp;
+&nbsp;    public interface EventoActions {
+&nbsp;        void onIncrementar(String idDoc);
+&nbsp;        void onDecrementar(String idDoc);
+&nbsp;        void onEditar(Map&lt;String, Object&gt; evento);
+&nbsp;        void onBorrar(Map&lt;String, Object&gt; evento);
+&nbsp;        void onVerInscritos(String idDoc, String tituloMostrado);
+&nbsp;        CollectionReference getInscritosRef(String idDoc);
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class VH extends RecyclerView.ViewHolder {
+&nbsp;        TextView tvTitulo, tvUbicacion, tvPlazas, tvInscritosCount;
+&nbsp;        MaterialButton btnMas, btnMenos, btnEditar, btnBorrar, btnInscritos;
+&nbsp;
+&nbsp;        public VH(@NonNull View itemView) {
+<b class="nc">&nbsp;            super(itemView);</b>
+<b class="nc">&nbsp;            tvTitulo         = itemView.findViewById(R.id.tvTitulo);</b>
+<b class="nc">&nbsp;            tvUbicacion      = itemView.findViewById(R.id.tvUbicacion);</b>
+<b class="nc">&nbsp;            tvPlazas         = itemView.findViewById(R.id.tvPlazas);</b>
+<b class="nc">&nbsp;            tvInscritosCount = itemView.findViewById(R.id.tvInscritosCount);</b>
+<b class="nc">&nbsp;            btnMas           = itemView.findViewById(R.id.btnMas);</b>
+<b class="nc">&nbsp;            btnMenos         = itemView.findViewById(R.id.btnMenos);</b>
+<b class="nc">&nbsp;            btnEditar        = itemView.findViewById(R.id.btnEditar);</b>
+<b class="nc">&nbsp;            btnBorrar        = itemView.findViewById(R.id.btnBorrar);</b>
+<b class="nc">&nbsp;            btnInscritos     = itemView.findViewById(R.id.btnInscritos);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private final List&lt;Map&lt;String, Object&gt;&gt; data;
+&nbsp;    private final EventoActions actions;
+&nbsp;
+&nbsp;    public EventosAdapter(@NonNull List&lt;Map&lt;String, Object&gt;&gt; data,
+<b class="nc">&nbsp;                          @NonNull EventoActions actions) {</b>
+<b class="nc">&nbsp;        this.data = data;</b>
+<b class="nc">&nbsp;        this.actions = actions;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @NonNull
+&nbsp;    @Override
+&nbsp;    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<b class="nc">&nbsp;        View v = LayoutInflater.from(parent.getContext())</b>
+<b class="nc">&nbsp;                .inflate(R.layout.item_evento_gestion, parent, false);</b>
+<b class="nc">&nbsp;        return new VH(v);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onBindViewHolder(@NonNull VH h, int position) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; ev = data.get(position);</b>
+&nbsp;
+<b class="nc">&nbsp;        String idDoc     = String.valueOf(ev.get(&quot;idDoc&quot;));</b>
+<b class="nc">&nbsp;        String nombre    = safeStr(ev.get(&quot;nombre&quot;));</b>
+<b class="nc">&nbsp;        String fecha     = safeStr(ev.get(&quot;fecha&quot;));</b>
+<b class="nc">&nbsp;        String hora      = safeStr(ev.get(&quot;hora&quot;));</b>
+<b class="nc">&nbsp;        String comunidad = safeStr(ev.get(&quot;comunidad&quot;));</b>
+<b class="nc">&nbsp;        String provincia = safeStr(ev.get(&quot;provincia&quot;));</b>
+<b class="nc">&nbsp;        String ciudad    = safeStr(ev.get(&quot;ciudad&quot;));</b>
+<b class="nc">&nbsp;        String pueblo    = safeStr(ev.get(&quot;pueblo&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        long plazas = toLong(ev.get(&quot;plazasDisponibles&quot;));</b>
+&nbsp;
+&nbsp;        // Título y subtítulo
+<b class="nc">&nbsp;        h.tvTitulo.setText(nombre);</b>
+<b class="nc">&nbsp;        String ubicacion = buildUbicacion(ciudad, provincia, pueblo);</b>
+<b class="nc">&nbsp;        String sub = buildSub(fecha, hora, ubicacion);</b>
+<b class="nc">&nbsp;        h.tvUbicacion.setText(sub); // &lt;&lt;&lt; muestra fecha hora • ubicación</b>
+<b class="nc">&nbsp;        h.tvPlazas.setText(&quot;Plazas disponibles: &quot; + plazas);</b>
+<b class="nc">&nbsp;        h.tvInscritosCount.setText(&quot;Inscritos: —&quot;);</b>
+&nbsp;
+&nbsp;        // Contador de inscritos (lectura única)
+<b class="nc">&nbsp;        CollectionReference insRef = actions.getInscritosRef(idDoc);</b>
+<b class="nc">&nbsp;        if (insRef != null) {</b>
+<b class="nc">&nbsp;            insRef.get()</b>
+<b class="nc">&nbsp;                    .addOnSuccessListener(snap -&gt;</b>
+<b class="nc">&nbsp;                            h.tvInscritosCount.setText(&quot;Inscritos: &quot; + snap.size()))</b>
+<b class="nc">&nbsp;                    .addOnFailureListener(e -&gt;</b>
+<b class="nc">&nbsp;                            h.tvInscritosCount.setText(&quot;Inscritos: —&quot;));</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Clicks
+<b class="nc">&nbsp;        h.btnMas.setOnClickListener(v -&gt; actions.onIncrementar(idDoc));</b>
+<b class="nc">&nbsp;        h.btnMenos.setOnClickListener(v -&gt; actions.onDecrementar(idDoc));</b>
+<b class="nc">&nbsp;        h.btnEditar.setOnClickListener(v -&gt; actions.onEditar(ev));</b>
+<b class="nc">&nbsp;        h.btnBorrar.setOnClickListener(v -&gt; actions.onBorrar(ev));</b>
+<b class="nc">&nbsp;        h.btnInscritos.setOnClickListener(v -&gt; actions.onVerInscritos(idDoc, nombre + &quot; - &quot; + sub));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+<b class="nc">&nbsp;    public int getItemCount() { return data.size(); }</b>
+&nbsp;
+&nbsp;    /* ==================== helpers ==================== */
+&nbsp;
+&nbsp;    private static String safeStr(Object o) {
+<b class="nc">&nbsp;        return o == null ? &quot;&quot; : String.valueOf(o);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static long toLong(Object o) {
+<b class="nc">&nbsp;        if (o instanceof Long) return (Long) o;</b>
+<b class="nc">&nbsp;        if (o instanceof Integer) return ((Integer) o).longValue();</b>
+<b class="nc">&nbsp;        if (o instanceof String) {</b>
+<b class="nc">&nbsp;            try { return Long.parseLong((String) o); } catch (Exception ignored) {}</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return 0L;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String buildUbicacion(String ciudad, String provincia, String pueblo) {
+&nbsp;        // &quot;Ciudad, Provincia · Pueblo&quot; (ignora vacíos)
+<b class="nc">&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="nc">&nbsp;        if (!ciudad.isEmpty()) sb.append(ciudad);</b>
+<b class="nc">&nbsp;        if (!provincia.isEmpty()) {</b>
+<b class="nc">&nbsp;            if (sb.length() &gt; 0) sb.append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;            sb.append(provincia);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (!pueblo.isEmpty()) {</b>
+<b class="nc">&nbsp;            if (sb.length() &gt; 0) sb.append(&quot; · &quot;);</b>
+<b class="nc">&nbsp;            sb.append(pueblo);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return sb.length() == 0 ? &quot;-&quot; : sb.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String buildSub(String fecha, String hora, String ubicacion) {
+<b class="nc">&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="nc">&nbsp;        if (!fecha.isEmpty()) sb.append(fecha);</b>
+<b class="nc">&nbsp;        if (!hora.isEmpty()) {</b>
+<b class="nc">&nbsp;            if (sb.length() &gt; 0) sb.append(&quot; &quot;);</b>
+<b class="nc">&nbsp;            sb.append(hora);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (!ubicacion.isEmpty()) {</b>
+<b class="nc">&nbsp;            if (sb.length() &gt; 0) sb.append(&quot; • &quot;);</b>
+<b class="nc">&nbsp;            sb.append(ubicacion);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return sb.toString();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

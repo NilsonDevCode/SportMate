@@ -21,8 +21,20 @@ import java.util.UUID;
 
 public class SignUpViewModel extends ViewModel {
 
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth auth;
+    private final FirebaseFirestore db;
+
+    // 🔧 Constructor principal (uso normal en la app)
+    public SignUpViewModel() {
+        this.auth = FirebaseAuth.getInstance();
+        this.db = FirebaseFirestore.getInstance();
+    }
+
+    // 🔧 Constructor alternativo para tests (sin Firebase real)
+    public SignUpViewModel(FirebaseAuth auth, FirebaseFirestore db) {
+        this.auth = auth;
+        this.db = db;
+    }
 
     private final MutableLiveData<String> eAlias = new MutableLiveData<>(null);
     private final MutableLiveData<String> ePassword = new MutableLiveData<>(null);
@@ -148,7 +160,6 @@ public class SignUpViewModel extends ViewModel {
 
                     batch1.commit()
                             .addOnSuccessListener(unused -> {
-                                // Si es ayuntamiento: crear pueblo si viene relleno
                                 if ("ayuntamiento".equals(rol)
                                         && puebloNombre != null && !puebloNombre.trim().isEmpty()
                                         && comunidadIdSel != null && !comunidadIdSel.isEmpty()
@@ -165,8 +176,6 @@ public class SignUpViewModel extends ViewModel {
                                     puebloDoc.put("comunidadNombre", comunidadNombre);
                                     puebloDoc.put("provinciaNombre", provinciaNombre);
                                     puebloDoc.put("ciudadNombre", ciudadNombre);
-
-                                    // 👉 Bonus: guardar también el ayuntamiento en el pueblo
                                     puebloDoc.put("ayuntamientoId", uid);
                                     puebloDoc.put("ayuntamientoNombre", nombre);
 
@@ -174,7 +183,6 @@ public class SignUpViewModel extends ViewModel {
                                             .addOnFailureListener(e -> message.setValue("Perfil OK pero falló crear pueblo: " + e.getMessage()));
                                 }
 
-                                // Preferencias y navegación
                                 Preferencias.guardarUid(appContext, uid);
                                 Preferencias.guardarAlias(appContext, aliasInput);
                                 Preferencias.guardarRol(appContext, rol);

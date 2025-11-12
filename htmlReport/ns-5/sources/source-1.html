@@ -1,0 +1,129 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AuthLocalDataSource</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.data.local</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthLocalDataSource (com.nilson.appsportmate.data.local)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthLocalDataSource</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.data.local;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;import android.content.SharedPreferences;
+&nbsp;
+&nbsp;public class AuthLocalDataSource {
+&nbsp;    private static final String PREF_NAME = &quot;auth_prefs&quot;;
+&nbsp;    private static final String KEY_UID = &quot;uid&quot;;
+&nbsp;    private static final String KEY_ALIAS = &quot;alias&quot;;
+&nbsp;    private static final String KEY_ROLE = &quot;role&quot;;
+&nbsp;
+&nbsp;    private final SharedPreferences sharedPreferences;
+&nbsp;
+<b class="nc">&nbsp;    public AuthLocalDataSource(Context context) {</b>
+<b class="nc">&nbsp;        this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void saveUser(String uid, String alias, String role) {
+<b class="nc">&nbsp;        sharedPreferences.edit()</b>
+<b class="nc">&nbsp;                .putString(KEY_UID, uid)</b>
+<b class="nc">&nbsp;                .putString(KEY_ALIAS, alias)</b>
+<b class="nc">&nbsp;                .putString(KEY_ROLE, role)</b>
+<b class="nc">&nbsp;                .apply();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

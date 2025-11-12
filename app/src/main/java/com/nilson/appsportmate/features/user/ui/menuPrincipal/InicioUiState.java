@@ -5,53 +5,48 @@ import java.util.List;
 
 public class InicioUiState {
     public final boolean loading;
-    public final String message;
     public final String error;
+    public final String message;
     public final List<DeporteUi> deportes;
 
-    public InicioUiState(boolean loading, String message, String error, List<DeporteUi> deportes) {
+    public InicioUiState(boolean loading, String error, String message, List<DeporteUi> deportes) {
         this.loading = loading;
-        this.message = message;
         this.error = error;
-        this.deportes = (deportes == null) ? new ArrayList<>() : deportes;
+        this.message = message;
+        this.deportes = deportes == null ? new ArrayList<>() : deportes;
     }
 
-    /* ---------- Fábricas ---------- */
+    public static InicioUiState loading() { return new InicioUiState(true, null, null, null); }
+    public static InicioUiState success(List<DeporteUi> items) { return new InicioUiState(false, null, null, items); }
+    public static InicioUiState error(String msg) { return new InicioUiState(false, msg, null, null); }
 
-    public static InicioUiState loading() {
-        return new InicioUiState(true, null, null, new ArrayList<>());
-    }
-
-    public static InicioUiState success(List<DeporteUi> d) {
-        return new InicioUiState(false, null, null, d);
-    }
-
-    public static InicioUiState error(String e) {
-        return new InicioUiState(false, null, e, new ArrayList<>());
-    }
-
-    /* ---------- Helpers de mensaje ---------- */
-
-    /** Devuelve un nuevo estado con mensaje (y sin error). */
     public InicioUiState withMessage(String msg) {
-        return new InicioUiState(false, msg, null, this.deportes);
+        return new InicioUiState(this.loading, this.error, msg, this.deportes);
     }
 
-    /** Limpia el mensaje actual manteniendo el resto del estado. */
-    public InicioUiState clearMessage() {
-        return new InicioUiState(this.loading, null, this.error, this.deportes);
-    }
-
-    /* ---------- DTO para cada deporte ---------- */
     public static class DeporteUi {
-        public final String nombreDeporte, fecha, hora, ayuntamiento;
-        public final String docId, aytoId; // nuevos
+        public String docId;
+        public String aytoId;
 
-        public DeporteUi(String n, String f, String h, String a, String docId, String aytoId) {
-            this.nombreDeporte = n;
-            this.fecha = f;
-            this.hora = h;
-            this.ayuntamiento = a;
+        public String nombreDeporte;
+        public String descripcion;
+        public String fecha;   // dd/MM/yyyy
+        public String hora;    // HH:mm
+        public String lugar;
+
+        public int plazasMax;
+        public int inscritos;
+
+        public String ayuntamiento; // nombre visible
+
+        public DeporteUi() {}
+
+        public DeporteUi(String nombreDeporte, String fecha, String hora, String ayuntamiento,
+                         String docId, String aytoId) {
+            this.nombreDeporte = nombreDeporte;
+            this.fecha = fecha;
+            this.hora = hora;
+            this.ayuntamiento = ayuntamiento;
             this.docId = docId;
             this.aytoId = aytoId;
         }

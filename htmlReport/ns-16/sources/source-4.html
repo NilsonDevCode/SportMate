@@ -1,0 +1,273 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LoginViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.ui.auth.login</a>
+</div>
+
+<h1>Coverage Summary for Class: LoginViewModel (com.nilson.appsportmate.ui.auth.login)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoginViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    33,3%
+  </span>
+  <span class="absValue">
+    (4/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    58,3%
+  </span>
+  <span class="absValue">
+    (7/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64,7%
+  </span>
+  <span class="absValue">
+    (22/34)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">LoginViewModel$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (4/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35%
+  </span>
+  <span class="absValue">
+    (7/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    41,5%
+  </span>
+  <span class="absValue">
+    (22/53)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.ui.auth.login;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.firebase.auth.FirebaseAuth;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.nilson.appsportmate.common.datos.firebase.FirestoreManager;
+&nbsp;import com.nilson.appsportmate.common.utils.AuthAliasHelper;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;
+&nbsp;public class LoginViewModel extends ViewModel {
+&nbsp;
+&nbsp;    private final FirebaseAuth auth;
+&nbsp;    private final FirebaseFirestore db;
+&nbsp;
+&nbsp;    // 🧠 Constructor testable (para tests unitarios con mocks)
+<b class="fc">&nbsp;    public LoginViewModel(FirebaseAuth auth, FirebaseFirestore db) {</b>
+<b class="fc">&nbsp;        this.auth = auth;</b>
+<b class="fc">&nbsp;        this.db = db;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ⚙️ Constructor normal (para uso real en la app)
+&nbsp;    public LoginViewModel() {
+<b class="nc">&nbsp;        this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; errorAlias = new MutableLiveData&lt;&gt;(null);</b>
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; errorPassword = new MutableLiveData&lt;&gt;(null);</b>
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; message = new MutableLiveData&lt;&gt;(null);</b>
+&nbsp;
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; navTownhall = new MutableLiveData&lt;&gt;(null);</b>
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; navUser = new MutableLiveData&lt;&gt;(null);</b>
+&nbsp;
+<b class="fc">&nbsp;    public LiveData&lt;String&gt; getErrorAlias() { return errorAlias; }</b>
+<b class="fc">&nbsp;    public LiveData&lt;String&gt; getErrorPassword() { return errorPassword; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getMessage() { return message; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getNavTownhall() { return navTownhall; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;String&gt; getNavUser() { return navUser; }</b>
+&nbsp;
+&nbsp;    public void onLoginClicked(String aliasInput, String password, Context appContext) {
+<b class="pc">&nbsp;        if (aliasInput == null || aliasInput.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;            errorAlias.setValue(&quot;Alias requerido&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        String aliasErr = AuthAliasHelper.getAliasValidationError(aliasInput);</b>
+<b class="pc">&nbsp;        if (aliasErr != null) {</b>
+<b class="nc">&nbsp;            errorAlias.setValue(aliasErr);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="pc">&nbsp;        if (password == null || password.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;            errorPassword.setValue(&quot;Contraseña requerida&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        errorAlias.setValue(null);</b>
+<b class="fc">&nbsp;        errorPassword.setValue(null);</b>
+&nbsp;
+<b class="fc">&nbsp;        String emailSintetico = AuthAliasHelper.aliasToEmail(aliasInput.trim());</b>
+&nbsp;
+<b class="fc">&nbsp;        auth.signInWithEmailAndPassword(emailSintetico, password)</b>
+<b class="fc">&nbsp;                .addOnSuccessListener(result -&gt; {</b>
+<b class="nc">&nbsp;                    if (result.getUser() == null) {</b>
+<b class="nc">&nbsp;                        message.setValue(&quot;No se pudo obtener el usuario&quot;);</b>
+&nbsp;                        return;
+&nbsp;                    }
+<b class="nc">&nbsp;                    String uid = result.getUser().getUid();</b>
+&nbsp;
+<b class="nc">&nbsp;                    FirestoreManager.resolveRolOrRepair(uid, aliasInput.trim(), new FirestoreManager.RoleCallback() {</b>
+&nbsp;                        @Override
+&nbsp;                        public void onResolved(String rol) {
+<b class="nc">&nbsp;                            if (rol == null) {</b>
+<b class="nc">&nbsp;                                message.setValue(&quot;Perfil no encontrado&quot;);</b>
+&nbsp;                                return;
+&nbsp;                            }
+<b class="nc">&nbsp;                            String r = rol.trim().toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;                            Preferencias.guardarUid(appContext, uid);</b>
+<b class="nc">&nbsp;                            Preferencias.guardarAlias(appContext, aliasInput.trim());</b>
+<b class="nc">&nbsp;                            Preferencias.guardarRol(appContext, r);</b>
+&nbsp;
+<b class="nc">&nbsp;                            if (&quot;ayuntamiento&quot;.equals(r)) {</b>
+<b class="nc">&nbsp;                                Preferencias.guardarAyuntamientoId(appContext, uid);</b>
+<b class="nc">&nbsp;                                navTownhall.setValue(uid);</b>
+&nbsp;                            } else {
+<b class="nc">&nbsp;                                db.collection(&quot;usuarios&quot;).document(uid).get()</b>
+<b class="nc">&nbsp;                                        .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                                            String aytoId = doc.getString(&quot;ayuntamientoId&quot;);</b>
+<b class="nc">&nbsp;                                            if (aytoId == null || aytoId.isEmpty()) {</b>
+<b class="nc">&nbsp;                                                message.setValue(&quot;Tu perfil no tiene ayuntamiento asignado&quot;);</b>
+&nbsp;                                            } else {
+<b class="nc">&nbsp;                                                Preferencias.guardarAyuntamientoId(appContext, aytoId);</b>
+<b class="nc">&nbsp;                                                navUser.setValue(aytoId);</b>
+&nbsp;                                            }
+&nbsp;                                        })
+<b class="nc">&nbsp;                                        .addOnFailureListener(e -&gt; message.setValue(&quot;Error leyendo perfil de usuario&quot;));</b>
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;
+&nbsp;                        @Override
+&nbsp;                        public void onError(Exception e) {
+<b class="nc">&nbsp;                            message.setValue(&quot;Error perfil: &quot; + e.getMessage());</b>
+&nbsp;                        }
+&nbsp;                    });
+&nbsp;                })
+<b class="fc">&nbsp;                .addOnFailureListener(e -&gt; message.setValue(&quot;Login fallido: &quot; + e.getMessage()));</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void consumeNavTownhall() { navTownhall.setValue(null); }</b>
+<b class="nc">&nbsp;    public void consumeNavUser() { navUser.setValue(null); }</b>
+<b class="nc">&nbsp;    public void consumeMessage() { message.setValue(null); }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

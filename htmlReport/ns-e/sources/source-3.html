@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestionDeportesAyuntamientoViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.gestiondeportes</a>
+</div>
+
+<h1>Coverage Summary for Class: GestionDeportesAyuntamientoViewModel (com.nilson.appsportmate.features.townhall.ui.gestiondeportes)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestionDeportesAyuntamientoViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.gestiondeportes;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.google.firebase.auth.FirebaseAuth;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * Lógica de creación de evento (MVVM).
+&nbsp; * Keys/colecciones iguales a tu implementación previa.
+&nbsp; */
+<b class="nc">&nbsp;public class GestionDeportesAyuntamientoViewModel extends ViewModel {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+&nbsp;
+&nbsp;    // Estado base
+&nbsp;    private String ayuntamientoId;
+&nbsp;
+&nbsp;    // Señales UI
+<b class="nc">&nbsp;    private final MutableLiveData&lt;String&gt;  toast = new MutableLiveData&lt;&gt;();</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;Boolean&gt; navigateToLogin = new MutableLiveData&lt;&gt;(false);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;Boolean&gt; navigateToGestionEventos = new MutableLiveData&lt;&gt;(false);</b>
+<b class="nc">&nbsp;    private final MutableLiveData&lt;Boolean&gt; clearForm = new MutableLiveData&lt;&gt;(false); // NUEVO</b>
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Exposición
+&nbsp;    // ---------------------------
+&nbsp;
+<b class="nc">&nbsp;    public void setAyuntamientoId(String id) { this.ayuntamientoId = id; }</b>
+&nbsp;
+<b class="nc">&nbsp;    public LiveData&lt;String&gt;  getToast()                 { return toast; }</b>
+<b class="nc">&nbsp;    public void consumeToast() { toast.setValue(null); }</b>
+&nbsp;
+<b class="nc">&nbsp;    public LiveData&lt;Boolean&gt; getNavigateToLogin()       { return navigateToLogin; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;Boolean&gt; getNavigateToGestionEventos() { return navigateToGestionEventos; }</b>
+<b class="nc">&nbsp;    public LiveData&lt;Boolean&gt; getClearForm()             { return clearForm; } // NUEVO</b>
+<b class="nc">&nbsp;    public void onFormCleared()                         { clearForm.setValue(false); } // NUEVO</b>
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Acciones
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    public void crearDeporte(String nombre,
+&nbsp;                             Integer cantidad,
+&nbsp;                             String fecha,
+&nbsp;                             String hora,
+&nbsp;                             String descripcion,
+&nbsp;                             String reglas,
+&nbsp;                             String materiales,
+&nbsp;                             String urlPueblo) {
+&nbsp;
+<b class="nc">&nbsp;        if (isEmpty(nombre) || cantidad == null || cantidad &lt; 1 ||</b>
+<b class="nc">&nbsp;                isEmpty(fecha) || isEmpty(hora) || isEmpty(descripcion) ||</b>
+<b class="nc">&nbsp;                isEmpty(reglas) || isEmpty(materiales) || isEmpty(urlPueblo)) {</b>
+<b class="nc">&nbsp;            toast.postValue(&quot;Completa todos los campos&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            toast.postValue(&quot;Error: ayuntamiento_id no encontrado.&quot;);</b>
+<b class="nc">&nbsp;            navigateToLogin.postValue(true);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; deporte = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        deporte.put(&quot;nombre&quot;, nombre);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;plazasDisponibles&quot;, cantidad);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;fecha&quot;, fecha);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;hora&quot;, hora);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;descripcion&quot;, descripcion);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;reglas&quot;, reglas);</b>
+&nbsp;        // claves reales que consume tu adapter
+<b class="nc">&nbsp;        deporte.put(&quot;materiales&quot;, materiales);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;urlPueblo&quot;, urlPueblo);</b>
+<b class="nc">&nbsp;        deporte.put(&quot;ayuntamientoId&quot;, ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;        String docId = generarDocId(nombre, fecha, hora);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .collection(&quot;lista&quot;)</b>
+<b class="nc">&nbsp;                .document(docId)</b>
+<b class="nc">&nbsp;                .set(deporte)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(unused -&gt; {</b>
+<b class="nc">&nbsp;                    toast.postValue(&quot;Deporte creado correctamente.&quot;); // CAMBIADO</b>
+<b class="nc">&nbsp;                    clearForm.postValue(true);                         // NUEVO: limpiar</b>
+<b class="nc">&nbsp;                    navigateToGestionEventos.postValue(true);          // luego navegar</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt;</b>
+<b class="nc">&nbsp;                        toast.postValue(&quot;Error al crear el evento: &quot; + e.getMessage()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void logout(Context ctx) {
+<b class="nc">&nbsp;        FirebaseAuth.getInstance().signOut();</b>
+<b class="nc">&nbsp;        Preferencias.guardarRol(ctx, null);</b>
+<b class="nc">&nbsp;        navigateToLogin.postValue(true);</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void onNavigatedToLogin()            { navigateToLogin.setValue(false); }</b>
+<b class="nc">&nbsp;    public void onNavigatedToGestionEventos()   { navigateToGestionEventos.setValue(false); }</b>
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Helpers
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    public static String generarDocId(String nombre, String fecha, String hora) {
+<b class="nc">&nbsp;        return nombre.replace(&quot; &quot;, &quot;_&quot;) + &quot;_&quot; + fecha.replace(&quot;/&quot;, &quot;_&quot;) + &quot;_&quot; + hora.replace(&quot;:&quot;, &quot;_&quot;);</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    private boolean isEmpty(String s) { return s == null || s.trim().isEmpty(); }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

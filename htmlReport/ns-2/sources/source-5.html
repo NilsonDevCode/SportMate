@@ -1,0 +1,320 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FirestoreManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.common.datos.firebase</a>
+</div>
+
+<h1>Coverage Summary for Class: FirestoreManager (com.nilson.appsportmate.common.datos.firebase)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FirestoreManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FirestoreManager$RoleCallback</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.common.datos.firebase;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;import android.content.SharedPreferences;
+&nbsp;import android.os.Handler;
+&nbsp;import android.os.Looper;
+&nbsp;import android.util.Log;
+&nbsp;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;
+&nbsp;import com.google.android.gms.tasks.OnFailureListener;
+&nbsp;import com.google.android.gms.tasks.OnSuccessListener;
+&nbsp;import com.google.android.gms.tasks.Tasks;
+&nbsp;import com.google.firebase.firestore.CollectionReference;
+&nbsp;import com.google.firebase.firestore.DocumentSnapshot;
+&nbsp;import com.google.firebase.firestore.EventListener;
+&nbsp;import com.google.firebase.firestore.FirebaseFirestore;
+&nbsp;import com.google.firebase.firestore.QuerySnapshot;
+&nbsp;import com.google.firebase.firestore.SetOptions;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.concurrent.Executors;
+&nbsp;
+&nbsp;/**
+&nbsp; * FirestoreManager unificado:
+&nbsp; * - CRUD utilidades
+&nbsp; * - Gestión de deportes_ayuntamiento
+&nbsp; * - Preferencias locales
+&nbsp; * - Resolución de rol por UID (usuariosAuth/{uid}) + autorreparación
+&nbsp; * - Callbacks SIEMPRE en MAIN thread
+&nbsp; */
+<b class="nc">&nbsp;public class FirestoreManager {</b>
+&nbsp;
+&nbsp;    // ===== MAIN thread helper (evita &quot;Can&#39;t toast on a thread...&quot;) =====
+<b class="nc">&nbsp;    private static final Handler MAIN = new Handler(Looper.getMainLooper());</b>
+<b class="nc">&nbsp;    private static void postMain(Runnable r) { MAIN.post(r); }</b>
+&nbsp;
+&nbsp;    // ===========================
+&nbsp;    // ====== UTILIDADES CRUD ====
+&nbsp;    // ===========================
+&nbsp;
+&nbsp;    public static void crearDocumento(CollectionReference ref, String id, Map&lt;String, Object&gt; data, String logTag) {
+<b class="nc">&nbsp;        ref.document(id).set(data)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(unused -&gt; Log.d(logTag, &quot;Documento creado correctamente&quot;))</b>
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; Log.e(logTag, &quot;Error al crear documento&quot;, e));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void actualizarDocumento(CollectionReference ref, String id, Map&lt;String, Object&gt; data, String logTag) {
+<b class="nc">&nbsp;        ref.document(id).update(data)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(unused -&gt; Log.d(logTag, &quot;Documento actualizado correctamente&quot;))</b>
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; Log.e(logTag, &quot;Error al actualizar documento&quot;, e));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void eliminarDocumento(CollectionReference ref, String id, String logTag) {
+<b class="nc">&nbsp;        ref.document(id).delete()</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(unused -&gt; Log.d(logTag, &quot;Documento eliminado correctamente&quot;))</b>
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; Log.e(logTag, &quot;Error al eliminar documento&quot;, e));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void obtenerDocumentosFiltrados(CollectionReference ref, String campo, String valor, EventListener&lt;QuerySnapshot&gt; listener) {
+<b class="nc">&nbsp;        ref.whereEqualTo(campo, valor).addSnapshotListener(listener);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ===========================
+&nbsp;    // == deportes_ayuntamiento ==
+&nbsp;    // ===========================
+&nbsp;
+&nbsp;    public static void obtenerDeportesPorAyuntamiento(String ayuntamientoId,
+&nbsp;                                                      OnSuccessListener&lt;List&lt;String&gt;&gt; onSuccess,
+&nbsp;                                                      OnFailureListener onFailure) {
+<b class="nc">&nbsp;        FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+<b class="nc">&nbsp;        db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .get()</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(documentSnapshot -&gt; {</b>
+<b class="nc">&nbsp;                    if (documentSnapshot.exists()) {</b>
+<b class="nc">&nbsp;                        List&lt;String&gt; lista = (List&lt;String&gt;) documentSnapshot.get(&quot;deportes&quot;);</b>
+<b class="nc">&nbsp;                        onSuccess.onSuccess(lista != null ? lista : new ArrayList&lt;&gt;());</b>
+&nbsp;                    } else {
+<b class="nc">&nbsp;                        onSuccess.onSuccess(new ArrayList&lt;&gt;());</b>
+&nbsp;                    }
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(onFailure);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void guardarDeportesAyuntamiento(String ayuntamientoId, List&lt;String&gt; listaDeportes,
+&nbsp;                                                   OnSuccessListener&lt;Void&gt; onSuccess,
+&nbsp;                                                   OnFailureListener onFailure) {
+<b class="nc">&nbsp;        FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; datos = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        datos.put(&quot;deportes&quot;, listaDeportes);</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;deportes_ayuntamiento&quot;)</b>
+<b class="nc">&nbsp;                .document(ayuntamientoId)</b>
+<b class="nc">&nbsp;                .set(datos)</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(onSuccess)</b>
+<b class="nc">&nbsp;                .addOnFailureListener(onFailure);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ===========================
+&nbsp;    // ========= Preferencias ====
+&nbsp;    // ===========================
+&nbsp;
+&nbsp;    public static void guardarAyuntamientoId(Context context, String ayuntamientoId) {
+<b class="nc">&nbsp;        SharedPreferences.Editor editor = context.getSharedPreferences(&quot;AppPrefs&quot;, Context.MODE_PRIVATE).edit();</b>
+<b class="nc">&nbsp;        editor.putString(&quot;ayuntamiento_id&quot;, ayuntamientoId);</b>
+<b class="nc">&nbsp;        editor.apply();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ===========================================
+&nbsp;    // === RESOLUCIÓN DE ROL Y AUTORREPARACIÓN ===
+&nbsp;    // ===========================================
+&nbsp;
+&nbsp;    public interface RoleCallback {
+&nbsp;        /** rol: &quot;usuario&quot;, &quot;ayuntamiento&quot; o null si no hay perfil */
+&nbsp;        void onResolved(@Nullable String rol);
+&nbsp;        void onError(Exception e);
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Lee usuariosAuth/{uid}. Si falta o no tiene &#39;rol&#39;, repara buscando:
+&nbsp;     * - ayuntamientos/{uid}  -&gt; rol = ayuntamiento
+&nbsp;     * - usuarios/{uid}       -&gt; rol = usuario
+&nbsp;     * - (compat) deportistas/{uid} -&gt; rol = usuario
+&nbsp;     */
+&nbsp;    public static void resolveRolOrRepair(String uid, String alias, RoleCallback cb) {
+<b class="nc">&nbsp;        FirebaseFirestore db = FirebaseFirestore.getInstance();</b>
+<b class="nc">&nbsp;        db.collection(&quot;usuariosAuth&quot;).document(uid).get()</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(doc -&gt; {</b>
+<b class="nc">&nbsp;                    if (doc.exists()) {</b>
+<b class="nc">&nbsp;                        String rol = safeLower(doc.getString(&quot;rol&quot;));</b>
+<b class="nc">&nbsp;                        if (rol == null || rol.isEmpty()) {</b>
+<b class="nc">&nbsp;                            autoRepairUsuariosAuth(db, uid, alias, cb);</b>
+&nbsp;                        } else {
+<b class="nc">&nbsp;                            postMain(() -&gt; cb.onResolved(rol));</b>
+&nbsp;                        }
+&nbsp;                    } else {
+<b class="nc">&nbsp;                        autoRepairUsuariosAuth(db, uid, alias, cb);</b>
+&nbsp;                    }
+&nbsp;                })
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; postMain(() -&gt; cb.onError(e)));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Reconstruye usuariosAuth/{uid} si falta
+&nbsp;    private static void autoRepairUsuariosAuth(FirebaseFirestore db, String uid, String alias, RoleCallback cb) {
+<b class="nc">&nbsp;        Executors.newSingleThreadExecutor().execute(() -&gt; {</b>
+&nbsp;            try {
+&nbsp;                // 1) ¿Existe en ayuntamientos/{uid}?
+<b class="nc">&nbsp;                DocumentSnapshot ay = Tasks.await(db.collection(&quot;ayuntamientos&quot;).document(uid).get());</b>
+<b class="nc">&nbsp;                if (ay.exists()) { createUsuariosAuth(db, uid, alias, &quot;ayuntamiento&quot;, cb); return; }</b>
+&nbsp;
+&nbsp;                // 2) ¿Existe en usuarios/{uid}?
+<b class="nc">&nbsp;                DocumentSnapshot us = Tasks.await(db.collection(&quot;usuarios&quot;).document(uid).get());</b>
+<b class="nc">&nbsp;                if (us.exists()) { createUsuariosAuth(db, uid, alias, &quot;usuario&quot;, cb); return; }</b>
+&nbsp;
+&nbsp;                // 3) Compat: ¿existe en deportistas/{uid}? -&gt; tratar como usuario
+<b class="nc">&nbsp;                DocumentSnapshot dep = Tasks.await(db.collection(&quot;deportistas&quot;).document(uid).get());</b>
+<b class="nc">&nbsp;                if (dep.exists()) { createUsuariosAuth(db, uid, alias, &quot;usuario&quot;, cb); return; }</b>
+&nbsp;
+&nbsp;                // 4) No hay perfil en ninguna
+<b class="nc">&nbsp;                postMain(() -&gt; cb.onResolved(null));</b>
+&nbsp;            } catch (Exception e) {
+<b class="nc">&nbsp;                postMain(() -&gt; cb.onError(e));</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void createUsuariosAuth(FirebaseFirestore db, String uid, String alias, String rol, RoleCallback cb) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; authDoc = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        authDoc.put(&quot;uid&quot;, uid);          // SIEMPRE UID, no alias</b>
+<b class="nc">&nbsp;        authDoc.put(&quot;alias&quot;, alias);      // informativo</b>
+<b class="nc">&nbsp;        authDoc.put(&quot;rol&quot;, rol);          // &quot;usuario&quot; | &quot;ayuntamiento&quot;</b>
+&nbsp;
+<b class="nc">&nbsp;        db.collection(&quot;usuariosAuth&quot;).document(uid)</b>
+<b class="nc">&nbsp;                .set(authDoc, SetOptions.merge())</b>
+<b class="nc">&nbsp;                .addOnSuccessListener(v -&gt; postMain(() -&gt; cb.onResolved(rol)))</b>
+<b class="nc">&nbsp;                .addOnFailureListener(e -&gt; postMain(() -&gt; cb.onError(e)));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String safeLower(@Nullable String s) {
+<b class="nc">&nbsp;        return s == null ? null : s.trim().toLowerCase();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

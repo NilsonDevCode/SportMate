@@ -2,30 +2,31 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 🔹 Colores principales -->
+    <color name="primary">#1976D2</color> <!-- Azul SportMate -->
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#63A4FF</color>
+    <color name="stripLeft">#0F2E47</color>   <!-- azul oscuro -->
+    <color name="stripRight">#5F93C8</color>  <!-- azul claro -->
+    <color name="red">#FF0000</color>
+    <color name="green">#00C853</color>
 
-    <!-- Background Gradient -->
-    <color name="gradient_start">#2A4051</color>
-    <color name="gradient_end">#5488B6</color>
 
-    <!-- Base Colors -->
-    <color name="colorPrimary">#2A4051</color>
-    <color name="colorPrimaryContainer">#3C5F7A</color>
-    <color name="colorSecondary">#5488B6</color>
-    <color name="colorSecondaryContainer">#A3C6E5</color>
-    <color name="colorTertiary">#F5C518</color>
+    <!-- 🔹 Colores secundarios -->
+    <color name="secondary">#0288D1</color>
+    <color name="secondary_dark">#01579B</color>
+    <color name="secondary_light">#81D4FA</color>
 
-    <!-- Surfaces -->
-    <color name="colorBackground">#E9F0F6</color>
-    <color name="colorSurface">#FFFFFF</color>
-    <color name="colorSurfaceVariant">#F3F6FA</color>
+    <!-- 🔹 Fondo y textos -->
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
 
-    <!-- Text -->
-    <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorOnSecondary">#FFFFFF</color>
-    <color name="colorOnSurface">#0E1B2A</color>
-    <color name="colorOutline">#B0C4D4</color>
+    <!-- 🔹 Cinta inferior -->
+    <color name="cinta_fondo">@color/primary</color>
+    <color name="cinta_texto">@android:color/white</color>
 
-    <!-- Errors -->
-    <color name="colorError">#E53935</color>
-    <color name="colorOnError">#FFFFFF</color>
+    <!-- 🔹 Bordes y detalles -->
+    <color name="stroke_color">@color/primary_dark</color>
 </resources>

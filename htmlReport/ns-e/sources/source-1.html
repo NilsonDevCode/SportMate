@@ -1,0 +1,350 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestionDeportesAyuntamientoFragment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.townhall.ui.gestiondeportes</a>
+</div>
+
+<h1>Coverage Summary for Class: GestionDeportesAyuntamientoFragment (com.nilson.appsportmate.features.townhall.ui.gestiondeportes)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestionDeportesAyuntamientoFragment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/100)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.townhall.ui.gestiondeportes;
+&nbsp;
+&nbsp;import android.app.DatePickerDialog;
+&nbsp;import android.app.TimePickerDialog;
+&nbsp;import android.os.Bundle;
+&nbsp;import android.text.TextUtils;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.Button;
+&nbsp;import android.widget.EditText;
+&nbsp;import android.widget.Toast;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.fragment.app.Fragment;
+&nbsp;import androidx.lifecycle.ViewModelProvider;
+&nbsp;import androidx.navigation.NavController;
+&nbsp;import androidx.navigation.Navigation;
+&nbsp;
+&nbsp;import com.google.android.material.button.MaterialButton;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;
+&nbsp;import java.util.Calendar;
+&nbsp;
+&nbsp;/**
+&nbsp; * Formulario de creación/oferta de deporte (MVVM).
+&nbsp; * Layout e IDs se mantienen intactos.
+&nbsp; */
+&nbsp;public class GestionDeportesAyuntamientoFragment extends Fragment {
+&nbsp;
+&nbsp;    // UI
+&nbsp;    private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
+&nbsp;            etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
+&nbsp;    private MaterialButton btnCrearEvento, btnGestionEventos;
+&nbsp;    private Button btnLogout;
+&nbsp;
+&nbsp;    // VM
+&nbsp;    private GestionDeportesAyuntamientoViewModel vm;
+&nbsp;
+&nbsp;    // Estado
+&nbsp;    private String ayuntamientoId;
+&nbsp;
+<b class="nc">&nbsp;    public GestionDeportesAyuntamientoFragment() { }</b>
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Lifecycle
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    @Nullable
+&nbsp;    @Override
+&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater,
+&nbsp;                             @Nullable ViewGroup container,
+&nbsp;                             @Nullable Bundle savedInstanceState) {
+&nbsp;        // Usamos tu layout sin cambios
+<b class="nc">&nbsp;        return inflater.inflate(R.layout.activity_gestion_deportes_ayuntamiento, container, false);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        super.onViewCreated(view, savedInstanceState);</b>
+&nbsp;
+<b class="nc">&nbsp;        vm = new ViewModelProvider(this).get(GestionDeportesAyuntamientoViewModel.class);</b>
+&nbsp;
+<b class="nc">&nbsp;        ayuntamientoId = Preferencias.obtenerAyuntamientoId(requireContext());</b>
+<b class="nc">&nbsp;        if (TextUtils.isEmpty(ayuntamientoId)) {</b>
+<b class="nc">&nbsp;            Toast.makeText(requireContext(), &quot;Error: ayuntamiento_id no encontrado.&quot;, Toast.LENGTH_LONG).show();</b>
+<b class="nc">&nbsp;            Navigation.findNavController(view).navigate(R.id.loginFragment);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        vm.setAyuntamientoId(ayuntamientoId);</b>
+&nbsp;
+<b class="nc">&nbsp;        bindViews(view);</b>
+<b class="nc">&nbsp;        setupClicks();</b>
+<b class="nc">&nbsp;        observeVm();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Bind / Observers / Clicks
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private void bindViews(View v) {
+<b class="nc">&nbsp;        etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);</b>
+<b class="nc">&nbsp;        etCantidadJugadores  = v.findViewById(R.id.etCantidadJugadores);</b>
+<b class="nc">&nbsp;        etFecha              = v.findViewById(R.id.etFecha);</b>
+<b class="nc">&nbsp;        etHora               = v.findViewById(R.id.etHora);</b>
+<b class="nc">&nbsp;        etDescripcionEvento  = v.findViewById(R.id.etDescripcionEvento);</b>
+<b class="nc">&nbsp;        etReglasEvento       = v.findViewById(R.id.etReglasEvento);</b>
+<b class="nc">&nbsp;        etMateriales         = v.findViewById(R.id.etMateriales);</b>
+<b class="nc">&nbsp;        etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);</b>
+&nbsp;
+<b class="nc">&nbsp;        btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);</b>
+<b class="nc">&nbsp;        btnGestionEventos    = v.findViewById(R.id.btnGestionEventos);</b>
+<b class="nc">&nbsp;        btnLogout            = v.findViewById(R.id.btnLogout);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setupClicks() {
+<b class="nc">&nbsp;        etFecha.setOnClickListener(v -&gt; mostrarDatePicker());</b>
+<b class="nc">&nbsp;        etHora.setOnClickListener(v -&gt; mostrarTimePicker());</b>
+&nbsp;
+<b class="nc">&nbsp;        btnCrearEvento.setOnClickListener(v -&gt; vm.crearDeporte(</b>
+<b class="nc">&nbsp;                txt(etNombreDeporte),</b>
+<b class="nc">&nbsp;                txtInt(etCantidadJugadores),</b>
+<b class="nc">&nbsp;                txt(etFecha),</b>
+<b class="nc">&nbsp;                txt(etHora),</b>
+<b class="nc">&nbsp;                txt(etDescripcionEvento),</b>
+<b class="nc">&nbsp;                txt(etReglasEvento),</b>
+<b class="nc">&nbsp;                txt(etMateriales),</b>
+<b class="nc">&nbsp;                txt(etUrlPueblo)</b>
+&nbsp;        ));
+&nbsp;
+<b class="nc">&nbsp;        btnGestionEventos.setOnClickListener(v -&gt; {</b>
+&nbsp;            // Navegación a Fragment según tu grafo
+<b class="nc">&nbsp;            NavController nav = Navigation.findNavController(requireView());</b>
+<b class="nc">&nbsp;            Bundle args = new Bundle();</b>
+<b class="nc">&nbsp;            args.putString(&quot;ayuntamientoId&quot;, ayuntamientoId);</b>
+<b class="nc">&nbsp;            nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        btnLogout.setOnClickListener(v -&gt; {</b>
+<b class="nc">&nbsp;            NavController nav = Navigation.findNavController(v);</b>
+<b class="nc">&nbsp;            boolean popped = nav.popBackStack(R.id.menuAyuntamientoFragment, false);</b>
+<b class="nc">&nbsp;            if (!popped) {</b>
+<b class="nc">&nbsp;                nav.navigate(R.id.action_global_menuAyuntamientoFragment);</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void observeVm() {
+<b class="nc">&nbsp;        vm.getToast().observe(getViewLifecycleOwner(), msg -&gt; {</b>
+<b class="nc">&nbsp;            if (msg != null &amp;&amp; !msg.isEmpty()) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();</b>
+<b class="nc">&nbsp;                vm.consumeToast(); // evita que se repita al volver atrás</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;
+&nbsp;        // NUEVO: limpiar el formulario al crear correctamente
+<b class="nc">&nbsp;        vm.getClearForm().observe(getViewLifecycleOwner(), clear -&gt; {</b>
+<b class="nc">&nbsp;            if (clear != null &amp;&amp; clear) {</b>
+<b class="nc">&nbsp;                limpiarFormulario();</b>
+<b class="nc">&nbsp;                vm.onFormCleared();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        vm.getNavigateToLogin().observe(getViewLifecycleOwner(), go -&gt; {</b>
+<b class="nc">&nbsp;            if (go != null &amp;&amp; go) {</b>
+<b class="nc">&nbsp;                NavController nav = Navigation.findNavController(requireView());</b>
+<b class="nc">&nbsp;                nav.navigate(R.id.loginFragment);</b>
+<b class="nc">&nbsp;                vm.onNavigatedToLogin();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -&gt; {</b>
+<b class="nc">&nbsp;            if (go != null &amp;&amp; go) {</b>
+<b class="nc">&nbsp;                NavController nav = Navigation.findNavController(requireView());</b>
+<b class="nc">&nbsp;                Bundle args = new Bundle();</b>
+<b class="nc">&nbsp;                args.putString(&quot;ayuntamientoId&quot;, ayuntamientoId);</b>
+<b class="nc">&nbsp;                nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);</b>
+<b class="nc">&nbsp;                vm.onNavigatedToGestionEventos();</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Pickers
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private void mostrarDatePicker() {
+<b class="nc">&nbsp;        Calendar c = Calendar.getInstance();</b>
+<b class="nc">&nbsp;        new DatePickerDialog(</b>
+<b class="nc">&nbsp;                requireContext(),</b>
+&nbsp;                (view, year, month, dayOfMonth) -&gt;
+<b class="nc">&nbsp;                        etFecha.setText(String.format(&quot;%02d/%02d/%04d&quot;, dayOfMonth, month + 1, year)),</b>
+<b class="nc">&nbsp;                c.get(Calendar.YEAR),</b>
+<b class="nc">&nbsp;                c.get(Calendar.MONTH),</b>
+<b class="nc">&nbsp;                c.get(Calendar.DAY_OF_MONTH)</b>
+<b class="nc">&nbsp;        ).show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void mostrarTimePicker() {
+<b class="nc">&nbsp;        Calendar c = Calendar.getInstance();</b>
+<b class="nc">&nbsp;        new TimePickerDialog(</b>
+<b class="nc">&nbsp;                requireContext(),</b>
+&nbsp;                (view, hourOfDay, minute) -&gt;
+<b class="nc">&nbsp;                        etHora.setText(String.format(&quot;%02d:%02d&quot;, hourOfDay, minute)),</b>
+<b class="nc">&nbsp;                c.get(Calendar.HOUR_OF_DAY),</b>
+<b class="nc">&nbsp;                c.get(Calendar.MINUTE),</b>
+&nbsp;                true
+<b class="nc">&nbsp;        ).show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ---------------------------
+&nbsp;    // Utils
+&nbsp;    // ---------------------------
+&nbsp;
+&nbsp;    private static String txt(EditText et) {
+<b class="nc">&nbsp;        return et.getText() == null ? &quot;&quot; : et.getText().toString().trim();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static Integer txtInt(EditText et) {
+&nbsp;        try {
+<b class="nc">&nbsp;            String t = txt(et);</b>
+<b class="nc">&nbsp;            return t.isEmpty() ? null : Integer.parseInt(t);</b>
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            et.setError(&quot;Número inválido&quot;);</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // NUEVO: limpiar inputs tras crear
+&nbsp;    private void limpiarFormulario() {
+<b class="nc">&nbsp;        etNombreDeporte.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etCantidadJugadores.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etFecha.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etHora.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etDescripcionEvento.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etReglasEvento.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etMateriales.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        etUrlPueblo.setText(&quot;&quot;);</b>
+&nbsp;
+&nbsp;        // limpiar errores (opcional)
+<b class="nc">&nbsp;        etNombreDeporte.setError(null);</b>
+<b class="nc">&nbsp;        etCantidadJugadores.setError(null);</b>
+<b class="nc">&nbsp;        etFecha.setError(null);</b>
+<b class="nc">&nbsp;        etHora.setError(null);</b>
+<b class="nc">&nbsp;        etDescripcionEvento.setError(null);</b>
+<b class="nc">&nbsp;        etReglasEvento.setError(null);</b>
+<b class="nc">&nbsp;        etMateriales.setError(null);</b>
+<b class="nc">&nbsp;        etUrlPueblo.setError(null);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

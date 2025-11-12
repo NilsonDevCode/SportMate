@@ -1,0 +1,273 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeporteApuntadoAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.user.ui.menuPrincipal.adaptadores</a>
+</div>
+
+<h1>Coverage Summary for Class: DeporteApuntadoAdapter (com.nilson.appsportmate.features.user.ui.menuPrincipal.adaptadores)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeporteApuntadoAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DeporteApuntadoAdapter$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">DeporteApuntadoAdapter$Listener</td>
+  </tr>
+  <tr>
+    <td class="name">DeporteApuntadoAdapter$VH</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/34)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.user.ui.menuPrincipal.adaptadores;
+&nbsp;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.ImageView;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.recyclerview.widget.DiffUtil;
+&nbsp;import androidx.recyclerview.widget.ListAdapter;
+&nbsp;import androidx.recyclerview.widget.RecyclerView;
+&nbsp;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.features.user.ui.menuPrincipal.InicioUiState;
+&nbsp;
+&nbsp;public class DeporteApuntadoAdapter extends ListAdapter&lt;InicioUiState.DeporteUi, DeporteApuntadoAdapter.VH&gt; {
+&nbsp;
+&nbsp;    public interface Listener {
+&nbsp;        void onItemClick(InicioUiState.DeporteUi item);
+&nbsp;        void onItemLongClick(InicioUiState.DeporteUi item);
+&nbsp;    }
+&nbsp;
+&nbsp;    private final Listener listener;
+&nbsp;
+&nbsp;    public DeporteApuntadoAdapter(Listener listener) {
+<b class="nc">&nbsp;        super(DIFF);</b>
+<b class="nc">&nbsp;        this.listener = listener;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    private static final DiffUtil.ItemCallback&lt;InicioUiState.DeporteUi&gt; DIFF =</b>
+<b class="nc">&nbsp;            new DiffUtil.ItemCallback&lt;InicioUiState.DeporteUi&gt;() {</b>
+&nbsp;                @Override
+&nbsp;                public boolean areItemsTheSame(@NonNull InicioUiState.DeporteUi a, @NonNull InicioUiState.DeporteUi b) {
+<b class="nc">&nbsp;                    return a.docId != null &amp;&amp; a.docId.equals(b.docId);</b>
+&nbsp;                }
+&nbsp;                @Override
+&nbsp;                public boolean areContentsTheSame(@NonNull InicioUiState.DeporteUi a, @NonNull InicioUiState.DeporteUi b) {
+<b class="nc">&nbsp;                    return str(a.nombreDeporte).equals(str(b.nombreDeporte)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            str(a.descripcion).equals(str(b.descripcion)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            str(a.fecha).equals(str(b.fecha)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            str(a.hora).equals(str(b.hora)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            str(a.lugar).equals(str(b.lugar)) &amp;&amp;</b>
+&nbsp;                            a.plazasMax == b.plazasMax &amp;&amp;
+&nbsp;                            a.inscritos == b.inscritos &amp;&amp;
+<b class="nc">&nbsp;                            str(a.ayuntamiento).equals(str(b.ayuntamiento));</b>
+&nbsp;                }
+<b class="nc">&nbsp;                private String str(String s){ return s==null? &quot;&quot;: s; }</b>
+&nbsp;            };
+&nbsp;
+&nbsp;    @NonNull @Override
+&nbsp;    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<b class="nc">&nbsp;        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_deporte_apuntado, parent, false);</b>
+<b class="nc">&nbsp;        return new VH(v);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onBindViewHolder(@NonNull VH h, int pos) {
+<b class="nc">&nbsp;        InicioUiState.DeporteUi it = getItem(pos);</b>
+&nbsp;
+<b class="nc">&nbsp;        h.tvNombreDeporte.setText(nz(it.nombreDeporte));</b>
+<b class="nc">&nbsp;        h.tvDescripcion.setText(nz(it.descripcion));</b>
+<b class="nc">&nbsp;        h.tvFecha.setText(nz(it.fecha));</b>
+<b class="nc">&nbsp;        h.tvHora.setText(nz(it.hora));</b>
+<b class="nc">&nbsp;        h.tvLugar.setText(nz(it.lugar));</b>
+&nbsp;
+<b class="nc">&nbsp;        h.tvPlazas.setText(&quot;PLAZAS &gt; &quot; + it.plazasMax);</b>
+<b class="nc">&nbsp;        h.tvInscritos.setText(&quot;INSCRITOS &gt; &quot; + it.inscritos);</b>
+&nbsp;
+<b class="nc">&nbsp;        h.itemView.setOnClickListener(v -&gt; { if (listener != null) listener.onItemClick(it); });</b>
+<b class="nc">&nbsp;        h.itemView.setOnLongClickListener(v -&gt; { if (listener != null) listener.onItemLongClick(it); return true; });</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    static class VH extends RecyclerView.ViewHolder {
+&nbsp;        TextView tvNombreDeporte, tvDescripcion, tvFecha, tvHora, tvLugar, tvPlazas, tvInscritos;
+&nbsp;        ImageView ivDummy1, ivDummy2; // (por si quieres setear iconos dinámicos en el futuro)
+&nbsp;
+&nbsp;        VH(@NonNull View v) {
+<b class="nc">&nbsp;            super(v);</b>
+<b class="nc">&nbsp;            tvNombreDeporte = v.findViewById(R.id.tvNombreDeporte);</b>
+<b class="nc">&nbsp;            tvDescripcion   = v.findViewById(R.id.tvDescripcionActividad);</b>
+<b class="nc">&nbsp;            tvFecha         = v.findViewById(R.id.tvFecha);</b>
+<b class="nc">&nbsp;            tvHora          = v.findViewById(R.id.tvHora);</b>
+<b class="nc">&nbsp;            tvLugar         = v.findViewById(R.id.tvLugar);</b>
+<b class="nc">&nbsp;            tvPlazas        = v.findViewById(R.id.tvPlazas);</b>
+<b class="nc">&nbsp;            tvInscritos     = v.findViewById(R.id.tvInscritos);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public void submit(java.util.List&lt;InicioUiState.DeporteUi&gt; items){ submitList(items); }</b>
+&nbsp;
+<b class="nc">&nbsp;    private String nz(String s){ return s==null? &quot;&quot;: s; }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

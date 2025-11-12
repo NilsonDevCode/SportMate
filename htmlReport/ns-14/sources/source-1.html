@@ -1,0 +1,482 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SeleccionarNuevoAyuntamientoFragment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nilson.appsportmate.features.user.ui.menuPrincipal.opcionesMenu</a>
+</div>
+
+<h1>Coverage Summary for Class: SeleccionarNuevoAyuntamientoFragment (com.nilson.appsportmate.features.user.ui.menuPrincipal.opcionesMenu)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SeleccionarNuevoAyuntamientoFragment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/92)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SeleccionarNuevoAyuntamientoFragment$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SeleccionarNuevoAyuntamientoFragment$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SeleccionarNuevoAyuntamientoFragment$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SeleccionarNuevoAyuntamientoFragment$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/58)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/108)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nilson.appsportmate.features.user.ui.menuPrincipal.opcionesMenu;
+&nbsp;
+&nbsp;import android.os.Bundle;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.AdapterView;
+&nbsp;import android.widget.ArrayAdapter;
+&nbsp;import android.widget.Spinner;
+&nbsp;import android.widget.Toast;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.fragment.app.Fragment;
+&nbsp;import androidx.lifecycle.ViewModelProvider;
+&nbsp;import androidx.navigation.NavController;
+&nbsp;import androidx.navigation.NavOptions;
+&nbsp;import androidx.navigation.Navigation;
+&nbsp;
+&nbsp;import com.nilson.appsportmate.R;
+&nbsp;import com.nilson.appsportmate.common.utils.Preferencias;
+&nbsp;import com.nilson.appsportmate.databinding.FragmentSeleccionarNuevoAyuntamientoBinding;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;public class SeleccionarNuevoAyuntamientoFragment extends Fragment {</b>
+&nbsp;
+&nbsp;    private FragmentSeleccionarNuevoAyuntamientoBinding binding;
+&nbsp;    private SeleccionarNuevoAyuntamientoViewModel vm;
+&nbsp;
+&nbsp;    /** Flag para evitar disparar listeners durante setup/precarga */
+<b class="nc">&nbsp;    private boolean settingUp = false;</b>
+&nbsp;
+&nbsp;    /** Evita reconstruir adapters si las listas no cambiaron */
+<b class="nc">&nbsp;    private int lastComCount = -1, lastProvCount = -1, lastCiuCount = -1, lastPueCount = -1;</b>
+&nbsp;
+&nbsp;    /** Solo hacemos la precarga por IDs una vez */
+<b class="nc">&nbsp;    private boolean didPreload = false;</b>
+&nbsp;
+&nbsp;    @Nullable
+&nbsp;    @Override
+&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater,
+&nbsp;                             @Nullable ViewGroup container,
+&nbsp;                             @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        binding = FragmentSeleccionarNuevoAyuntamientoBinding.inflate(inflater, container, false);</b>
+<b class="nc">&nbsp;        return binding.getRoot();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+<b class="nc">&nbsp;        super.onViewCreated(view, savedInstanceState);</b>
+&nbsp;
+<b class="nc">&nbsp;        vm = new ViewModelProvider(this).get(SeleccionarNuevoAyuntamientoViewModel.class);</b>
+&nbsp;
+<b class="nc">&nbsp;        setupSpinners();</b>
+<b class="nc">&nbsp;        setupClicks();</b>
+<b class="nc">&nbsp;        observeUi();</b>
+&nbsp;
+<b class="nc">&nbsp;        vm.cargarComunidades();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setupSpinners() {
+<b class="nc">&nbsp;        binding.spComunidad.setAdapter(emptyAdapter());</b>
+<b class="nc">&nbsp;        binding.spProvincia.setAdapter(emptyAdapter());</b>
+<b class="nc">&nbsp;        binding.spCiudad.setAdapter(emptyAdapter());</b>
+<b class="nc">&nbsp;        binding.spPueblo.setAdapter(emptyAdapter());</b>
+&nbsp;
+<b class="nc">&nbsp;        binding.spComunidad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</b>
+&nbsp;            @Override public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) {
+<b class="nc">&nbsp;                if (settingUp) return;</b>
+<b class="nc">&nbsp;                vm.onComunidadSelected(position);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            @Override public void onNothingSelected(AdapterView&lt;?&gt; parent) {}</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        binding.spProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</b>
+&nbsp;            @Override public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) {
+<b class="nc">&nbsp;                if (settingUp) return;</b>
+<b class="nc">&nbsp;                vm.onProvinciaSelected(position);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            @Override public void onNothingSelected(AdapterView&lt;?&gt; parent) {}</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        binding.spCiudad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</b>
+&nbsp;            @Override public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) {
+<b class="nc">&nbsp;                if (settingUp) return;</b>
+<b class="nc">&nbsp;                vm.onCiudadSelected(position);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            @Override public void onNothingSelected(AdapterView&lt;?&gt; parent) {}</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        binding.spPueblo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</b>
+&nbsp;            @Override public void onItemSelected(AdapterView&lt;?&gt; parent, View view, int position, long id) {
+<b class="nc">&nbsp;                if (settingUp) return;</b>
+<b class="nc">&nbsp;                vm.onPuebloSelected(position);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            @Override public void onNothingSelected(AdapterView&lt;?&gt; parent) {}</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setupClicks() {
+<b class="nc">&nbsp;        binding.btnGuardar.setOnClickListener(v -&gt; vm.guardarSeleccion());</b>
+&nbsp;
+<b class="nc">&nbsp;        if (binding.toolbarSeleccionAyto != null) {</b>
+<b class="nc">&nbsp;            binding.toolbarSeleccionAyto.setNavigationOnClickListener(v -&gt; requireActivity().onBackPressed());</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (binding.btnCancelar != null) {</b>
+<b class="nc">&nbsp;            binding.btnCancelar.setOnClickListener(v -&gt; requireActivity().onBackPressed());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void observeUi() {
+<b class="nc">&nbsp;        vm.ui.observe(getViewLifecycleOwner(), s -&gt; {</b>
+<b class="nc">&nbsp;            binding.progress.setVisibility(s.loading ? View.VISIBLE : View.GONE);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (s.error != null) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), s.error, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (&quot;Guardado&quot;.equals(s.message)) {</b>
+<b class="nc">&nbsp;                Toast.makeText(requireContext(), &quot;Ayuntamiento actualizado&quot;, Toast.LENGTH_SHORT).show();</b>
+&nbsp;
+&nbsp;                // ✅ GUARDAR EN PREFERENCIAS LO SELECCIONADO (CLAVE DEL BUG)
+<b class="nc">&nbsp;                if (getContext() != null) {</b>
+<b class="nc">&nbsp;                    if (s.ayuntamientoIdSel != null) {</b>
+<b class="nc">&nbsp;                        Preferencias.guardarAyuntamientoId(getContext(), s.ayuntamientoIdSel);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (s.ayuntamientoNombre != null) {</b>
+<b class="nc">&nbsp;                        Preferencias.guardarAyuntamientoNombre(getContext(), s.ayuntamientoNombre);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (s.puebloIdSel != null) {</b>
+<b class="nc">&nbsp;                        Preferencias.guardarPuebloId(getContext(), s.puebloIdSel);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (s.puebloNombre != null) {</b>
+<b class="nc">&nbsp;                        Preferencias.guardarPuebloNombre(getContext(), s.puebloNombre);</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;
+&nbsp;                // 🔁 Recrea DeportesDisponibles para que lea el NUEVO ayuntamiento desde Preferencias
+<b class="nc">&nbsp;                NavController nav = Navigation.findNavController(requireView());</b>
+<b class="nc">&nbsp;                NavOptions opts = new NavOptions.Builder()</b>
+<b class="nc">&nbsp;                        .setPopUpTo(R.id.deportesDisponiblesFragment, true) // limpia cualquier instancia previa</b>
+<b class="nc">&nbsp;                        .build();</b>
+<b class="nc">&nbsp;                nav.navigate(R.id.action_global_deportesDisponiblesFragment, null, opts);</b>
+&nbsp;                return;
+&nbsp;            }
+&nbsp;
+&nbsp;            // 1) Actualiza adapters SOLO si cambian las listas (por tamaño)
+<b class="nc">&nbsp;            settingUp = true;</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                if (s.comunidades.size() != lastComCount) {</b>
+<b class="nc">&nbsp;                    setAdapterNoSelect(binding.spComunidad, mapNombres(s.comunidades));</b>
+<b class="nc">&nbsp;                    lastComCount = s.comunidades.size();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                if (s.provincias.size() != lastProvCount) {</b>
+<b class="nc">&nbsp;                    setAdapterNoSelect(binding.spProvincia, mapNombres(s.provincias));</b>
+<b class="nc">&nbsp;                    lastProvCount = s.provincias.size();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                if (s.ciudades.size() != lastCiuCount) {</b>
+<b class="nc">&nbsp;                    setAdapterNoSelect(binding.spCiudad, mapNombres(s.ciudades));</b>
+<b class="nc">&nbsp;                    lastCiuCount = s.ciudades.size();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                if (s.pueblos.size() != lastPueCount) {</b>
+<b class="nc">&nbsp;                    setAdapterNoSelect(binding.spPueblo, mapPueblosNombres(s.pueblos));</b>
+<b class="nc">&nbsp;                    lastPueCount = s.pueblos.size();</b>
+&nbsp;                }
+&nbsp;
+&nbsp;                // 2) Precarga por IDs (una vez)
+<b class="nc">&nbsp;                if (!didPreload) {</b>
+<b class="nc">&nbsp;                    trySelectById(binding.spComunidad, mapIds(s.comunidades), s.comunidadIdSel);</b>
+<b class="nc">&nbsp;                    trySelectById(binding.spProvincia, mapIds(s.provincias), s.provinciaIdSel);</b>
+<b class="nc">&nbsp;                    trySelectById(binding.spCiudad, mapIds(s.ciudades), s.ciudadIdSel);</b>
+<b class="nc">&nbsp;                    trySelectById(binding.spPueblo, mapPuebloIds(s.pueblos), s.puebloIdSel);</b>
+<b class="nc">&nbsp;                    didPreload = true;</b>
+&nbsp;                }
+&nbsp;            } finally {
+<b class="nc">&nbsp;                settingUp = false;</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // 3) Textos de lectura
+<b class="nc">&nbsp;            binding.etPuebloNombre.setText(s.puebloNombre);</b>
+<b class="nc">&nbsp;            binding.etAytoNombre.setText(s.ayuntamientoNombre);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    /* Helpers */
+&nbsp;
+&nbsp;    private ArrayAdapter&lt;String&gt; emptyAdapter() {
+<b class="nc">&nbsp;        return new ArrayAdapter&lt;&gt;(requireContext(), android.R.layout.simple_spinner_dropdown_item, new ArrayList&lt;&gt;());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setAdapterNoSelect(Spinner sp, ArrayList&lt;String&gt; data) {
+<b class="nc">&nbsp;        ArrayAdapter&lt;String&gt; ad = new ArrayAdapter&lt;&gt;(requireContext(),</b>
+&nbsp;                android.R.layout.simple_spinner_dropdown_item, data);
+<b class="nc">&nbsp;        sp.setAdapter(ad);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ArrayList&lt;String&gt; mapNombres(List&lt;SeleccionarNuevoAyuntamientoUiState.Opcion&gt; lista) {
+<b class="nc">&nbsp;        ArrayList&lt;String&gt; r = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (SeleccionarNuevoAyuntamientoUiState.Opcion o : lista) r.add(o.nombre);</b>
+<b class="nc">&nbsp;        return r;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ArrayList&lt;String&gt; mapIds(List&lt;SeleccionarNuevoAyuntamientoUiState.Opcion&gt; lista) {
+<b class="nc">&nbsp;        ArrayList&lt;String&gt; r = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (SeleccionarNuevoAyuntamientoUiState.Opcion o : lista) r.add(o.id);</b>
+<b class="nc">&nbsp;        return r;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ArrayList&lt;String&gt; mapPueblosNombres(List&lt;SeleccionarNuevoAyuntamientoUiState.PuebloOpcion&gt; lista) {
+<b class="nc">&nbsp;        ArrayList&lt;String&gt; r = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (SeleccionarNuevoAyuntamientoUiState.PuebloOpcion o : lista) r.add(o.nombre);</b>
+<b class="nc">&nbsp;        return r;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ArrayList&lt;String&gt; mapPuebloIds(List&lt;SeleccionarNuevoAyuntamientoUiState.PuebloOpcion&gt; lista) {
+<b class="nc">&nbsp;        ArrayList&lt;String&gt; r = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (SeleccionarNuevoAyuntamientoUiState.PuebloOpcion o : lista) r.add(o.id);</b>
+<b class="nc">&nbsp;        return r;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Selecciona por ID si existe en la lista */
+&nbsp;    private boolean trySelectById(Spinner sp, List&lt;String&gt; ids, String targetId) {
+<b class="nc">&nbsp;        if (targetId == null || targetId.isEmpty() || ids == null) return false;</b>
+<b class="nc">&nbsp;        int idx = -1;</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; ids.size(); i++) {</b>
+<b class="nc">&nbsp;            if (targetId.equals(ids.get(i))) { idx = i; break; }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (idx &gt;= 0) {</b>
+<b class="nc">&nbsp;            sp.setSelection(idx, false);</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void onDestroyView() {
+<b class="nc">&nbsp;        super.onDestroyView();</b>
+<b class="nc">&nbsp;        binding = null;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-11 18:12</div>
+</div>
+</body>
+</html>

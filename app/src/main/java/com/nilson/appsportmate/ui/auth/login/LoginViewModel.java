@@ -1,94 +1,115 @@
 package com.nilson.appsportmate.ui.auth.login;
 
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.nilson.appsportmate.domain.usecase.LoginUserUseCase;
-import com.nilson.appsportmate.domain.usecase.params.LoginUserParams;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.nilson.appsportmate.common.datos.firebase.FirestoreManager;
+import com.nilson.appsportmate.common.utils.AuthAliasHelper;
+import com.nilson.appsportmate.common.utils.Preferencias;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
-
-@HiltViewModel
 public class LoginViewModel extends ViewModel {
 
-    private final LoginUserUseCase loginUserUseCase;
+    private final FirebaseAuth auth;
+    private final FirebaseFirestore db;
 
-    private final MutableLiveData<LoginUiState> _uiState = new MutableLiveData<>();
-    public final LiveData<LoginUiState> uiState = _uiState;
-
-    @Inject
-    public LoginViewModel(LoginUserUseCase loginUserUseCase) {
-        this.loginUserUseCase = loginUserUseCase;
-        _uiState.setValue(LoginUiState.initial());
+    // 🧠 Constructor testable (para tests unitarios con mocks)
+    public LoginViewModel(FirebaseAuth auth, FirebaseFirestore db) {
+        this.auth = auth;
+        this.db = db;
     }
 
-    public void onAliasChanged(String alias) {
-        LoginUiState currentState = getCurrentState();
-        String aliasError = validateAlias(alias);
-
-        _uiState.setValue(new LoginUiState.Builder()
-                .alias(alias)
-                .password(currentState.getPassword())
-                .aliasError(aliasError)
-                .passwordError(currentState.getPasswordError())
-                .showPassword(currentState.isShowPassword())
-                .rememberMe(currentState.isRememberMe())
-                .build());
+    // ⚙️ Constructor normal (para uso real en la app)
+    public LoginViewModel() {
+        this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
     }
 
-    public void onPasswordChanged(String password) {
-        LoginUiState currentState = getCurrentState();
-        String passwordError = validatePassword(password);
+    private final MutableLiveData<String> errorAlias = new MutableLiveData<>(null);
+    private final MutableLiveData<String> errorPassword = new MutableLiveData<>(null);
+    private final MutableLiveData<String> message = new MutableLiveData<>(null);
 
-        _uiState.setValue(new LoginUiState.Builder()
-                .alias(currentState.getAlias())
-                .password(password)
-                .aliasError(currentState.getAliasError())
-                .passwordError(passwordError)
-                .showPassword(currentState.isShowPassword())
-                .rememberMe(currentState.isRememberMe())
-                .build());
-    }
+    private final MutableLiveData<String> navTownhall = new MutableLiveData<>(null);
+    private final MutableLiveData<String> navUser = new MutableLiveData<>(null);
 
-    public void onLoginClicked() {
-        LoginUiState currentState = getCurrentState();
+    public LiveData<String> getErrorAlias() { return errorAlias; }
+    public LiveData<String> getErrorPassword() { return errorPassword; }
+    public LiveData<String> getMessage() { return message; }
+    public LiveData<String> getNavTownhall() { return navTownhall; }
+    public LiveData<String> getNavUser() { return navUser; }
 
-        if (!currentState.isLoadingEnabled()) {
+    public void onLoginClicked(String aliasInput, String password, Context appContext) {
+        if (aliasInput == null || aliasInput.trim().isEmpty()) {
+            errorAlias.setValue("Alias requerido");
+            return;
+        }
+        String aliasErr = AuthAliasHelper.getAliasValidationError(aliasInput);
+        if (aliasErr != null) {
+            errorAlias.setValue(aliasErr);
+            return;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            errorPassword.setValue("Contraseña requerida");
             return;
         }
 
-        Log.d("LoginViewModel", "onLoginClicked");
+        errorAlias.setValue(null);
+        errorPassword.setValue(null);
 
-        loginUserUseCase.execute(new LoginUserParams(currentState.getAlias(), currentState.getPassword()));
+        String emailSintetico = AuthAliasHelper.aliasToEmail(aliasInput.trim());
+
+        auth.signInWithEmailAndPassword(emailSintetico, password)
+                .addOnSuccessListener(result -> {
+                    if (result.getUser() == null) {
+                        message.setValue("No se pudo obtener el usuario");
+                        return;
+                    }
+                    String uid = result.getUser().getUid();
+
+                    FirestoreManager.resolveRolOrRepair(uid, aliasInput.trim(), new FirestoreManager.RoleCallback() {
+                        @Override
+                        public void onResolved(String rol) {
+                            if (rol == null) {
+                                message.setValue("Perfil no encontrado");
+                                return;
+                            }
+                            String r = rol.trim().toLowerCase();
+
+                            Preferencias.guardarUid(appContext, uid);
+                            Preferencias.guardarAlias(appContext, aliasInput.trim());
+                            Preferencias.guardarRol(appContext, r);
+
+                            if ("ayuntamiento".equals(r)) {
+                                Preferencias.guardarAyuntamientoId(appContext, uid);
+                                navTownhall.setValue(uid);
+                            } else {
+                                db.collection("usuarios").document(uid).get()
+                                        .addOnSuccessListener(doc -> {
+                                            String aytoId = doc.getString("ayuntamientoId");
+                                            if (aytoId == null || aytoId.isEmpty()) {
+                                                message.setValue("Tu perfil no tiene ayuntamiento asignado");
+                                            } else {
+                                                Preferencias.guardarAyuntamientoId(appContext, aytoId);
+                                                navUser.setValue(aytoId);
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> message.setValue("Error leyendo perfil de usuario"));
+                            }
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            message.setValue("Error perfil: " + e.getMessage());
+                        }
+                    });
+                })
+                .addOnFailureListener(e -> message.setValue("Login fallido: " + e.getMessage()));
     }
 
-    private LoginUiState getCurrentState() {
-        LoginUiState state = _uiState.getValue();
-        return state != null ? state : LoginUiState.initial();
-    }
-
-    private String validateAlias(String alias) {
-        if (alias.isEmpty()) {
-            return "El Alias es requerido";
-        }
-
-        // TODO(Jordy Pinos): Completar la validacion del alias
-
-        return null;
-    }
-
-    private String validatePassword(String password) {
-        if (password.isEmpty()) {
-            return "La contrasena es requerida";
-        }
-
-        // TODO(Jordy Pinos): Completar la validacion de la contrasena
-
-        return null;
-    }
+    public void consumeNavTownhall() { navTownhall.setValue(null); }
+    public void consumeNavUser() { navUser.setValue(null); }
+    public void consumeMessage() { message.setValue(null); }
 }
