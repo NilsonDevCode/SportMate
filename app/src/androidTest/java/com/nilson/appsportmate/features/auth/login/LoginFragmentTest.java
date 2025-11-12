@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.auth.fragments;
+package com.nilson.appsportmate.features.auth.login;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

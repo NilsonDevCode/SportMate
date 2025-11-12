@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.auth.fragments;
+package com.nilson.appsportmate.features.auth.login;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -24,7 +24,6 @@ import androidx.test.filters.LargeTest;
 
 import com.nilson.appsportmate.HiltTestActivity;
 import com.nilson.appsportmate.R;
-import com.nilson.appsportmate.features.auth.login.FakeLoginViewModel;
 import com.nilson.appsportmate.ui.auth.login.LoginFragment;
 
 import org.junit.After;
