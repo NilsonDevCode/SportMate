@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nilson.appsportmate">
 
+    <!-- Permisos necesarios -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,18 +15,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme"
+        android:theme="@style/Theme.AppSportMate"
         tools:targetApi="31">
 
-        <!-- ÚNICO LAUNCHER: MainActivity con NavHost (Splash/Auth/Login/SignUp como Fragments) -->
+        <!-- 🚀 Pantalla principal con el NavHostFragment (Splash, Login, Register, etc.) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
     </application>
 
 </manifest>
