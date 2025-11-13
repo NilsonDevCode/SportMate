@@ -105,16 +105,16 @@ public class LoginFragment extends Fragment {
         // Acción login correcto o no
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && isAdded()) {
-                binding.tvMensaje.setVisibility(View.VISIBLE);
-                binding.tvMensaje.setText(msg);
+                // binding.tvMensaje.setVisibility(View.VISIBLE);
+                // binding.tvMensaje.setText(msg);
 
-                int color = msg.toLowerCase().contains("correcto")
-                        ? R.color.green
-                        : R.color.red;
+                // int color = msg.toLowerCase().contains("correcto")
+                //         ? R.color.green
+                //         : R.color.red;
 
-                binding.tvMensaje.setTextColor(
-                        ContextCompat.getColor(requireContext(), color)
-                );
+                // binding.tvMensaje.setTextColor(
+                //         ContextCompat.getColor(requireContext(), color)
+                // );
 
                 viewModel.consumeMessage();
             }
