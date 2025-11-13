@@ -3,6 +3,8 @@
     <string name="app_name">AppSportMate</string>
 
     <!-- Auth -->
+
+    <!-- Auth - Login -->
     <string name="login_title">Entra ya!</string>
     <string name="login_subtitle">Tus nuevos amigos te estan esperando</string>
     <string name="login_action_name">Inicia Sesion</string>
@@ -10,6 +12,25 @@
     <string name="login_password_label">Contrasena</string>
     <string name="login_button">Entrar</string>
     <string name="login_go_register">Crear cuenta</string>
+
+    <!-- Auth - Sign Up -->
+    <string name="sign_up_title">Crear cuenta</string>
+    <string name="sign_up_alias_label">Alias (unico)</string>
+    <string name="sign_up_name_label">Nombre</string>
+    <string name="sign_up_surname_label">Apellidos</string>
+    <string name="sign_up_social_reason_label">Razon social</string>
+    <string name="sign_up_community_label">Comunidad</string>
+    <string name="sign_up_province_label">Provincia</string>
+    <string name="sign_up_city_label">Ciudad</string>
+    <string name="sign_up_town_label">Pueblo (existente)</string>
+    <string name="sign_up_townhall_label">Ayuntamiento (auto)</string>
+    <string name="sign_up_create_town_label">Pueblo (crear nuevo)</string>
+    <string name="sign_up_password_label">Contrasena</string>
+    <string name="sign_up_confirm_password_label">Repetir contrasena</string>
+    <string name="sign_up_select_role">Selecciona tu rol:</string>
+    <string name="sign_up_user_role">Usuario</string>
+    <string name="sign_up_townhall_role">Ayuntamiento</string>
+    <string name="sign_up_button">Crear cuenta</string>
 
     <!-- Actividades -->
     <string name="title_activity_formulario_usuario">Formulario Usuario</string>
