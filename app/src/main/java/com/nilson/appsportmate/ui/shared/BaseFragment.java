@@ -11,20 +11,20 @@ public abstract class BaseFragment extends Fragment {
     protected void setStatusBarIconsLight(boolean isLight) {
         if (getActivity() == null) return;
 
-        ///  Allows to draw behind the status bar
+        /// Allows to draw behind the status bar
         WindowCompat.setDecorFitsSystemWindows(
                 getActivity().getWindow(),
                 false);
 
-        ///  Set the status bar to transparent
+        /// Set the status bar to transparent
         getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-        ///  Change the status bar icons color
+        /// Change the status bar icons color
         WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(
                 getActivity().getWindow(),
                 getActivity().getWindow().getDecorView());
 
-        ///  True = dark icons, False = light icons
+        /// True = dark icons, False = light icons
         controller.setAppearanceLightStatusBars(isLight);
 
     }

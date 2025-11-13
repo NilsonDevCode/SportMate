@@ -54,12 +54,7 @@ public class AuthFragment extends BaseFragment {
     }
 
     private void setupClickListeners() {
-        logInBtn.setOnClickListener(view -> {
-            navigateWithAnimation(nav,R.id.action_authFragment_to_loginFragment);
-        });
-
-        signInBtn.setOnClickListener(view -> {
-            navigateWithAnimation(nav,R.id.action_authFragment_to_signInFragment);
-        });
+        logInBtn.setOnClickListener(view ->  navigateWithAnimation(nav,R.id.action_authFragment_to_loginFragment));
+        signInBtn.setOnClickListener(view -> navigateWithAnimation(nav,R.id.action_authFragment_to_signInFragment));
     }
 }

@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class SplashFragment extends Fragment {
 
     private static final long SPLASH_DELAY_MS = 2000L; // 2s para ver el logo
-    private boolean navigated = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,13 +34,8 @@ public class SplashFragment extends Fragment {
     }
 
     private void goAuth(@NonNull View view) {
-        if (!isAdded() || navigated) return;
+        if (!isAdded()) return;
         NavController nav = Navigation.findNavController(view);
-        try {
-            navigateWithAnimation(nav, R.id.action_splashFragment_to_authFragment);
-            navigated = true;
-        } catch (IllegalArgumentException ignore) {
-            // acción no existe en el grafo → evita crash
-        }
+        navigateWithAnimation(nav, R.id.action_splashFragment_to_authFragment);
     }
 }
