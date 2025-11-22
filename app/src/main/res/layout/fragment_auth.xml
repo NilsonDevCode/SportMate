@@ -1,34 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_fondo_generico"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="32dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Bienvenido a AppSportMate"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white" />
-
-    <Button
-        android:id="@+id/btnLogin"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Iniciar sesión"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:src="@drawable/gradient_background" />
 
-    <Button
-        android:id="@+id/btnSignIn"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrarse" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/logo_fondo_transparente" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="match_parent"
+        android:padding="24dp"
+        android:background="@drawable/auth_txtcabecera_superior"
+        android:orientation="vertical"
+        android:layout_height="250dp"
+        android:gravity="center_vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contenedorTextoCabecera"
+        android:layout_width="match_parent"
+        android:padding="24dp"
+        android:orientation="vertical"
+        android:layout_height="250dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvBigTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="¡Entra ya!"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineHeight="50dp"
+            android:text="tus nuevos amigos están esperando…"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            style="@style/AppButtonWhite"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:maxWidth="300dp"
+            android:text="INICIAR SESIÓN" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignIn"
+            style="@style/AppButtonWhite"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxWidth="300dp"
+            android:text="REGISTRARSE" />
+
+    </LinearLayout>
+
+</FrameLayout>
