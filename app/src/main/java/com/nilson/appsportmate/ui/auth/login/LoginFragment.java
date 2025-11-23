@@ -1,8 +1,15 @@
 package com.nilson.appsportmate.ui.auth.login;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +41,8 @@ public class LoginFragment extends Fragment {
     public static boolean disableFirebaseForTest = false;
 
     private TextInputEditText etAlias, etPassword;
-    private MaterialButton btnLogin, btnNavRegister;
+    private MaterialButton btnLogin;
+    private TextView btnNavRegister;
     private boolean aliasUpdating = false;
 
     @Nullable
@@ -59,6 +67,47 @@ public class LoginFragment extends Fragment {
         etPassword = binding.etPassword;
         btnLogin = binding.btnLogin;
         btnNavRegister = binding.btnNavRegister;
+
+        // Texto inferior clicable para acceder al formulario de registro.
+        String texto1 = getString(R.string.login_no_account) + " ";
+        String texto2 = getString(R.string.login_create_here);
+
+        SpannableString spannable = new SpannableString(texto1 + texto2);
+
+        // Span clicable en la segunda parte
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                navController.navigate(R.id.action_loginFragment_to_signInFragment);
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                ds.setColor(Color.WHITE);
+            }
+        };
+
+        // Aplicar el span clicable
+        spannable.setSpan(
+                clickableSpan,
+                texto1.length(),
+                texto1.length() + texto2.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        // Primera parte en gris semi-transparente
+        spannable.setSpan(
+                new ForegroundColorSpan(Color.parseColor("#80FFFFFF")),
+                0,
+                texto1.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        btnNavRegister.setText(spannable);
+        btnNavRegister.setMovementMethod(LinkMovementMethod.getInstance());
+        btnNavRegister.setHighlightColor(Color.TRANSPARENT);
 
         // Validación y normalización del alias (primera letra mayúscula)
         etAlias.addTextChangedListener(new TextWatcher() {
