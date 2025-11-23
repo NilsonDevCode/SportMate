@@ -68,47 +68,6 @@ public class LoginFragment extends Fragment {
         btnLogin = binding.btnLogin;
         btnNavRegister = binding.btnNavRegister;
 
-        // Texto inferior clicable para acceder al formulario de registro.
-        String texto1 = getString(R.string.login_no_account) + " ";
-        String texto2 = getString(R.string.login_create_here);
-
-        SpannableString spannable = new SpannableString(texto1 + texto2);
-
-        // Span clicable en la segunda parte
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                navController.navigate(R.id.action_loginFragment_to_signInFragment);
-            }
-
-            @Override
-            public void updateDrawState(@NonNull TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-                ds.setColor(Color.WHITE);
-            }
-        };
-
-        // Aplicar el span clicable
-        spannable.setSpan(
-                clickableSpan,
-                texto1.length(),
-                texto1.length() + texto2.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-
-        // Primera parte en gris semi-transparente
-        spannable.setSpan(
-                new ForegroundColorSpan(Color.parseColor("#80FFFFFF")),
-                0,
-                texto1.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-
-        btnNavRegister.setText(spannable);
-        btnNavRegister.setMovementMethod(LinkMovementMethod.getInstance());
-        btnNavRegister.setHighlightColor(Color.TRANSPARENT);
-
         // Validación y normalización del alias (primera letra mayúscula)
         etAlias.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

@@ -26,7 +26,6 @@
         android:orientation="vertical"
         android:padding="32dp">
 
-
         <TextView
             android:text="@string/login_action_name"
             style="@style/FontPoppinsLight"
@@ -72,19 +71,34 @@
             android:layout_height="wrap_content"
             android:text="@string/login_button"
             android:textAllCaps="true" />
-
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/btnNavRegister"
-        tools:text="¿No tienes cuenta? Crea una aquí."
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="10dp"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="40dp" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:id="@+id/txtNoAccount"
+            style="@style/FontPoppinsMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_no_account"
+            android:textColor="#80FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btnNavRegister"
+            style="@style/FontPoppinsBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_create_here"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
 
 </FrameLayout>
