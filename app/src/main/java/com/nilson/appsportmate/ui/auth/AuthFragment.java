@@ -25,9 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AuthFragment extends BaseFragment {
     private FragmentAuthBinding binding;
-
     private NavController nav;
-
     private Button logInBtn, signInBtn;
 
     @Override
@@ -55,6 +53,6 @@ public class AuthFragment extends BaseFragment {
 
     private void setupClickListeners() {
         logInBtn.setOnClickListener(view ->  navigateWithAnimation(nav,R.id.action_authFragment_to_loginFragment));
-        signInBtn.setOnClickListener(view -> navigateWithAnimation(nav,R.id.action_authFragment_to_signInFragment));
+        signInBtn.setOnClickListener(view -> navigateWithAnimation(nav,R.id.action_authFragment_to_rolSelectionFragment));
     }
 }
