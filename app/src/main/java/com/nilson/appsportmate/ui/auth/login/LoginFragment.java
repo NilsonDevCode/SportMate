@@ -1,8 +1,15 @@
 package com.nilson.appsportmate.ui.auth.login;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +41,8 @@ public class LoginFragment extends Fragment {
     public static boolean disableFirebaseForTest = false;
 
     private TextInputEditText etAlias, etPassword;
-    private MaterialButton btnLogin, btnNavRegister;
+    private MaterialButton btnLogin;
+    private TextView btnNavRegister;
     private boolean aliasUpdating = false;
 
     @Nullable

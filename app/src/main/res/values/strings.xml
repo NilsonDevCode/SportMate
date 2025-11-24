@@ -6,27 +6,27 @@
 
     <!-- Auth - Login -->
     <string name="login_title">Entra ya!</string>
-    <string name="login_subtitle">Tus nuevos amigos te estan esperando</string>
-    <string name="login_action_name">Inicia Sesion</string>
+    <string name="login_subtitle">Tus nuevos amigos están esperando...</string>
+    <string name="login_action_name">Inicia Sesión</string>
     <string name="login_alias_label">Alias</string>
-    <string name="login_password_label">Contrasena</string>
+    <string name="login_password_label">Contraseña</string>
     <string name="login_button">Entrar</string>
     <string name="login_go_register">Crear cuenta</string>
 
     <!-- Auth - Sign Up -->
     <string name="sign_up_title">Crear cuenta</string>
-    <string name="sign_up_alias_label">Alias (unico)</string>
+    <string name="sign_up_alias_label">Alias (único)</string>
     <string name="sign_up_name_label">Nombre</string>
     <string name="sign_up_surname_label">Apellidos</string>
-    <string name="sign_up_social_reason_label">Razon social</string>
+    <string name="sign_up_social_reason_label">Razón social</string>
     <string name="sign_up_community_label">Comunidad</string>
     <string name="sign_up_province_label">Provincia</string>
     <string name="sign_up_city_label">Ciudad</string>
     <string name="sign_up_town_label">Pueblo (existente)</string>
     <string name="sign_up_townhall_label">Ayuntamiento (auto)</string>
     <string name="sign_up_create_town_label">Pueblo (crear nuevo)</string>
-    <string name="sign_up_password_label">Contrasena</string>
-    <string name="sign_up_confirm_password_label">Repetir contrasena</string>
+    <string name="sign_up_password_label">Contraseña</string>
+    <string name="sign_up_confirm_password_label">Repetir contraseña</string>
     <string name="sign_up_select_role">Selecciona tu rol:</string>
     <string name="sign_up_user_role">Usuario</string>
     <string name="sign_up_townhall_role">Ayuntamiento</string>
@@ -69,6 +69,8 @@
     <string name="gestionar_eventos">Gestionar eventos</string>
     <string name="inscribirse">Inscribirse</string>
     <string name="expulsar">Expulsar</string>
+    <string name="login_no_account">¿No tienes cuenta?</string>
+    <string name="login_create_here">Crea una aquí.</string>
 
     <!-- Mensajes -->
     <string name="welcome">¡Bienvenido!</string>
@@ -100,6 +102,7 @@
         <item>Usuario Particular</item>
         <item>Ayuntamiento</item>
     </string-array>
+
     <!-- Strings used for fragments for navigation -->
     <string name="splash_fragment_label">Splash Fragment</string>
     <string name="auth_fragment_label">Auth Fragment</string>
@@ -117,8 +120,7 @@
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>
     <string name="cambiar_foto_de_perfil">Cambiar foto de perfil</string>
     <string name="cambiar_ayuntamiento">Cambiar ayuntamiento</string>
-
     <string name="inicio_ayuntamiento">inicio_ayuntamiento</string>
     <string name="inscritos">inscritos</string>
-    <string name="ubicacion">Ubicacion</string>
+    <string name="ubicacion">Ubicación</string>
 </resources>
