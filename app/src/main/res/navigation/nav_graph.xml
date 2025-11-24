@@ -43,8 +43,8 @@
             app:destination="@id/loginFragment" />
 
         <action
-            android:id="@+id/action_authFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            android:id="@+id/action_authFragment_to_rolSelectionFragment"
+            app:destination="@id/rolSelectionFragment" />
     </fragment>
 
     <!-- ========================= -->
@@ -200,5 +200,20 @@
     <action
         android:id="@+id/action_global_menuAyuntamientoFragment"
         app:destination="@id/menuAyuntamientoFragment" />
+
+    <!-- ========================= -->
+    <!-- Selección de rol -->
+    <!-- ========================= -->
+    <fragment
+        android:id="@+id/rolSelectionFragment"
+        android:name="com.nilson.appsportmate.ui.auth.signUp.rol.RolSelectionFragment"
+        android:label="Seleccionar rol"
+        tools:layout="@layout/fragment_role_selection">
+
+        <action
+            android:id="@+id/action_rolSelectionFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+
 
 </navigation>
