@@ -47,14 +47,15 @@ public class RolSelectionFragment extends Fragment {
         btnRolUsuario.setOnClickListener(v -> {
             viewModel.selectRole(UserRol.STANDARD);
             NavHostFragment.findNavController(RolSelectionFragment.this)
-                    .navigate(R.id.action_rolSelectionFragment_to_signInFragment);
+                    .navigate(R.id.action_rolSelectionFragment_to_formUsuarioFragment);
+            ;
         });
 
         // → Ayuntamiento
         btnRolAyuntamiento.setOnClickListener(v -> {
             viewModel.selectRole(UserRol.TOWNHALL);
             NavHostFragment.findNavController(RolSelectionFragment.this)
-                    .navigate(R.id.action_rolSelectionFragment_to_signInFragment);
+                    .navigate(R.id.action_rolSelectionFragment_to_formAyuntamientoFragment);
         });
     }
 }
