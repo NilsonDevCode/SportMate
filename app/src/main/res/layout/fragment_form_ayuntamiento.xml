@@ -1,205 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gradient_background" />
 
-        <!-- Título -->
-        <TextView
-            android:id="@+id/tvTituloForm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registro de Ayuntamiento"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Alias -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutAlias"
-            style="?attr/textInputFilledStyle"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Alias"
-            android:layout_marginBottom="12dp">
+            android:layout_height="match_parent" >
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etAlias"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:padding="24dp">
 
-        <!-- Razón social -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutRazonSocial"
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Razón social"
-            android:layout_marginBottom="12dp">
+                <TextView
+                    android:id="@+id/tvTituloForm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_title"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRazonSocial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Comunidad -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:weightSum="1">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutComunidad"
-                style="?attr/textInputFilledStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Comunidad">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etComunidad"
+                <!-- Alias -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/layoutAlias"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:clickable="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/sign_up_alias_label"
+                    android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAlias"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/spComunidad"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"/>
-        </LinearLayout>
-
-        <!-- Provincia -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:weightSum="1">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutProvincia"
-                style="?attr/textInputFilledStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Provincia">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etProvincia"
+                <!-- Nombre -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/layoutNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:clickable="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/sign_up_name_label"
+                    android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/spProvincia"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"/>
-        </LinearLayout>
-
-        <!-- Ciudad -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:weightSum="1">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutCiudad"
-                style="?attr/textInputFilledStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Ciudad">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCiudad"
+                <!-- Razón Social (solo Ayuntamiento) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/layoutNumero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:clickable="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/sign_up_social_reason_label"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNumero"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/spCiudad"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"/>
-        </LinearLayout>
+                <!-- Comunidad + Spinner -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:weightSum="1">
 
-        <!-- Crear nuevo pueblo -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPuebloNuevo"
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Crear nuevo pueblo"
-            android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
+                        android:id="@+id/layoutComunidad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/sign_up_community_label">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPuebloNuevo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescripcionEvento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:clickable="false"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPassword"
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            app:passwordToggleEnabled="true"
-            android:layout_marginBottom="12dp">
+                    <Spinner
+                        android:id="@+id/spComunidad"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"/>
+                </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                <!-- Provincia + Spinner -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:weightSum="1">
 
-        <!-- Repetir Password -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPassword2"
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Repetir contraseña"
-            app:passwordToggleEnabled="true"
-            android:layout_marginBottom="20dp">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
+                        android:id="@+id/layoutProvincia"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/sign_up_province_label">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etReglasEvento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:clickable="false"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRegistrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Registrarse"/>
+                    <Spinner
+                        android:id="@+id/spProvincia"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"/>
+                </LinearLayout>
 
-    </LinearLayout>
-</ScrollView>
+                <!-- Ciudad + Spinner -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:weightSum="1">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
+                        android:id="@+id/layoutCiudad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/sign_up_city_label">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etMateriales"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:clickable="false"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Spinner
+                        android:id="@+id/spCiudad"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"/>
+                </LinearLayout>
+
+                <!-- BLOQUE AYUNTAMIENTO: Crear pueblo nuevo -->
+                <LinearLayout
+                    android:id="@+id/blocAyuntamiento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- Campo para crear pueblo (Ayuntamiento) -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
+                        android:id="@+id/layoutPuebloAyto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/sign_up_create_town_label"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPuebloAyto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Contraseña -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/layoutPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/sign_up_password_label"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Repetir contraseña -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/layoutPassword2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/sign_up_confirm_password_label"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Spinner Ayuntamientos (si lo necesitas más tarde, por ahora oculto) -->
+                <Spinner
+                    android:id="@+id/spinnerAyuntamientos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginBottom="20dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrar"
+                    style="@style/BotonGenericoBlanco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_button" />
+            </LinearLayout>
+        </ScrollView>
+</FrameLayout>
