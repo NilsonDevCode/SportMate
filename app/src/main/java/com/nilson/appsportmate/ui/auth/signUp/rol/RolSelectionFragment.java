@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-
 import com.google.android.material.button.MaterialButton;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentRoleSelectionBinding;
@@ -24,7 +22,6 @@ public class RolSelectionFragment extends Fragment {
     private RolSelectionViewModel viewModel;
 
     public RolSelectionFragment() {
-        super(R.layout.fragment_role_selection);
     }
 
     @Nullable

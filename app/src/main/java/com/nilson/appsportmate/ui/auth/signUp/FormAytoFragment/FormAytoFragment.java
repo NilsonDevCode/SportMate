@@ -1,6 +1,5 @@
 package com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentFormAyuntamientoBinding;
+import com.nilson.appsportmate.databinding.FragmentSignUpBinding;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 import com.nilson.appsportmate.MainActivity;
 
@@ -86,6 +87,16 @@ public class FormAytoFragment extends Fragment {
             }
         });
 
+        // ===== Toggle UI por rol =====
+        binding.rgRol.setOnCheckedChangeListener((g, id) -> {
+            RadioButton rb = binding.getRoot().findViewById(id);
+            boolean esUsuario = (rb == null) || "usuario".equals(String.valueOf(rb.getTag()));
+            binding.layoutApellidos.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
+            binding.layoutNumero.setVisibility(esUsuario ? View.GONE : View.VISIBLE);
+            binding.blocUsuario.setVisibility(esUsuario ? View.VISIBLE : View.GONE);
+            binding.blocAyuntamiento.setVisibility(esUsuario ? View.GONE : View.VISIBLE);
+        });
+
         // ===== Botón registrar =====
         binding.btnRegistrar.setOnClickListener(v ->
                 viewModel.onRegisterClicked(
@@ -94,11 +105,15 @@ public class FormAytoFragment extends Fragment {
                         getTxt(binding.etPassword),
                         getTxt(binding.etPassword2),
                         getTxt(binding.etNombre),
+                        getTxt(binding.etApellidos),
                         getTxt(binding.etDescripcionEvento),   // comunidadNombre
                         getTxt(binding.etReglasEvento),        // provinciaNombre
                         getTxt(binding.etMateriales),          // ciudadNombre
-                        getTxt(binding.etPuebloAyto),
+                        binding.blocUsuario.getVisibility() == View.VISIBLE
+                                ? getTxt(binding.etPuebloUsuario)
+                                : getTxt(binding.etPuebloAyto),
                         getTxt(binding.etNumero),              // razón social
+                        getRolLower(),
                         getAyuntamientoSeleccionadoId(),
                         comunidadIdSel == null ? "" : comunidadIdSel,
                         provinciaIdSel == null ? "" : provinciaIdSel,
@@ -140,6 +155,13 @@ public class FormAytoFragment extends Fragment {
             }
         });
 
+        viewModel.getEApellidos().observe(getViewLifecycleOwner(), e -> {
+            if (e != null) {
+                binding.etApellidos.setError(e);
+                binding.etApellidos.requestFocus();
+            }
+        });
+
         viewModel.getERazon().observe(getViewLifecycleOwner(), e -> {
             if (e != null) {
                 binding.etNumero.setError(e);
@@ -164,13 +186,13 @@ public class FormAytoFragment extends Fragment {
             }
         });
 
-/*        viewModel.getNavUser().observe(getViewLifecycleOwner(), go -> {
+        viewModel.getNavUser().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go && isAdded()) {
                 startActivity(new Intent(requireContext(), MainActivity.class));
                 requireActivity().finish();
                 viewModel.consumeNavUser();
             }
-        });*/
+        });
 
         // ✅ Evita llamadas Firestore si está en entorno de test
         if (!isTestEnvironment) {
@@ -209,14 +231,14 @@ public class FormAytoFragment extends Fragment {
                 DocumentSnapshot d = ciudadesDocs.get(position);
                 ciudadIdSel = d.getId();
                 binding.etMateriales.setText(safe(d.getString("nombre")));
-/*                if (binding.blocUsuario.getVisibility() == View.VISIBLE) {
+                if (binding.blocUsuario.getVisibility() == View.VISIBLE) {
                     cargarPueblosPorCiudad(ciudadIdSel);
-                }*/
+                }
             }
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-/*        binding.spPuebloUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spPuebloUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= pueblosDocs.size()) return;
                 DocumentSnapshot d = pueblosDocs.get(position);
@@ -247,7 +269,7 @@ public class FormAytoFragment extends Fragment {
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) {}
-        });*/
+        });
     }
 
     private void cargarComunidades() {
@@ -305,19 +327,26 @@ public class FormAytoFragment extends Fragment {
                 pueblosDocs.add(d);
                 nombres.add(safe(d.getString("nombre")));
             }
-/*            binding.spPuebloUsuario.setAdapter(new ArrayAdapter<>(requireContext(),
+            binding.spPuebloUsuario.setAdapter(new ArrayAdapter<>(requireContext(),
                     android.R.layout.simple_spinner_dropdown_item, nombres));
             if (!pueblosDocs.isEmpty()) binding.spPuebloUsuario.setSelection(0);
             else {
                 binding.etPuebloUsuario.setText("");
                 binding.etAyuntamientoUsuario.setText("");
                 ayuntamientoIdSel = null;
-            }*/
+            }
         }).addOnFailureListener(e -> toast("Error cargando pueblos"));
     }
 
     private String getTxt(com.google.android.material.textfield.TextInputEditText t) {
         return t.getText() == null ? "" : t.getText().toString().trim();
+    }
+
+    private String getRolLower() {
+        int checkedId = binding.rgRol.getCheckedRadioButtonId();
+        if (checkedId == -1) return "usuario";
+        RadioButton rb = binding.getRoot().findViewById(checkedId);
+        return rb != null ? String.valueOf(rb.getTag()).trim().toLowerCase() : "usuario";
     }
 
     private String getAyuntamientoSeleccionadoId() {

@@ -61,11 +61,13 @@ public class FormAytoViewModel extends ViewModel {
             String pass1,
             String pass2,
             String nombre,
+            String apellidos,
             String comunidadNombre,
             String provinciaNombre,
             String ciudadNombre,
             String puebloNombre,
             String razonSocial,
+            String rol, // "usuario" | "ayuntamiento"
             String ayuntamientoSeleccionadoId,
             String comunidadIdSel,
             String provinciaIdSel,
@@ -82,7 +84,7 @@ public class FormAytoViewModel extends ViewModel {
         if (!pass1.equals(pass2)) { ePassword.setValue("Las contraseñas no coinciden"); return; }
         if (nombre == null || nombre.trim().isEmpty()) { eNombre.setValue("Nombre requerido"); return; }
 
-/*        if ("usuario".equals(rol)) {
+        if ("usuario".equals(rol)) {
             if (apellidos == null || apellidos.trim().isEmpty()) { eApellidos.setValue("Apellidos requeridos"); return; }
             if (puebloNombre == null || puebloNombre.trim().isEmpty()) { message.setValue("Selecciona un pueblo"); return; }
             if (ayuntamientoSeleccionadoId == null || ayuntamientoSeleccionadoId.trim().isEmpty()) {
@@ -91,28 +93,26 @@ public class FormAytoViewModel extends ViewModel {
             }
         } else {
             if (razonSocial == null || razonSocial.trim().isEmpty()) { eRazon.setValue("Razón social requerida"); return; }
-        }*/
+        }
 
-/*
         String emailSintetico = AuthAliasHelper.aliasToEmail(aliasInput.trim());
-*/
 
-/*        auth.fetchSignInMethodsForEmail(emailSintetico)
+        auth.fetchSignInMethodsForEmail(emailSintetico)
                 .addOnSuccessListener((SignInMethodQueryResult r) -> {
                     boolean existe = r.getSignInMethods() != null && !r.getSignInMethods().isEmpty();
                     if (existe) { eAlias.setValue("Alias en uso. Inicia sesión o elige otro."); return; }
                     crearUsuario(
                             appContext,
                             emailSintetico, pass1, aliasInput.trim(), rol,
-                            nombre, comunidadNombre, provinciaNombre, ciudadNombre,
+                            nombre, apellidos, comunidadNombre, provinciaNombre, ciudadNombre,
                             puebloNombre, razonSocial,
                             ayuntamientoSeleccionadoId, comunidadIdSel, provinciaIdSel, ciudadIdSel
                     );
                 })
                 .addOnFailureListener(e -> message.setValue("Error comprobando alias: " + e.getMessage()));
-    }*/
+    }
 
-/*    private void crearUsuario (
+    private void crearUsuario(
             Context appContext,
             String email, String pass1, String aliasInput, String rol,
             String nombre, String apellidos, String comunidadNombre, String provinciaNombre,
@@ -198,11 +198,9 @@ public class FormAytoViewModel extends ViewModel {
                             .addOnFailureListener(e -> message.setValue("Error guardando perfil: " + e.getMessage()));
                 })
                 .addOnFailureListener(e -> message.setValue("Registro fallido: " + e.getMessage()));
-    }*/
-
     }
+
     public void consumeMessage() { message.setValue(null); }
     public void consumeNavAyto() { navAyto.setValue(false); }
-//    public void consumeNavUser() { navUser.setValue(false); }
+    public void consumeNavUser() { navUser.setValue(false); }
 }
-
