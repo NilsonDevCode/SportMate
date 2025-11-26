@@ -12,8 +12,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/gradient_background" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -62,7 +61,7 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Apellidos (solo Usuario) -->
+            <!-- Apellidos -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutApellidos"
@@ -77,29 +76,13 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Razón Social (solo Ayuntamiento) -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="?attr/textInputFilledStyle"
-                android:id="@+id/layoutNumero"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/sign_up_social_reason_label"
-                android:layout_marginBottom="12dp"
-                android:visibility="gone">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNumero"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- Comunidad + Spinner -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="12dp"
-                android:weightSum="1" >
+                android:weightSum="1">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="?attr/textInputFilledStyle"
@@ -186,7 +169,7 @@
                     android:layout_marginStart="12dp"/>
             </LinearLayout>
 
-            <!-- BLOQUE USUARIO: Pueblo (selector) + Ayuntamiento (solo lectura) -->
+            <!-- BLOQUE USUARIO (pueblo + ayuntamiento auto) -->
             <LinearLayout
                 android:id="@+id/blocUsuario"
                 android:layout_width="match_parent"
@@ -194,7 +177,7 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <!-- Pueblo + Spinner (Usuario elige pueblo existente de la ciudad) -->
+                <!-- Pueblo + Spinner -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -225,7 +208,7 @@
                         android:layout_marginStart="12dp"/>
                 </LinearLayout>
 
-                <!-- Ayuntamiento (auto, leído del pueblo elegido) -->
+                <!-- Ayuntamiento auto -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutAyuntamientoUsuario"
@@ -240,31 +223,6 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:clickable="false"/>
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- BLOQUE AYUNTAMIENTO: Crear pueblo nuevo -->
-            <LinearLayout
-                android:id="@+id/blocAyuntamiento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <!-- Campo para crear pueblo (Ayuntamiento) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="?attr/textInputFilledStyle"
-                    android:id="@+id/layoutPuebloAyto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/sign_up_create_town_label"
-                    android:layout_marginBottom="12dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPuebloAyto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -300,49 +258,7 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Selección de rol -->
-            <TextView
-                android:id="@+id/tvRolLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_up_select_role"
-                android:textColor="@color/white"
-                android:layout_marginBottom="8dp"/>
-
-            <RadioGroup
-                android:id="@+id/rgRol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
-
-                <RadioButton
-                    android:id="@+id/rbUsuario"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sign_up_user_role"
-                    android:tag="usuario"
-                    android:textColor="@color/white"
-                    android:checked="true"/>
-
-                <RadioButton
-                    android:id="@+id/rbAyuntamiento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sign_up_townhall_role"
-                    android:tag="ayuntamiento"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="24dp"/>
-            </RadioGroup>
-
-            <!-- Spinner Ayuntamientos (si lo necesitas más tarde, por ahora oculto) -->
-            <Spinner
-                android:id="@+id/spinnerAyuntamientos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginBottom="20dp"/>
-
+            <!-- Botón registrar -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegistrar"
                 style="@style/BotonGenericoBlanco"
@@ -350,6 +266,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up_button"/>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
