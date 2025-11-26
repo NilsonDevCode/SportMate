@@ -56,7 +56,7 @@
             android:includeFontPadding="false"
             android:textColor="@android:color/white"
             android:lineHeight="50sp"
-            android:textSize="40sp" />
+            android:textSize="45sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,24 +64,44 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="32dp"
+        android:layout_marginTop="250dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRolUsuario"
-            style="@style/BotonGenericoBlanco"
             android:text="@string/rol_usuario"
+            android:background="@drawable/btn_rol_usuario"
+            android:fontFamily="@font/poppins_black"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:layout_width="700px"
+            android:layout_height="210px"
+            android:layout_marginBottom="24dp"
             android:textAllCaps="true"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:insetLeft="-5dp"
+            android:insetRight="0dp"
+            android:insetTop="5dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@null"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRolAyuntamiento"
-            style="@style/BotonGenericoBlanco"
             android:text="@string/rol_ayuntamiento"
+            android:background="@drawable/btn_rol_ayto"
+            android:fontFamily="@font/poppins_black"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:layout_width="700px"
+            android:layout_height="210px"
+            android:layout_marginBottom="24dp"
             android:textAllCaps="true"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:insetLeft="15dp"
+            android:insetRight="0dp"
+            android:insetTop="5dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 
