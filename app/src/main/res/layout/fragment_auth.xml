@@ -20,6 +20,8 @@
 
     <LinearLayout
         android:id="@+id/headerContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:padding="24dp"
         android:background="@drawable/auth_txtcabecera_superior"
@@ -38,24 +40,25 @@
 
         <TextView
             android:id="@+id/txtCabecera1"
-            style="@style/FontPoppinsLight"
             android:text="@string/login_title"
+            android:textFontWeight="300"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="40sp" />
+            android:includeFontPadding="false" />
 
         <TextView
             android:id="@+id/txtCabecera2"
-            style="@style/FontPoppinsBlack"
             android:text="@string/login_subtitle"
+            android:textFontWeight="900"
+            android:textSize="45sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:lineHeight="50sp"
-            android:textSize="40sp" />
+            android:lineHeight="50sp"/>
+
     </LinearLayout>
 
     <LinearLayout
