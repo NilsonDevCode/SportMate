@@ -32,31 +32,31 @@
         android:id="@+id/contenedorTextoCabecera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp"
         android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:padding="30dp" >
 
         <TextView
             android:id="@+id/txtCabecera1"
-            style="@style/FontPoppinsLight"
             android:text="@string/elige_perfil"
+            android:textFontWeight="300"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp" />
 
         <TextView
             android:id="@+id/txtCabecera2"
-            style="@style/FontPoppinsBlack"
             android:text="@string/crea_cuenta"
+            android:textFontWeight="900"
+            android:textSize="45sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:lineHeight="50sp"
-            android:textSize="45sp" />
+            android:lineHeight="50sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,8 +71,8 @@
             android:id="@+id/btnRolUsuario"
             android:text="@string/rol_usuario"
             android:background="@drawable/btn_rol_usuario"
-            android:fontFamily="@font/poppins_black"
             android:textColor="@color/colorPrimary"
+            android:textFontWeight="800"
             android:textSize="15sp"
             android:textAlignment="textStart"
             android:layout_width="700px"
@@ -83,13 +83,13 @@
             android:insetRight="0dp"
             android:insetTop="5dp"
             android:insetBottom="0dp"
-            app:backgroundTint="@null"/>
+            app:backgroundTint="@null" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRolAyuntamiento"
             android:text="@string/rol_ayuntamiento"
             android:background="@drawable/btn_rol_ayto"
-            android:fontFamily="@font/poppins_black"
+            android:textFontWeight="800"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:textAlignment="textStart"
