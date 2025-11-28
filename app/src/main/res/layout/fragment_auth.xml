@@ -20,6 +20,7 @@
 
     <LinearLayout
         android:id="@+id/headerContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:padding="24dp"
         android:background="@drawable/auth_txtcabecera_superior"
@@ -31,31 +32,32 @@
     <LinearLayout
         android:id="@+id/contenedorTextoCabecera"
         android:layout_width="match_parent"
-        android:padding="30dp"
-        android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="30dp" >
 
         <TextView
             android:id="@+id/txtCabecera1"
-            style="@style/FontPoppinsLight"
             android:text="@string/login_title"
+            android:textFontWeight="300"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="40sp" />
+            android:includeFontPadding="false" />
 
         <TextView
             android:id="@+id/txtCabecera2"
-            style="@style/FontPoppinsBlack"
             android:text="@string/login_subtitle"
+            android:textFontWeight="900"
+            android:textSize="45sp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:lineHeight="50sp"
-            android:textSize="40sp" />
+            android:lineHeight="50sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -63,24 +65,21 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="32dp"
+        android:layout_marginTop="250dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
             style="@style/BotonGenericoBlanco"
             android:text="@string/action_sign_in_short"
             android:textAllCaps="true"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="25dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignIn"
             style="@style/BotonGenericoBlanco"
             android:text="@string/registrarse"
-            android:textAllCaps="true"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:textAllCaps="true" />
 
     </LinearLayout>
 
