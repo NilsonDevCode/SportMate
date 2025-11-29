@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Fondo translúcido -->
+    <solid android:color="#33FFFFFF"/> <!-- Blanco 20% -->
+
+    <!-- Esquinas redondeadas -->
+    <corners android:radius="5dp" />
+
+    <!-- Sombra (Android no soporta sombra en shape nativo),
+         pero se aplica automáticamente con elevation en el layout -->
+    <padding
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp"/>
+
+</shape>

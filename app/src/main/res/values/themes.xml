@@ -5,6 +5,9 @@
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="textInputStyle">@style/WhiteTextInput</item>
+        <item name="textInputFilledStyle">@style/WhiteTextInput</item>
+
     </style>
 
     <style name="Theme" parent="Theme.AppSportMate">
