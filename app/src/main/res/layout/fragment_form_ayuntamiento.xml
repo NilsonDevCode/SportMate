@@ -12,25 +12,60 @@
         android:scaleType="centerCrop"
         android:src="@drawable/gradient_background" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/logo_fondo_transparente" />
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:elevation="10dp" >
 
+        <!-- Header superior con título y flecha -->
+        <LinearLayout
+            android:id="@+id/txtTituloPantalla"
+            android:background="@drawable/bg_blanco_degradado_generico"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:elevation="10dp"
+            android:gravity="center_vertical" >
+
+            <!-- Título de la Pantalla -->
             <TextView
-                android:id="@+id/tvTituloForm"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvTituloPantalla"
+                android:text="@string/nuevo_ayuntamiento_header"
+                android:textFontWeight="700"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_up_title"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:textAlignment="gravity" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerFormGlass1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_contenedor_glass"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:elevation="8dp"
+            android:translationZ="8dp" >
 
             <!-- Alias -->
             <com.google.android.material.textfield.TextInputLayout
@@ -61,9 +96,6 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
             <!-- Razón Social → ahora visible -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
@@ -71,7 +103,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_social_reason_label"
-                android:layout_marginBottom="12dp"
                 android:visibility="visible">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNumero"
@@ -79,6 +110,21 @@
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerFormGlass2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_contenedor_glass"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:elevation="8dp"
+            android:translationZ="8dp">
 
             <!-- Comunidad + Spinner -->
             <LinearLayout
@@ -106,9 +152,10 @@
 
                 <Spinner
                     android:id="@+id/spComunidad"
+                    android:background="@drawable/bg_spinner"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"/>
+                    android:layout_height="65dp"
+                    android:layout_marginStart="12dp" />
             </LinearLayout>
 
             <!-- Provincia + Spinner -->
@@ -137,9 +184,10 @@
 
                 <Spinner
                     android:id="@+id/spProvincia"
+                    android:background="@drawable/bg_spinner"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"/>
+                    android:layout_height="65dp"
+                    android:layout_marginStart="12dp" />
             </LinearLayout>
 
             <!-- Ciudad + Spinner -->
@@ -168,9 +216,10 @@
 
                 <Spinner
                     android:id="@+id/spCiudad"
+                    android:background="@drawable/bg_spinner"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"/>
+                    android:layout_height="65dp"
+                    android:layout_marginStart="12dp" />
             </LinearLayout>
 
             <!-- BLOQUE AYUNTAMIENTO: Crear pueblo nuevo -->
@@ -186,8 +235,7 @@
                     android:id="@+id/layoutPuebloAyto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/sign_up_create_town_label"
-                    android:layout_marginBottom="12dp">
+                    android:hint="@string/sign_up_create_town_label" >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPuebloAyto"
@@ -196,6 +244,20 @@
                         android:inputType="textCapWords"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerFormGlass3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_contenedor_glass"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:elevation="8dp"
+            android:translationZ="8dp" >
 
             <!-- Contraseña -->
             <com.google.android.material.textfield.TextInputLayout
@@ -220,23 +282,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_confirm_password_label"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="16dp">
+                app:passwordToggleEnabled="true" >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-            <!-- Botón registrar -->
+            <!-- Botón Crear Cuenta -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegistrar"
                 style="@style/BotonGenericoBlanco"
+                android:text="@string/sign_up_button"
                 android:textAllCaps="true"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_up_button"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"/>
 
         </LinearLayout>
     </ScrollView>

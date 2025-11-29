@@ -98,6 +98,8 @@
     <string name="plazas">Plazas disponibles</string>
     <string name="sin_eventos">No hay eventos disponibles</string>
     <string name="sin_inscritos">No hay inscritos en este evento</string>
+    <string name="nuevo_usuario_header">Nuevo USUARIO</string>
+    <string name="nuevo_ayuntamiento_header">Nuevo AYUNTAMIENTO</string>
 
     <!-- Arrays -->
     <string-array name="roles_array">
