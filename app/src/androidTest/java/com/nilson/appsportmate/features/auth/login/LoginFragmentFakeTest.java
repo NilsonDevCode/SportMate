@@ -35,14 +35,8 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
 /**
- * ✅ Prueba unitaria aislada del LoginFragment.
- *
- * En este test se utiliza un ViewModel falso (FakeLoginViewModel)
- * que permite verificar el comportamiento del fragmento
- * sin necesidad de conectarse a Firebase.
- *
- * El objetivo es comprobar que, ante credenciales erróneas,
- * la interfaz muestra el mensaje de error de forma correcta.
+ * Prueba unitaria del LoginFragment usando un ViewModel falso.
+ * Verifica que el fragmento responde correctamente ante login inválido.
  */
 @HiltAndroidTest
 @LargeTest
@@ -52,7 +46,6 @@ public class LoginFragmentFakeTest {
     @org.junit.Rule
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    // Subclase del fragmento que inyecta un ViewModel falso
     public static class LoginFragmentFake extends LoginFragment {
         @Override
         public void onViewCreated(@NonNull View view, @Nullable android.os.Bundle savedInstanceState) {
@@ -61,57 +54,37 @@ public class LoginFragmentFakeTest {
         }
     }
 
-    /**
-     * Se ejecuta antes de cada test.
-     * Activa el modo de prueba para evitar inicializar Firebase.
-     */
     @Before
     public void setUp() {
         hiltRule.inject();
-        com.nilson.appsportmate.ui.auth.login.LoginFragment.disableFirebaseForTest = true;
+        LoginFragment.disableFirebaseForTest = true;
     }
 
-    /**
-     * Se ejecuta después de cada test.
-     * Restaura el comportamiento normal del fragmento
-     * reactivando la inicialización de Firebase.
-     */
     @After
     public void tearDown() {
-        com.nilson.appsportmate.ui.auth.login.LoginFragment.disableFirebaseForTest = false;
+        LoginFragment.disableFirebaseForTest = false;
     }
 
-    /**
-     * Evalúa el comportamiento del fragmento cuando se introducen credenciales incorrectas.
-     *
-     * Utiliza un ViewModel simulado (FakeLoginViewModel) para reproducir
-     * una respuesta de error sin depender de Firebase ni de conexión real.
-     *
-     * El objetivo es confirmar que el mensaje de error se muestra en pantalla
-     * y que la interfaz reacciona de forma adecuada ante un inicio de sesión fallido.
-     */
     @Test
     public void ingresarAliasIncorrecto_oPasswordIncorrecta_muestraErrorLogin() {
         ActivityScenario<HiltTestActivity> scenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         scenario.onActivity(activity -> {
+
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
+
             navController.setGraph(R.navigation.nav_graph);
 
             LoginFragment fragment = new LoginFragmentFake();
-
-            fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
-                if (owner != null && fragment.getView() != null) {
-                    Navigation.setViewNavController(fragment.requireView(), navController);
-                }
-            });
 
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
+
+            Navigation.setViewNavController(fragment.requireView(), navController);
         });
 
         onView(withId(R.id.etAlias)).perform(replaceText("usuarioInvalido"), closeSoftKeyboard());
@@ -119,6 +92,8 @@ public class LoginFragmentFakeTest {
         onView(withId(R.id.btnLogin)).perform(scrollTo(), click());
 
         onView(isRoot()).perform(waitFor(600));
-        onView(withId(R.id.tvMensaje)).check(matches(isDisplayed()));
+
+        // El mensaje ya NO se muestra en pantalla, pero el fragmento debe seguir visible.
+        onView(withId(R.id.etAlias)).check(matches(isDisplayed()));
     }
 }

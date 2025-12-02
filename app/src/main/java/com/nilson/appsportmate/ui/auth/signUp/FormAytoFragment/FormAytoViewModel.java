@@ -24,9 +24,16 @@ public class FormAytoViewModel extends ViewModel {
     private final FirebaseAuth auth;
     private final FirebaseFirestore db;
 
+    // 🔥 Constructor real (APP)
     public FormAytoViewModel() {
         this.auth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
+    }
+
+    // 🔥 Constructor para tests (NECESARIO)
+    public FormAytoViewModel(FirebaseAuth auth, FirebaseFirestore db) {
+        this.auth = auth;
+        this.db = db;
     }
 
     private final MutableLiveData<String> eAlias = new MutableLiveData<>(null);
