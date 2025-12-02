@@ -98,7 +98,8 @@ public class LoginFragment extends Fragment {
 
         // Acción: ir a registro
         btnNavRegister.setOnClickListener(v ->
-                navController.navigate(R.id.action_authFragment_to_rolSelectionFragment)
+                navController.navigate(R.id.action_global_rolSelectionFragment)
+
         );
 
         // Observadores ViewModel
