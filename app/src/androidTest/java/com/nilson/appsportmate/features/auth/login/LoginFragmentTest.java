@@ -29,11 +29,8 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
 /**
- * ✅ Conjunto de pruebas instrumentadas del LoginFragment.
- *
- * Estas pruebas evalúan el comportamiento general del formulario de inicio de sesión
- * con Firebase activo, verificando la interacción del usuario con la interfaz
- * y la validación de los campos principales antes del envío.
+ * Tests instrumentados del LoginFragment.
+ * Verifica interacción de usuario real con el formulario.
  */
 @HiltAndroidTest
 @LargeTest
@@ -43,93 +40,96 @@ public class LoginFragmentTest {
     @org.junit.Rule
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    /**
-     * Inicializa el entorno de pruebas y asegura
-     * que Firebase esté habilitado para los casos reales.
-     */
     @Before
     public void setUp() {
         hiltRule.inject();
-        com.nilson.appsportmate.ui.auth.login.LoginFragment.disableFirebaseForTest = false;
+        LoginFragment.disableFirebaseForTest = false;   // Firebase real activado
     }
 
-    /**
-     * Limpia el entorno de pruebas tras cada ejecución,
-     * restaurando la configuración por defecto.
-     */
     @After
     public void tearDown() {
-        com.nilson.appsportmate.ui.auth.login.LoginFragment.disableFirebaseForTest = false;
+        LoginFragment.disableFirebaseForTest = false;
     }
 
     /**
-     * Verifica que el formulario de inicio de sesión permite introducir correctamente
-     * un alias y una contraseña, y que ambos valores se muestran de forma correcta
-     * en los campos correspondientes tras pulsar el botón de login.
-     *
-     * Este test comprueba la interacción básica del usuario con la interfaz,
-     * sin validar aún la conexión real con Firebase.
+     * Verifica que alias y password se introducen correctamente
+     * y permanecen visibles tras pulsar login.
      */
     @Test
     public void ingresarAliasYPassword_yClickLogin_verificaInputCorrecto() {
+
         ActivityScenario<HiltTestActivity> scenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         scenario.onActivity(activity -> {
+
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
+
             navController.setGraph(R.navigation.nav_graph);
 
             LoginFragment fragment = new LoginFragment();
+
+            // ⭐ EXACTAMENTE igual que antes, adaptado al fragment actual
             fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
                 if (owner != null && fragment.getView() != null) {
                     Navigation.setViewNavController(fragment.requireView(), navController);
                 }
             });
+
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
         });
 
+        // Escribir alias y password como antes
         onView(withId(R.id.etAlias)).perform(typeText("Nilson"));
         onView(withId(R.id.etPassword)).perform(typeText("123456"), closeSoftKeyboard());
+
+        // Pulsar login
         onView(withId(R.id.btnLogin)).perform(click());
 
+        // Validar que siguen escritos tal cual
         onView(withId(R.id.etAlias)).check(matches(withText("Nilson")));
         onView(withId(R.id.etPassword)).check(matches(withText("123456")));
     }
 
     /**
-     * Comprueba que al intentar iniciar sesión sin escribir un alias,
-     * la aplicación muestra un mensaje de error visual en el campo correspondiente.
-     *
-     * Este test garantiza que la validación de campos funciona correctamente
-     * antes de realizar la autenticación.
+     * Valida que si alias está vacío, se muestra el error correspondiente.
      */
     @Test
     public void ingresarAliasVacio_muestraErrorEnAlias() {
+
         ActivityScenario<HiltTestActivity> scenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
         scenario.onActivity(activity -> {
+
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
+
             navController.setGraph(R.navigation.nav_graph);
 
             LoginFragment fragment = new LoginFragment();
+
+            // ⭐ Mismo patrón exacto del test original
             fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
                 if (owner != null && fragment.getView() != null) {
                     Navigation.setViewNavController(fragment.requireView(), navController);
                 }
             });
+
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
         });
 
+        // No escribimos nada → click directo
         onView(withId(R.id.btnLogin)).perform(click());
+
+        // Esperamos el error EXACTAMENTE igual que antes
         onView(withId(R.id.etAlias)).check(matches(hasErrorText("Alias requerido")));
     }
 }

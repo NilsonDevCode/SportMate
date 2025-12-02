@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-@SuppressWarnings("unchecked")
 public class LoginViewModelTest {
 
     @Rule
@@ -35,20 +34,25 @@ public class LoginViewModelTest {
     private FirebaseFirestore mockDb;
 
     @Mock
-    private Task<AuthResult> mockTask; // 👉 simularemos la respuesta del login
+    private Task<AuthResult> mockTask;
 
     private LoginViewModel viewModel;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        // 🔥 Desactivar Log.d() durante tests unitarios
+        System.setProperty("unitTest", "true");
+
+        // ViewModel con Firebase mockeado
         viewModel = new LoginViewModel(mockAuth, mockDb);
 
-        // 🔧 Cuando FirebaseAuth intente loguear, devolvemos un Task simulado
+        // Simula signInWithEmailAndPassword()
         when(mockAuth.signInWithEmailAndPassword(anyString(), anyString()))
                 .thenReturn(mockTask);
 
-        // 🔧 Y ese Task debe poder "responder" sin lanzar NPE
+        // Evita NullPointer en listeners
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
     }
@@ -73,15 +77,10 @@ public class LoginViewModelTest {
         assertNull(viewModel.getErrorPassword().getValue());
     }
 
-    /**
-     * ✅ Test profesional:
-     * Verifica que, al tener credenciales válidas, se llama a FirebaseAuth.signInWithEmailAndPassword().
-     */
     @Test
     public void loginCorrecto_invocaFirebaseAuth() {
         viewModel.onLoginClicked("Nilson", "123456", mockContext);
 
-        // 🧩 Confirmamos que el ViewModel realmente intentó loguear en Firebase
         verify(mockAuth).signInWithEmailAndPassword(anyString(), anyString());
     }
 }

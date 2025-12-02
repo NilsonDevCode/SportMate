@@ -31,25 +31,23 @@ public class FormAytoViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
-    @Mock
-    private Context mockContext;
-
-    @Mock
-    private FirebaseAuth mockAuth;
-
-    @Mock
-    private FirebaseFirestore mockDb;
-
-    @Mock
-    private Task<SignInMethodQueryResult> mockFetchTask;
+    @Mock private Context mockContext;
+    @Mock private FirebaseAuth mockAuth;
+    @Mock private FirebaseFirestore mockDb;
+    @Mock private Task<SignInMethodQueryResult> mockFetchTask;
 
     private FormAytoViewModel viewModel;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        // 🔥 Igual que en LoginViewModelTest: desactivar Log.d() en tests
+        System.setProperty("unitTest", "true");
+
         viewModel = new FormAytoViewModel(mockAuth, mockDb);
 
+        // Mock básico para fetchSignInMethodsForEmail()
         when(mockAuth.fetchSignInMethodsForEmail(anyString())).thenReturn(mockFetchTask);
         when(mockFetchTask.addOnSuccessListener(any())).thenReturn(mockFetchTask);
         when(mockFetchTask.addOnFailureListener(any())).thenReturn(mockFetchTask);
@@ -63,21 +61,11 @@ public class FormAytoViewModelTest {
     public void aliasVacio_muestraErrorAlias() {
         viewModel.onRegisterClicked(
                 mockContext,
-                "",                    // alias vacío
-                "123456",              // pass1
-                "123456",              // pass2
-                "Ayto",                // nombre
-                "",                    // apellidos IGNORADO
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "Razon",
-                "ayuntamiento",
-                "",                    // ignorado
-                "comId",
-                "provId",
-                "ciuId"
+                "",                  // alias vacío
+                "123456", "123456",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "PuebloX", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Alias requerido", viewModel.getEAlias().getValue());
@@ -87,21 +75,10 @@ public class FormAytoViewModelTest {
     public void passwordVacia_muestraErrorPassword() {
         viewModel.onRegisterClicked(
                 mockContext,
-                "AytoDev",
-                "",
-                "",
-                "Ayto",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "Razon",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "AytoDev", "", "",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "PuebloX", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Contraseña requerida", viewModel.getEPassword().getValue());
@@ -112,20 +89,10 @@ public class FormAytoViewModelTest {
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "abcdef",
-                "Ayto",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "Razon",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "abcdef",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "PuebloX", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Las contraseñas no coinciden", viewModel.getEPassword().getValue());
@@ -136,20 +103,10 @@ public class FormAytoViewModelTest {
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "123456",
-                "",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "Razon",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "123456",
+                "", "", "Com", "Prov", "Ciu",
+                "PuebloX", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Nombre requerido", viewModel.getENombre().getValue());
@@ -160,20 +117,10 @@ public class FormAytoViewModelTest {
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "123456",
-                "Ayto",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "123456",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "PuebloX", "", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Razón social requerida", viewModel.getERazon().getValue());
@@ -184,20 +131,10 @@ public class FormAytoViewModelTest {
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "123456",
-                "Ayto",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "",
-                "Razon",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "123456",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Debes crear un pueblo", viewModel.getMessage().getValue());
@@ -209,6 +146,8 @@ public class FormAytoViewModelTest {
 
     @Test
     public void aliasExistente_muestraErrorAlias() {
+
+        // Simular que Firebase devuelve un alias existente
         doAnswer(invocation -> {
             OnSuccessListener<SignInMethodQueryResult> listener = invocation.getArgument(0);
             SignInMethodQueryResult result = mock(SignInMethodQueryResult.class);
@@ -220,20 +159,10 @@ public class FormAytoViewModelTest {
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "123456",
-                "AytoNom",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloX",
-                "Razon Social",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "123456",
+                "Ayto", "", "Com", "Prov", "Ciu",
+                "Pueblo", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
         assertEquals("Alias ya está en uso", viewModel.getEAlias().getValue());
@@ -247,6 +176,7 @@ public class FormAytoViewModelTest {
     @Test
     public void registroCorrecto_creaUsuarioFirebase() {
 
+        // Simular alias NO existente
         doAnswer(invocation -> {
             OnSuccessListener<SignInMethodQueryResult> listener = invocation.getArgument(0);
             SignInMethodQueryResult result = mock(SignInMethodQueryResult.class);
@@ -255,33 +185,28 @@ public class FormAytoViewModelTest {
             return mockFetchTask;
         }).when(mockFetchTask).addOnSuccessListener(any());
 
+        // Mock: createUserWithEmailAndPassword()
         Task<AuthResult> mockCreate = mock(Task.class);
         when(mockAuth.createUserWithEmailAndPassword(anyString(), anyString()))
                 .thenReturn(mockCreate);
+
         when(mockCreate.addOnSuccessListener(any())).thenReturn(mockCreate);
         when(mockCreate.addOnFailureListener(any())).thenReturn(mockCreate);
 
         viewModel.onRegisterClicked(
                 mockContext,
                 "AytoDev",
-                "123456",
-                "123456",
-                "Ayuntamiento Central",
-                "",
-                "ComNom",
-                "ProvNom",
-                "CiuNom",
-                "PuebloNuevo",
-                "Razon Social",
-                "ayuntamiento",
-                "",
-                "comId",
-                "provId",
-                "ciuId"
+                "123456", "123456",
+                "Ayuntamiento Central", "",
+                "Com", "Prov", "Ciu",
+                "PuebloX", "Razon", "ayto",
+                "", "comId", "provId", "ciuId"
         );
 
+        // Verifica la llamada a Firebase
         verify(mockAuth).createUserWithEmailAndPassword(anyString(), anyString());
 
+        // Ningún error marcado
         assertNull(viewModel.getEAlias().getValue());
         assertNull(viewModel.getEPassword().getValue());
         assertNull(viewModel.getENombre().getValue());

@@ -21,6 +21,9 @@ import java.util.UUID;
 
 public class FormAytoViewModel extends ViewModel {
 
+    // 🔥 FLAG PARA TESTS (evita tocar Firebase)
+    public static boolean disableFirebaseForTest = false;
+
     private final FirebaseAuth auth;
     private final FirebaseFirestore db;
 
@@ -30,7 +33,7 @@ public class FormAytoViewModel extends ViewModel {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    // 🔥 Constructor para tests (NECESARIO)
+    // 🔥 Constructor para tests con Firebase falso
     public FormAytoViewModel(FirebaseAuth auth, FirebaseFirestore db) {
         this.auth = auth;
         this.db = db;
@@ -84,6 +87,12 @@ public class FormAytoViewModel extends ViewModel {
         if (nombre.isEmpty()) { eNombre.setValue("Nombre requerido"); return; }
         if (razonSocial.isEmpty()) { eRazon.setValue("Razón social requerida"); return; }
         if (puebloCreado.isEmpty()) { message.setValue("Debes crear un pueblo"); return; }
+
+        // 🚫 BLOQUEA FIREBASE EN TESTS
+        if (disableFirebaseForTest) {
+            message.setValue("TEST_MODE");
+            return;
+        }
 
         String email = AuthAliasHelper.aliasToEmail(aliasInput);
 

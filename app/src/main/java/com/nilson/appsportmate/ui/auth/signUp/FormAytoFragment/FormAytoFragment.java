@@ -1,6 +1,5 @@
 package com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,11 +18,9 @@ import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentFormAyuntamientoBinding;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
-import com.nilson.appsportmate.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +30,15 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class FormAytoFragment extends Fragment {
 
+    public static boolean disableFirebaseForTest = false;
+
     private FragmentFormAyuntamientoBinding binding;
     private FormAytoViewModel viewModel;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final List<DocumentSnapshot> comunidadesDocs = new ArrayList<>();
-    private final List<DocumentSnapshot> provinciasDocs  = new ArrayList<>();
-    private final List<DocumentSnapshot> ciudadesDocs    = new ArrayList<>();
+    private final List<DocumentSnapshot> provinciasDocs = new ArrayList<>();
+    private final List<DocumentSnapshot> ciudadesDocs = new ArrayList<>();
 
     private String comunidadIdSel, provinciaIdSel, ciudadIdSel;
     private boolean aliasUpdating = false;
@@ -58,8 +57,12 @@ public class FormAytoFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(FormAytoViewModel.class);
 
         configurarAlias();
-        configurarSpinners();
-        cargarComunidades();
+
+        // 🔥 Solo carga datos remotos si NO estamos en test
+        if (!disableFirebaseForTest) {
+            configurarSpinners();
+            cargarComunidades();
+        }
 
         binding.btnRegistrar.setOnClickListener(v ->
                 viewModel.onRegisterClicked(
@@ -68,21 +71,20 @@ public class FormAytoFragment extends Fragment {
                         getTxt(binding.etPassword),
                         getTxt(binding.etPassword2),
                         getTxt(binding.etNombre),
-                        "", // apellidos eliminado
+                        "",
                         getTxt(binding.etDescripcionEvento),
                         getTxt(binding.etReglasEvento),
                         getTxt(binding.etMateriales),
-                        getTxt(binding.etPuebloAyto), // pueblo AYUNTAMIENTO
-                        getTxt(binding.etNumero),     // razón social
-                        "ayuntamiento", // rol fijo
-                        "", // ayuntamientoIdSel no aplica aquí
+                        getTxt(binding.etPuebloAyto),
+                        getTxt(binding.etNumero),
+                        "ayuntamiento",
+                        "",
                         comunidadIdSel,
                         provinciaIdSel,
                         ciudadIdSel
                 )
         );
 
-        // Observers
         viewModel.getEAlias().observe(getViewLifecycleOwner(), e -> {
             if (e != null) binding.etAlias.setError(e);
         });
@@ -106,7 +108,6 @@ public class FormAytoFragment extends Fragment {
             }
         });
 
-        // Navegación
         viewModel.getNavAyto().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go) {
                 Navigation.findNavController(requireView())

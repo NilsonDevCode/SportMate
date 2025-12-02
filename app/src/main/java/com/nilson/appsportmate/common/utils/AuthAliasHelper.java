@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.text.Normalizer;
 
+import timber.log.Timber;
+
 /**
  * Helper class for handling alias to email conversion and validation.
  * <p>
@@ -15,6 +17,11 @@ import java.text.Normalizer;
  * @version 1.0
  */
 public final class AuthAliasHelper {
+
+    // Detecta si estamos en test unitario JVM
+    private static boolean isUnitTest() {
+        return "true".equals(System.getProperty("unitTest"));
+    }
 
     /// Domain with real TLD for the email
     private static final String DOMAIN = "@alias.appsportmate.com";
@@ -59,7 +66,19 @@ public final class AuthAliasHelper {
         if (a.isEmpty()) a = "user";
 
         String finalString = a + DOMAIN;
+
+        // ❗ Si estoy en test unitario (JVM), NO ejecuto Log.d()
+        if (isUnitTest()) return finalString;
+
+
+        // 👇 Mantienes tu Log.d original (como pediste)
         Log.d("AuthAliasHelper", "aliasToEmail: " + finalString);
+
+        // 👇 Añadimos Timber (no rompe tests)
+        if (Timber.treeCount() > 0) {
+            Timber.d("aliasToEmail: %s", finalString);
+        }
+
         return finalString;
     }
 

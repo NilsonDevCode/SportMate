@@ -76,6 +76,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.google.hilt.compiler)
 
+    //--- Timber---
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+
     // --- Glide ---
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
@@ -90,6 +94,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation("com.google.protobuf:protobuf-javalite:3.25.5")
 
+    // --- Timber para tests unitarios ---
+    testImplementation("com.jakewharton.timber:timber:5.0.1")
+
     // ---------- TESTS INSTRUMENTADOS ----------
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -102,6 +109,9 @@ dependencies {
     androidTestImplementation("com.google.firebase:firebase-auth")
     androidTestImplementation("com.google.firebase:firebase-firestore:25.1.1")
     androidTestImplementation("com.google.protobuf:protobuf-javalite:3.25.5")
+
+    // --- Timber para tests instrumentados ---
+    androidTestImplementation("com.jakewharton.timber:timber:5.0.1")
 
     // ---------- HILT TESTING ----------
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")

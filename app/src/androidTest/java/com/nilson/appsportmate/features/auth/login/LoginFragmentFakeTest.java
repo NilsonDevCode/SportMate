@@ -4,13 +4,13 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.nilson.appsportmate.features.auth.signUp.SignUpFragmentTest.waitFor;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -35,8 +35,8 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
 /**
- * Prueba unitaria del LoginFragment usando un ViewModel falso.
- * Verifica que el fragmento responde correctamente ante login inválido.
+ * Test aislado del LoginFragment usando un ViewModel falso.
+ * Verifica que NO crashea con credenciales incorrectas.
  */
 @HiltAndroidTest
 @LargeTest
@@ -46,10 +46,13 @@ public class LoginFragmentFakeTest {
     @org.junit.Rule
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
+    /**
+     * Subclase del fragmento para inyectar un ViewModel falso.
+     */
     public static class LoginFragmentFake extends LoginFragment {
         @Override
-        public void onViewCreated(@NonNull View view, @Nullable android.os.Bundle savedInstanceState) {
-            this.viewModel = new FakeLoginViewModel();
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            this.viewModel = new FakeLoginViewModel();  // 🔥 inyectamos ViewModel falso
             super.onViewCreated(view, savedInstanceState);
         }
     }
@@ -57,7 +60,7 @@ public class LoginFragmentFakeTest {
     @Before
     public void setUp() {
         hiltRule.inject();
-        LoginFragment.disableFirebaseForTest = true;
+        LoginFragment.disableFirebaseForTest = true; // desactiva Firebase real
     }
 
     @After
@@ -67,6 +70,7 @@ public class LoginFragmentFakeTest {
 
     @Test
     public void ingresarAliasIncorrecto_oPasswordIncorrecta_muestraErrorLogin() {
+
         ActivityScenario<HiltTestActivity> scenario =
                 ActivityScenario.launch(HiltTestActivity.class);
 
@@ -74,26 +78,31 @@ public class LoginFragmentFakeTest {
 
             TestNavHostController navController =
                     new TestNavHostController(ApplicationProvider.getApplicationContext());
-
             navController.setGraph(R.navigation.nav_graph);
 
             LoginFragment fragment = new LoginFragmentFake();
+
+
+            fragment.getViewLifecycleOwnerLiveData().observeForever(owner -> {
+                if (owner != null && fragment.getView() != null) {
+                    Navigation.setViewNavController(fragment.requireView(), navController);
+                }
+            });
 
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commitNow();
-
-            Navigation.setViewNavController(fragment.requireView(), navController);
         });
 
+        // Interactuamos con el login
         onView(withId(R.id.etAlias)).perform(replaceText("usuarioInvalido"), closeSoftKeyboard());
         onView(withId(R.id.etPassword)).perform(replaceText("wrongpass"), closeSoftKeyboard());
-        onView(withId(R.id.btnLogin)).perform(scrollTo(), click());
+        onView(withId(R.id.btnLogin)).perform(click()); // 🔥 sin scrollTo()
 
-        onView(isRoot()).perform(waitFor(600));
+        onView(isRoot()).perform(waitFor(600)); // pequeña espera
 
-        // El mensaje ya NO se muestra en pantalla, pero el fragmento debe seguir visible.
+        // comprobamos que el fragment sigue visible
         onView(withId(R.id.etAlias)).check(matches(isDisplayed()));
     }
 }

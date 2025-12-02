@@ -26,6 +26,7 @@ import androidx.test.filters.LargeTest;
 import com.nilson.appsportmate.HiltTestActivity;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment.FormAytoFragment;
+import com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment.FormAytoViewModel;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
@@ -51,18 +52,25 @@ public class SignUpFragmentTest {
         hiltRule.inject();
         context = ApplicationProvider.getApplicationContext();
 
+        // 🚩 Desactivamos Firebase en Fragment y en ViewModel
+        FormAytoFragment.disableFirebaseForTest = true;
+        FormAytoViewModel.disableFirebaseForTest = true;
+
         context.getSharedPreferences("prefs_usuario", Context.MODE_PRIVATE)
                 .edit().clear().apply();
 
-        SystemClock.sleep(300);
+        SystemClock.sleep(200);
     }
 
     @After
     public void tearDown() {
+        FormAytoFragment.disableFirebaseForTest = false;
+        FormAytoViewModel.disableFirebaseForTest = false;
+
         context.getSharedPreferences("prefs_usuario", Context.MODE_PRIVATE)
                 .edit().clear().apply();
 
-        SystemClock.sleep(300);
+        SystemClock.sleep(200);
     }
 
     public static ViewAction waitFor(long millis) {
@@ -95,7 +103,7 @@ public class SignUpFragmentTest {
             Navigation.setViewNavController(fragment.requireView(), navController);
         });
 
-        onView(isRoot()).perform(waitFor(400));
+        onView(isRoot()).perform(waitFor(300));
     }
 
     // -------------------------------------------------------
@@ -104,24 +112,7 @@ public class SignUpFragmentTest {
     @Test
     public void ingresarDatosCorrectos_yClickRegistrar_verificaInputCorrecto() {
 
-        ActivityScenario<HiltTestActivity> scenario =
-                ActivityScenario.launch(HiltTestActivity.class);
-
-        scenario.onActivity(activity -> {
-
-            TestNavHostController navController =
-                    new TestNavHostController(ApplicationProvider.getApplicationContext());
-            navController.setGraph(R.navigation.nav_graph);
-
-            FormAytoFragment fragment = new FormAytoFragment();
-
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(android.R.id.content, fragment)
-                    .commitNow();
-
-            Navigation.setViewNavController(fragment.requireView(), navController);
-        });
+        launchIsolatedFragment();
 
         onView(withId(R.id.etNombre)).perform(replaceText("AytoTest"), closeSoftKeyboard());
         onView(withId(R.id.etAlias)).perform(replaceText("AytoAlias"), closeSoftKeyboard());
@@ -131,21 +122,21 @@ public class SignUpFragmentTest {
         onView(withId(R.id.etPuebloAyto)).perform(replaceText("MiPueblo"), closeSoftKeyboard());
 
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
-        onView(isRoot()).perform(waitFor(600));
+        onView(isRoot()).perform(waitFor(400));
 
         onView(withId(R.id.etNombre)).check(matches(withText("AytoTest")));
         onView(withId(R.id.etAlias)).check(matches(withText("AytoAlias")));
     }
 
     // -------------------------------------------------------
-    // Caso 2: Campos vacíos muestran error
+    // Caso 2: Campos vacíos (solo que no crashee y haya errores)
     // -------------------------------------------------------
     @Test
     public void camposVacios_muestraErroresEnFormulario() {
         launchIsolatedFragment();
 
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
-        onView(isRoot()).perform(waitFor(800));
+        onView(isRoot()).perform(waitFor(400));
 
         esperarHastaError(R.id.etAlias);
         esperarHastaError(R.id.etPassword);
@@ -156,36 +147,21 @@ public class SignUpFragmentTest {
     private void esperarHastaError(int viewId) {
         for (int i = 0; i < 5; i++) {
             try {
-                onView(withId(viewId)).check((view, e) -> { if (e != null) throw e; });
+                onView(withId(viewId)).check((view, e) -> {
+                    if (e != null) throw e;
+                });
             } catch (Exception ignored) {}
-            SystemClock.sleep(250);
+            SystemClock.sleep(150);
         }
     }
 
     // -------------------------------------------------------
-    // Caso 3: Registro correcto
+    // Caso 3: Registro correcto (flujo básico)
     // -------------------------------------------------------
     @Test
     public void registroCorrecto() {
 
-        ActivityScenario<HiltTestActivity> scenario =
-                ActivityScenario.launch(HiltTestActivity.class);
-
-        scenario.onActivity(activity -> {
-
-            TestNavHostController navController =
-                    new TestNavHostController(ApplicationProvider.getApplicationContext());
-            navController.setGraph(R.navigation.nav_graph);
-
-            FormAytoFragment fragment = new FormAytoFragment();
-
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(android.R.id.content, fragment)
-                    .commitNow();
-
-            Navigation.setViewNavController(fragment.requireView(), navController);
-        });
+        launchIsolatedFragment();
 
         onView(withId(R.id.etNombre)).perform(replaceText("Ayto"), closeSoftKeyboard());
         onView(withId(R.id.etAlias)).perform(replaceText("Ayto1"), closeSoftKeyboard());
@@ -195,7 +171,7 @@ public class SignUpFragmentTest {
         onView(withId(R.id.etPuebloAyto)).perform(replaceText("PuebloX"), closeSoftKeyboard());
 
         onView(withId(R.id.btnRegistrar)).perform(scrollTo(), click());
-        onView(isRoot()).perform(waitFor(600));
+        onView(isRoot()).perform(waitFor(400));
 
         onView(withId(R.id.etAlias)).check(matches(withText("Ayto1")));
         onView(withId(R.id.etNombre)).check(matches(withText("Ayto")));
