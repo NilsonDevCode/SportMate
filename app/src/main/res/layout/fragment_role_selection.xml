@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gradient_background" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/logo_fondo_transparente" />
+
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="match_parent"
+        android:padding="24dp"
+        android:background="@drawable/auth_txtcabecera_superior"
+        android:orientation="vertical"
+        android:layout_height="250dp"
+        android:gravity="center_vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contenedorTextoCabecera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="30dp" >
+
+        <TextView
+            android:id="@+id/txtCabecera1"
+            android:text="@string/elige_perfil"
+            android:textFontWeight="300"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:id="@+id/txtCabecera2"
+            android:text="@string/crea_cuenta"
+            android:textFontWeight="900"
+            android:textSize="45sp"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineHeight="50sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:layout_marginTop="250dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRolUsuario"
+            android:text="@string/rol_usuario"
+            android:background="@drawable/btn_rol_usuario"
+            android:textColor="@color/colorPrimary"
+            android:textFontWeight="800"
+            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:layout_width="700px"
+            android:layout_height="210px"
+            android:layout_marginBottom="24dp"
+            android:textAllCaps="true"
+            android:insetLeft="-5dp"
+            android:insetRight="0dp"
+            android:insetTop="5dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@null" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRolAyuntamiento"
+            android:text="@string/rol_ayuntamiento"
+            android:background="@drawable/btn_rol_ayto"
+            android:textFontWeight="800"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:layout_width="700px"
+            android:layout_height="210px"
+            android:layout_marginBottom="24dp"
+            android:textAllCaps="true"
+            android:insetLeft="15dp"
+            android:insetRight="0dp"
+            android:insetTop="5dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+
+</FrameLayout>

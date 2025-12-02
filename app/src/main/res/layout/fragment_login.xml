@@ -2,103 +2,102 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- Imagen de fondo -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/img_fondo_login"
-        android:background="#000000" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/gradient_background" />
 
-    <!-- Contenido encima -->
-    <ScrollView
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/logo_fondo_transparente" />
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:text="@string/login_action_name"
+            style="@style/FontPoppinsLight"
+            android:textSize="22sp"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"/>
 
-            <!-- Título -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Iniciar sesión"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="16dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_alias_label"
+            android:layout_marginBottom="20dp">
 
-            <!-- Campo Alias -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAlias"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAlias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Alias"
-                android:layout_marginBottom="12dp">
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAlias"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_password_label"
+            app:passwordToggleEnabled="true"
+            android:layout_marginBottom="20dp">
 
-            <!-- Campo Contraseña -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPassword"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Contraseña"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="20dp">
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            style="@style/BotonGenericoBlanco"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:textAllCaps="true" />
+    </LinearLayout>
 
-            <!-- Botón de Login -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Entrar" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp">
 
-            <!-- Botón de Crear cuenta -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnNavRegister"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="12dp"
-                android:text="Crear cuenta"
-                android:textColor="@android:color/black"
-                app:strokeColor="@android:color/black" />
+        <TextView
+            android:id="@+id/txtNoAccount"
+            style="@style/FontPoppinsMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_no_account"
+            android:textColor="#80FFFFFF"
+            android:textSize="16sp" />
 
-            <!-- ✅ NUEVO TextView para mostrar mensajes -->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvMensaje"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:visibility="gone"
-                android:layout_marginTop="16dp"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/btnNavRegister"
+            style="@style/FontPoppinsBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_create_here"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
 </FrameLayout>

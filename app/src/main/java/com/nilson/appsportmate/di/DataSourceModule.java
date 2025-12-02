@@ -2,8 +2,9 @@ package com.nilson.appsportmate.di;
 
 import android.content.Context;
 
-import com.nilson.appsportmate.data.local.AuthLocalDataSource;
+import com.nilson.appsportmate.data.local.UserLocalDataSource;
 import com.nilson.appsportmate.data.remote.AuthRemoteDataSource;
+import com.nilson.appsportmate.data.remote.UserRemoteDataSource;
 
 import javax.inject.Singleton;
 
@@ -25,7 +26,13 @@ public class DataSourceModule {
 
     @Provides
     @Singleton
-    public AuthLocalDataSource provideAuthLocalDataSource(@ApplicationContext Context context) {
-        return new AuthLocalDataSource(context);
+    public UserLocalDataSource provideUserLocalDataSource(@ApplicationContext Context context) {
+        return new UserLocalDataSource(context);
+    }
+
+    @Provides
+    @Singleton
+    public UserRemoteDataSource provideUserRemoteDataSource() {
+        return new UserRemoteDataSource();
     }
 }

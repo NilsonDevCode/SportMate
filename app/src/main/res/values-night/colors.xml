@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gradient_start">#1B2D3D</color>
+    <color name="gradient_end">#406F9A</color>
+
+    <color name="colorPrimary">#5488B6</color>
+    <color name="colorPrimaryContainer">#2A4051</color>
+    <color name="colorSecondary">#5EA2D4</color>
+    <color name="colorSecondaryContainer">#3A5E7D</color>
+    <color name="colorTertiary">#F5C518</color>
+
+    <color name="colorBackground">#101C28</color>
+    <color name="colorSurface">#142536</color>
+    <color name="colorSurfaceVariant">#1F364C</color>
+
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorOnSurface">#E9F0F6</color>
+    <color name="colorOutline">#5E7386</color>
+
+    <color name="colorError">#EF5350</color>
+    <color name="colorOnError">#FFFFFF</color>
+</resources>

@@ -43,8 +43,8 @@
             app:destination="@id/loginFragment" />
 
         <action
-            android:id="@+id/action_authFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            android:id="@+id/action_authFragment_to_rolSelectionFragment"
+            app:destination="@id/rolSelectionFragment" />
     </fragment>
 
     <!-- ========================= -->
@@ -53,12 +53,8 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nilson.appsportmate.ui.auth.login.LoginFragment"
-        android:label="@string/login_fragment_label"
+        android:label= "@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
-
-        <action
-            android:id="@+id/action_loginFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
 
         <!-- Usuario -> Inicio -->
         <action
@@ -83,17 +79,40 @@
     </fragment>
 
     <!-- ========================= -->
-    <!-- Registro -->
+    <!-- Registro nuevo: Usuario -->
     <!-- ========================= -->
     <fragment
-        android:id="@+id/signInFragment"
-        android:name="com.nilson.appsportmate.ui.auth.signUp.SignUpFragment"
-        android:label="@string/sign_in_fragment_label"
-        tools:layout="@layout/fragment_sign_up">
+        android:id="@+id/formUsuarioFragment"
+        android:name="com.nilson.appsportmate.ui.auth.signUp.FormUsuarioFragment.FormUsuarioFragment"
+        android:label="Registro usuario"
+        tools:layout="@layout/fragment_form_usuario" >
+
         <action
-            android:id="@+id/action_signInFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_formUsuarioFragment_to_inicioFragment"
+            app:destination="@id/inicioFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
+
+    <!-- ========================= -->
+    <!-- Registro nuevo: Ayuntamiento -->
+    <!-- ========================= -->
+
+    <fragment
+        android:id="@+id/formAyuntamientoFragment"
+        android:name="com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment.FormAytoFragment"
+        android:label="Registro ayuntamiento"
+        tools:layout="@layout/fragment_form_ayuntamiento" >
+
+        <action
+            android:id="@+id/action_formAyuntamientoFragment_to_inicioFragment"
+            app:destination="@id/inicioFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
 
     <!-- ===================================================== -->
     <!-- INICIO (Home usuario normal con bienvenida y deportes) -->
@@ -197,5 +216,26 @@
     <action
         android:id="@+id/action_global_menuAyuntamientoFragment"
         app:destination="@id/menuAyuntamientoFragment" />
+
+    <!-- ========================= -->
+    <!-- Selección de rol -->
+    <!-- ========================= -->
+    <fragment
+        android:id="@+id/rolSelectionFragment"
+        android:name="com.nilson.appsportmate.ui.auth.signUp.rol.RolSelectionFragment"
+        android:label="Seleccionar rol"
+        tools:layout="@layout/fragment_role_selection">
+
+        <!-- Registro Usuario -->
+        <action
+            android:id="@+id/action_rolSelectionFragment_to_formUsuarioFragment"
+            app:destination="@id/formUsuarioFragment" />
+
+        <!-- Registro Ayuntamiento -->
+        <action
+            android:id="@+id/action_rolSelectionFragment_to_formAyuntamientoFragment"
+            app:destination="@id/formAyuntamientoFragment" />
+    </fragment>
+
 
 </navigation>

@@ -1,9 +1,12 @@
 package com.nilson.appsportmate.di;
 
-import com.nilson.appsportmate.data.local.AuthLocalDataSource;
+import com.nilson.appsportmate.data.local.UserLocalDataSource;
 import com.nilson.appsportmate.data.remote.AuthRemoteDataSource;
+import com.nilson.appsportmate.data.remote.UserRemoteDataSource;
 import com.nilson.appsportmate.data.repository.AuthRepositoryImpl;
+import com.nilson.appsportmate.data.repository.UserRepositoryImpl;
 import com.nilson.appsportmate.domain.repository.AuthRepository;
+import com.nilson.appsportmate.domain.repository.UserRepository;
 
 import javax.inject.Singleton;
 
@@ -19,9 +22,17 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public AuthRepository provideAuthRepository(
-            AuthRemoteDataSource remoteDataSource,
-            AuthLocalDataSource localDataSource
+            AuthRemoteDataSource remoteDataSource
     ) {
-        return new AuthRepositoryImpl(remoteDataSource, localDataSource);
+        return new AuthRepositoryImpl(remoteDataSource);
+    }
+
+    @Provides
+    @Singleton
+    public UserRepository provideUserRepository(
+            UserRemoteDataSource remoteDataSource,
+            UserLocalDataSource userLocalDataSource
+    ) {
+        return new UserRepositoryImpl(remoteDataSource, userLocalDataSource);
     }
 }

@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/img_fondo_generico"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -15,17 +14,18 @@
             android:id="@+id/tvTituloForm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crear cuenta"
+            android:text="@string/sign_up_title"
             android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
         <!-- Alias -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutAlias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Alias (único)"
+            android:hint="@string/sign_up_alias_label"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAlias"
@@ -36,10 +36,11 @@
 
         <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre"
+            android:hint="@string/sign_up_name_label"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNombre"
@@ -49,10 +50,11 @@
 
         <!-- Apellidos (solo Usuario) -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutApellidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Apellidos"
+            android:hint="@string/sign_up_surname_label"
             android:layout_marginBottom="12dp"
             android:visibility="visible">
             <com.google.android.material.textfield.TextInputEditText
@@ -63,10 +65,11 @@
 
         <!-- Razón Social (solo Ayuntamiento) -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutNumero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Razón Social (solo ayuntamiento)"
+            android:hint="@string/sign_up_social_reason_label"
             android:layout_marginBottom="12dp"
             android:visibility="gone">
             <com.google.android.material.textfield.TextInputEditText
@@ -85,11 +88,12 @@
             android:weightSum="1">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutComunidad"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Comunidad">
+                android:hint="@string/sign_up_community_label">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescripcionEvento"
@@ -115,11 +119,12 @@
             android:weightSum="1">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutProvincia"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Provincia">
+                android:hint="@string/sign_up_province_label">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etReglasEvento"
@@ -145,11 +150,12 @@
             android:weightSum="1">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutCiudad"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Ciudad">
+                android:hint="@string/sign_up_city_label">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMateriales"
@@ -183,11 +189,12 @@
                 android:weightSum="1">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutPuebloUsuario"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Pueblo (existente)">
+                    android:hint="@string/sign_up_town_label">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPuebloUsuario"
@@ -206,10 +213,11 @@
 
             <!-- Ayuntamiento (auto, leído del pueblo elegido) -->
             <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutAyuntamientoUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ayuntamiento (auto)"
+                android:hint="@string/sign_up_townhall_label"
                 android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -231,27 +239,28 @@
 
             <!-- Campo para crear pueblo (Ayuntamiento) -->
             <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:id="@+id/layoutPuebloAyto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Pueblo (crear nuevo)"
+                android:hint="@string/sign_up_create_town_label"
                 android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPuebloAyto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ej: Torrellano"
                     android:inputType="textCapWords"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Contraseña -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contraseña"
+            android:hint="@string/sign_up_password_label"
             app:passwordToggleEnabled="true"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
@@ -263,10 +272,11 @@
 
         <!-- Repetir contraseña -->
         <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
             android:id="@+id/layoutPassword2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Repetir contraseña"
+            android:hint="@string/sign_up_confirm_password_label"
             app:passwordToggleEnabled="true"
             android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText
@@ -281,7 +291,7 @@
             android:id="@+id/tvRolLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecciona tu rol:"
+            android:text="@string/sign_up_select_role"
             android:layout_marginBottom="8dp"/>
 
         <RadioGroup
@@ -295,7 +305,7 @@
                 android:id="@+id/rbUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usuario"
+                android:text="@string/sign_up_user_role"
                 android:tag="usuario"
                 android:checked="true"/>
 
@@ -303,7 +313,7 @@
                 android:id="@+id/rbAyuntamiento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ayuntamiento"
+                android:text="@string/sign_up_townhall_role"
                 android:tag="ayuntamiento"
                 android:layout_marginStart="24dp"/>
         </RadioGroup>
@@ -320,6 +330,6 @@
             android:id="@+id/btnRegistrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear cuenta"/>
+            android:text="@string/sign_up_button"/>
     </LinearLayout>
 </ScrollView>

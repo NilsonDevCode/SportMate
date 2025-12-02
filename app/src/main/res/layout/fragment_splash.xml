@@ -2,14 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@drawable/gradient_background">
 
     <ImageView
         android:id="@+id/imgSplash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/img_logo_splash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:maxWidth="300dp"
+        android:maxHeight="300dp"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerInside"
-        android:adjustViewBounds="true" />
+        android:src="@drawable/img_logo_splash" />
 </FrameLayout>

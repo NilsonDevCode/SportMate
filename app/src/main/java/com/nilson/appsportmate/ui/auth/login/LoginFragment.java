@@ -1,8 +1,15 @@
 package com.nilson.appsportmate.ui.auth.login;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +41,8 @@ public class LoginFragment extends Fragment {
     public static boolean disableFirebaseForTest = false;
 
     private TextInputEditText etAlias, etPassword;
-    private MaterialButton btnLogin, btnNavRegister;
+    private MaterialButton btnLogin;
+    private TextView btnNavRegister;
     private boolean aliasUpdating = false;
 
     @Nullable
@@ -90,7 +98,7 @@ public class LoginFragment extends Fragment {
 
         // Acción: ir a registro
         btnNavRegister.setOnClickListener(v ->
-                navController.navigate(R.id.action_loginFragment_to_signInFragment)
+                navController.navigate(R.id.action_authFragment_to_rolSelectionFragment)
         );
 
         // Observadores ViewModel
@@ -105,16 +113,16 @@ public class LoginFragment extends Fragment {
         // Acción login correcto o no
         viewModel.getMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && isAdded()) {
-                binding.tvMensaje.setVisibility(View.VISIBLE);
-                binding.tvMensaje.setText(msg);
+                // binding.tvMensaje.setVisibility(View.VISIBLE);
+                // binding.tvMensaje.setText(msg);
 
-                int color = msg.toLowerCase().contains("correcto")
-                        ? R.color.green
-                        : R.color.red;
+                // int color = msg.toLowerCase().contains("correcto")
+                //         ? R.color.green
+                //         : R.color.red;
 
-                binding.tvMensaje.setTextColor(
-                        ContextCompat.getColor(requireContext(), color)
-                );
+                // binding.tvMensaje.setTextColor(
+                //         ContextCompat.getColor(requireContext(), color)
+                // );
 
                 viewModel.consumeMessage();
             }

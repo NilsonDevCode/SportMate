@@ -2,23 +2,23 @@ package com.nilson.appsportmate.ui.auth.login;
 
 public class LoginUiState {
 
-    private String alias;
+    private final String alias;
 
-    private String password;
+    private final String password;
 
-    private boolean isLoading;
+    private final boolean isLoading;
 
-    private boolean isLoadingEnabled;
+    private final boolean isLoadingEnabled;
 
-    private String aliasError;
-    private String passwordError;
-    private String generalError;
+    private final String aliasError;
+    private final String passwordError;
+    private final String generalError;
 
-    private boolean showPassword;
+    private final boolean showPassword;
 
-    private boolean loginSuccess;
+    private final boolean loginSuccess;
 
-    private boolean rememberMe;
+    private final boolean rememberMe;
 
     private LoginUiState(Builder builder) {
         this.alias = builder.alias != null ? builder.alias : "";

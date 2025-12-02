@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Botones / Acciones -->
+    <style name="BotonGenericoBlanco" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/btn_blanco</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingLeft">50dp</item>
+        <item name="android:paddingRight">50dp</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_width">250dp</item>
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="WhiteTextInput" parent="Widget.Material3.TextInputLayout.FilledBox">
+
+        <item name="boxBackgroundMode">filled</item>
+
+        <!-- Fondo blanco -->
+        <item name="boxBackgroundColor">#FFFFFFFF</item>
+
+        <!-- Borde (opcional) -->
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeColor">#33000000</item>
+
+        <!-- Esquinas redondeadas -->
+        <item name="boxCornerRadiusTopStart">5dp</item>
+        <item name="boxCornerRadiusTopEnd">5dp</item>
+        <item name="boxCornerRadiusBottomStart">5dp</item>
+        <item name="boxCornerRadiusBottomEnd">5dp</item>
+
+    </style>
+
+
+    <!-- Tipografía -->
+    <style name="FontPoppinsLight">
+        <item name="android:fontFamily">@font/poppins_light</item>
+    </style>
+
+    <style name="FontPoppinsMedium">
+        <item name="android:fontFamily">@font/poppins_medium</item>
+    </style>
+
+    <style name="FontPoppinsBold">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+    </style>
+
+    <style name="FontPoppinsBlack">
+        <item name="android:fontFamily">@font/poppins_black</item>
+    </style>
+
+</resources>

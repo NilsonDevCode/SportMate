@@ -2,6 +2,36 @@
     <!-- Nombre de la app -->
     <string name="app_name">AppSportMate</string>
 
+    <!-- Auth -->
+
+    <!-- Auth - Login -->
+    <string name="login_title">¡Entra ya!</string>
+    <string name="login_subtitle">Tus nuevos amigos están esperando...</string>
+    <string name="login_action_name">Inicia Sesión</string>
+    <string name="login_alias_label">Alias</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_go_register">Crear cuenta</string>
+
+    <!-- Auth - Sign Up -->
+    <string name="sign_up_title">Crear cuenta</string>
+    <string name="sign_up_alias_label">Alias (único)</string>
+    <string name="sign_up_name_label">Nombre</string>
+    <string name="sign_up_surname_label">Apellidos</string>
+    <string name="sign_up_social_reason_label">Razón social</string>
+    <string name="sign_up_community_label">Comunidad</string>
+    <string name="sign_up_province_label">Provincia</string>
+    <string name="sign_up_city_label">Ciudad</string>
+    <string name="sign_up_town_label">Pueblo (existente)</string>
+    <string name="sign_up_townhall_label">Ayuntamiento (auto)</string>
+    <string name="sign_up_create_town_label">Pueblo (crear nuevo)</string>
+    <string name="sign_up_password_label">Contraseña</string>
+    <string name="sign_up_confirm_password_label">Repetir contraseña</string>
+    <string name="sign_up_select_role">Selecciona tu rol:</string>
+    <string name="sign_up_user_role">Usuario</string>
+    <string name="sign_up_townhall_role">Ayuntamiento</string>
+    <string name="sign_up_button">Crear cuenta</string>
+
     <!-- Actividades -->
     <string name="title_activity_formulario_usuario">Formulario Usuario</string>
     <string name="title_activity_formulario_ayuntamiento">Formulario Ayuntamiento</string>
@@ -39,6 +69,10 @@
     <string name="gestionar_eventos">Gestionar eventos</string>
     <string name="inscribirse">Inscribirse</string>
     <string name="expulsar">Expulsar</string>
+    <string name="login_no_account">¿No tienes cuenta?</string>
+    <string name="login_create_here">Crea una aquí.</string>
+    <string name="rol_usuario">Usuario Estándar</string>
+    <string name="rol_ayuntamiento">Ayuntamiento</string>
 
     <!-- Mensajes -->
     <string name="welcome">¡Bienvenido!</string>
@@ -64,12 +98,15 @@
     <string name="plazas">Plazas disponibles</string>
     <string name="sin_eventos">No hay eventos disponibles</string>
     <string name="sin_inscritos">No hay inscritos en este evento</string>
+    <string name="nuevo_usuario_header">Nuevo USUARIO</string>
+    <string name="nuevo_ayuntamiento_header">Nuevo AYUNTAMIENTO</string>
 
     <!-- Arrays -->
     <string-array name="roles_array">
         <item>Usuario Particular</item>
         <item>Ayuntamiento</item>
     </string-array>
+
     <!-- Strings used for fragments for navigation -->
     <string name="splash_fragment_label">Splash Fragment</string>
     <string name="auth_fragment_label">Auth Fragment</string>
@@ -87,47 +124,12 @@
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>
     <string name="cambiar_foto_de_perfil">Cambiar foto de perfil</string>
     <string name="cambiar_ayuntamiento">Cambiar ayuntamiento</string>
-
-
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
-        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
-        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
-        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
-        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
-        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
-        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
-        bibendum, vel congue leo egestas.\n\n
-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
-        est.\n\n
-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
-        convallis.\n\n
-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="inicio_ayuntamiento">inicio_ayuntamiento</string>
     <string name="inscritos">inscritos</string>
-    <string name="ubicacion">Ubicacion</string>
+    <string name="ubicacion">Ubicación</string>
+
+    <!-- Rol -->
+    <string name="elige_perfil">Elige tu perfil y</string>
+    <string name="crea_cuenta">crea una cuenta...</string>
+
 </resources>
