@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.user.ui.deportesdisponibles;
+package com.nilson.appsportmate.features.user.ui.deportesdisponiblesAyto;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

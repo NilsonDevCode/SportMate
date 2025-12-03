@@ -172,7 +172,7 @@ public class menuAyuntamientoFragment extends Fragment {
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_evento_gestion, parent, false);
+                    .inflate(R.layout.adapter_evento_gestion_ayto, parent, false);
             return new VH(v);
         }
 

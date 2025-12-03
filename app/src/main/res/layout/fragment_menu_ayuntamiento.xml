@@ -106,7 +106,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnGestionDeportes"
-        tools:listitem="@layout/item_evento_gestion"/>
+        tools:listitem="@layout/adapter_evento_gestion_ayto"/>
 
     <TextView
         android:id="@+id/tvEmpty"

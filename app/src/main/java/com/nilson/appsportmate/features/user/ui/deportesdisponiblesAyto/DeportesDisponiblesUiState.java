@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.user.ui.deportesdisponibles;
+package com.nilson.appsportmate.features.user.ui.deportesdisponiblesAyto;
 
 import java.util.Collections;
 import java.util.List;

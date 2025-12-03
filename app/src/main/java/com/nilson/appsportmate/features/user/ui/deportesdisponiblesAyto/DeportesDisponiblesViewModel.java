@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.user.ui.deportesdisponibles;
+package com.nilson.appsportmate.features.user.ui.deportesdisponiblesAyto;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;

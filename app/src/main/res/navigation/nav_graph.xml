@@ -125,7 +125,7 @@
 
     <fragment
         android:id="@+id/deportesDisponiblesFragment"
-        android:name="com.nilson.appsportmate.features.user.ui.deportesdisponibles.DeportesDisponiblesFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.deportesdisponiblesAyto.DeportesDisponiblesFragment"
         android:label="Deportes disponibles"
         tools:layout="@layout/activity_deportes_disponibles" />
 

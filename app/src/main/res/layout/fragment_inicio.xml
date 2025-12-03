@@ -121,7 +121,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnVerDeportes"
-        tools:listitem="@layout/item_deporte_apuntado" />
+        tools:listitem="@layout/adapter_deporte_apuntado_user" />
 
     <!-- Texto cuando no hay deportes -->
     <TextView

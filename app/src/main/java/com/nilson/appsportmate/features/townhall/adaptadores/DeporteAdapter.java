@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +36,7 @@ public class DeporteAdapter extends RecyclerView.Adapter<DeporteAdapter.DeporteV
     @Override
     public DeporteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_deporte, parent, false);
+                .inflate(R.layout.adapter_deporte_ayto, parent, false);
         return new DeporteViewHolder(view);
     }
 

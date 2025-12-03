@@ -36,7 +36,7 @@ public class AyuntamientoAdapter extends RecyclerView.Adapter<AyuntamientoAdapte
     @NonNull
     @Override
     public AyuntamientoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_ayuntamiento, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_ayuntamiento, parent, false);
         return new AyuntamientoViewHolder(view);
     }
 

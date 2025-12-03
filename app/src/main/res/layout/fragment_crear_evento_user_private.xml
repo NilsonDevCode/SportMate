@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,159 +13,131 @@
         android:padding="24dp">
 
         <TextView
+            android:id="@+id/tvTituloEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vincular Usuario a Ayuntamiento"
+            android:text="Creación de evento"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="20dp" />
 
-        <!-- Alias -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Alias"
+            android:hint="Nombre del deporte"
             android:layout_marginBottom="12dp">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etAlias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Nombre -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Apellidos -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Apellidos"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etApellidos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Comunidad -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Comunidad"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etDescripcionEvento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Provincia -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Provincia"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etReglasEvento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Ciudad -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ciudad"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etMateriales"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="maria"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Pueblo -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Pueblo"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUrlPueblo"
+                android:id="@+id/etNombreDeporte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- UID (solo lectura) -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="UID"
+            android:hint="Cantidad de jugadores (plazas)"
             android:layout_marginBottom="12dp">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUid"
+                android:id="@+id/etCantidadJugadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:text="RqTrmc3a46Z1b45..."/>
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ID (solo lectura, generado o fijo) -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ID"
-            android:layout_marginBottom="20dp">
-
+            android:hint="Fecha"
+            android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etId"
+                android:id="@+id/etFecha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:text="debee855-c0f7-47c6-9dee-f27a9974f025"/>
+                android:focusable="false"
+                android:clickable="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Spinner de ayuntamientos -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Selecciona tu Ayuntamiento:"
-            android:layout_marginBottom="8dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerAyuntamientos"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            android:layout_marginBottom="20dp"/>
+            android:hint="Hora"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etHora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción del evento"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescripcionEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences|textMultiLine"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Reglas del evento"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etReglasEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences|textMultiLine"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Material necesario"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etMateriales"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="URL exacta del evento"
+            android:layout_marginBottom="20dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUrlPueblo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardar"
+            android:id="@+id/btnCrearEvento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar"/>
+            android:text="Crear evento" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGestionEventos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestionar eventos"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atras"
+            android:layout_margin="16dp"
+            android:layout_gravity="end"/>
+
     </LinearLayout>
 </ScrollView>

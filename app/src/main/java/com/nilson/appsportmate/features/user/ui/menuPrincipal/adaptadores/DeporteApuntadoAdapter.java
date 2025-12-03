@@ -50,7 +50,7 @@ public class DeporteApuntadoAdapter extends ListAdapter<InicioUiState.DeporteUi,
 
     @NonNull @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_deporte_apuntado, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_deporte_apuntado_user, parent, false);
         return new VH(v);
     }
 

@@ -36,7 +36,7 @@ public class DeportesDisponiblesAdapter extends RecyclerView.Adapter<DeportesDis
 
     @NonNull @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_deporte_disponible, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_deporte_disponible_ayto, parent, false);
         return new VH(v);
     }
 

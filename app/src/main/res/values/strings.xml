@@ -132,5 +132,7 @@
     <!-- Rol -->
     <string name="elige_perfil">Elige tu perfil y</string>
     <string name="crea_cuenta">crea una cuenta...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
