@@ -182,18 +182,18 @@ public class InicioFragment extends Fragment {
                             }
                             if (n != null && !n.isEmpty()) {
                                 Preferencias.guardarNombreUsuario(requireContext(), n);
-                                binding.tvInicio.setText("Inicio\nBienvenido, " + n);
+                                binding.tvInicio.setText("Bienvenido, " + n);
                             } else {
-                                binding.tvInicio.setText("Inicio\nBienvenido, usuario");
+                                binding.tvInicio.setText("Bienvenido, usuario");
                             }
                         })
                         .addOnFailureListener(e ->
-                                binding.tvInicio.setText("Inicio\nBienvenido, usuario"));
+                                binding.tvInicio.setText("Bienvenido, usuario"));
             } else {
-                binding.tvInicio.setText("Inicio\nBienvenido, usuario");
+                binding.tvInicio.setText("Bienvenido, usuario");
             }
         } else {
-            binding.tvInicio.setText("Inicio\nBienvenido, " + nombre);
+            binding.tvInicio.setText("Bienvenido, " + nombre);
         }
     }
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#FFF">
+    android:background="@drawable/gradient_background">
 
     <TextView
         android:id="@+id/tvEmpty"
@@ -32,8 +32,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVolver"
-        android:layout_width="match_parent"
+        style="@style/BotonGenericoBlanco"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="Volver"
-        android:layout_marginTop="12dp" />
+        android:text="@string/Salir_button"
+        android:textAllCaps="true" />
 </LinearLayout>

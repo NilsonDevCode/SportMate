@@ -1,78 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFF">
+    android:layout_height="match_parent">
 
-    <!-- Caja con el nombre del ayuntamiento -->
-    <com.google.android.material.card.MaterialCardView
+    <!-- 🔵 Fondo con degradado -->
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        app:cardCornerRadius="16dp"
-        android:layout_marginBottom="12dp">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gradient_background" />
 
-        <LinearLayout
+    <!-- 🔵 Logo semitransparente (mismo estilo que Login) -->
+    <ImageView
+        android:id="@+id/logoMarcaAgua"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.15"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/logo_fondo_transparente" />
+
+    <!-- 🔵 Contenido principal encima del fondo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 🟣 Caja: Ayuntamiento actual -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="14dp">
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="16dp"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#AAFFFFFF">
 
-            <TextView
-                android:id="@+id/tvAytoTitulo"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ayuntamiento actual"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:orientation="vertical"
+                android:padding="14dp">
 
-            <TextView
-                android:id="@+id/tvAytoNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="—"
-                android:textSize="15sp"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/tvAytoTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ayuntamiento actual"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black" />
 
-    <!-- Bloque: Deportes disponibles -->
-    <TextView
-        android:id="@+id/tvTituloDisponibles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Deportes disponibles"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:paddingBottom="8dp" />
+                <TextView
+                    android:id="@+id/tvAytoNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="—"
+                    android:textSize="15sp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:id="@+id/tvEmptyDisponibles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No hay deportes disponibles."
-        android:visibility="gone"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="14sp" />
+        <!-- 🟣 Título de deportes disponibles -->
+        <TextView
+            android:id="@+id/tvTituloDisponibles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deportes disponibles"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDisponibles"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/tvEmptyDisponibles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No hay deportes disponibles."
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/white" />
 
-    <!-- Botón salir al Main -->
-    <Button
-        android:id="@+id/btnSalir"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:text="Volver"
-        android:textColor="@android:color/white" />
+        <!-- 🟣 Lista de deportes -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDisponibles"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="16dp" />
 
-</LinearLayout>
+        <!-- 🟣 Botón de volver -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSalir"
+            style="@style/BotonGenericoBlanco"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Salir_button"
+            android:textAllCaps="true" />
+
+    </LinearLayout>
+
+</FrameLayout>

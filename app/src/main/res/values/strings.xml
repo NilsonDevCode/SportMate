@@ -11,6 +11,7 @@
     <string name="login_alias_label">Alias</string>
     <string name="login_password_label">Contraseña</string>
     <string name="login_button">Entrar</string>
+    <string name="Salir_button">Volver</string>
     <string name="login_go_register">Crear cuenta</string>
 
     <!-- Auth - Sign Up -->
