@@ -16,9 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme"
         tools:targetApi="31">
-        <activity
-            android:name=".features.user.ui.eventosPrivados.crearEventoPrivate.CrearEventoFragment"
-            android:exported="false" />
+
         <!-- 🚀 Pantalla principal con el NavHostFragment (Splash, Login, Register, etc.) -->
         <activity
             android:name=".MainActivity"

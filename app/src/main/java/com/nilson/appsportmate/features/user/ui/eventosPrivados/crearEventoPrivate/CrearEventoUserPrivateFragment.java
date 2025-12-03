@@ -9,10 +9,10 @@ import com.nilson.appsportmate.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CrearEventoFragment#newInstance} factory method to
+ * Use the {@link CrearEventoUserPrivateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CrearEventoFragment extends Fragment {
+public class CrearEventoUserPrivateFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,11 +29,11 @@ public class CrearEventoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CrearEventoFragment.
+     * @return A new instance of fragment CrearEventoUserPrivateFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CrearEventoFragment newInstance(String param1, String param2) {
-        CrearEventoFragment fragment = new CrearEventoFragment();
+    public static CrearEventoUserPrivateFragment newInstance(String param1, String param2) {
+        CrearEventoUserPrivateFragment fragment = new CrearEventoUserPrivateFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -41,7 +41,7 @@ public class CrearEventoFragment extends Fragment {
         return fragment;
     }
 
-    public CrearEventoFragment() {
+    public CrearEventoUserPrivateFragment() {
         // Required empty public constructor
     }
 

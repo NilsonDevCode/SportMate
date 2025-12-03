@@ -1,4 +1,4 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.gestionEventosPrivate;
 
-public class GestionEventosUserFragment {
+public class GestionEventosUserPrivateUiState {
 }
