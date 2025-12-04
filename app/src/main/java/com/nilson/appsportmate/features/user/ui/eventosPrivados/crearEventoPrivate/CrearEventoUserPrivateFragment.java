@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,14 +38,9 @@ public class CrearEventoUserPrivateFragment extends Fragment {
 
     // Estado
     private String uidUsuario;
+    private String puebloId;
 
     public CrearEventoUserPrivateFragment() {}
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true); // NECESARIO PARA RECIBIR LAS OPCIONES DE MENÚ
-    }
 
     @Nullable
     @Override
@@ -64,24 +58,28 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         vm = new ViewModelProvider(this).get(CrearEventoUserPrivateViewModel.class);
 
         uidUsuario = Preferencias.obtenerUid(requireContext());
+        puebloId   = Preferencias.obtenerPuebloId(requireContext());   // ID REAL DE PUEBLO
+
         if (TextUtils.isEmpty(uidUsuario)) {
             Toast.makeText(requireContext(), "Error: UID no encontrado.", Toast.LENGTH_LONG).show();
             Navigation.findNavController(view).navigate(R.id.loginFragment);
             return;
         }
 
+        if (TextUtils.isEmpty(puebloId)) {
+            Toast.makeText(requireContext(), "Error: no se encontró el pueblo asociado. Vuelve a iniciar sesión.", Toast.LENGTH_LONG).show();
+            // puedes llevarlo a selector de pueblo o al inicio
+            Navigation.findNavController(view).navigate(R.id.action_global_inicioFragment);
+            return;
+        }
+
         vm.setUidUsuario(uidUsuario);
+        vm.setPuebloId(puebloId);
 
         bindViews(view);
         setupClicks();
         observeVm();
     }
-
-
-
-    // ---------------------------
-    // Bind Views
-    // ---------------------------
 
     private void bindViews(View v) {
         etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);
@@ -97,10 +95,6 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         btnGestionEventos    = v.findViewById(R.id.btnGestionEventos);
         btnLogout            = v.findViewById(R.id.btnLogout);
     }
-
-    // ---------------------------
-    // Click Listeners
-    // ---------------------------
 
     private void setupClicks() {
 
@@ -123,8 +117,6 @@ public class CrearEventoUserPrivateFragment extends Fragment {
             nav.navigate(R.id.action_crearEventoUserPrivateFragment_to_gestionEventosUserPrivateFragment);
         });
 
-
-
         btnLogout.setOnClickListener(v -> {
             NavController nav = Navigation.findNavController(v);
             boolean popped = nav.popBackStack(R.id.inicioFragment, false);
@@ -133,10 +125,6 @@ public class CrearEventoUserPrivateFragment extends Fragment {
             }
         });
     }
-
-    // ---------------------------
-    // Observers
-    // ---------------------------
 
     private void observeVm() {
 
@@ -162,11 +150,13 @@ public class CrearEventoUserPrivateFragment extends Fragment {
             }
         });
 
+        vm.getNavigateToLogin().observe(getViewLifecycleOwner(), go -> {
+            if (go != null && go) {
+                Navigation.findNavController(requireView()).navigate(R.id.loginFragment);
+                vm.onNavigatedToLogin();
+            }
+        });
     }
-
-    // ---------------------------
-    // Pickers
-    // ---------------------------
 
     private void mostrarDatePicker() {
         Calendar c = Calendar.getInstance();
@@ -191,10 +181,6 @@ public class CrearEventoUserPrivateFragment extends Fragment {
                 true
         ).show();
     }
-
-    // ---------------------------
-    // Utils
-    // ---------------------------
 
     private static String txt(EditText et) {
         return et.getText() == null ? "" : et.getText().toString().trim();

@@ -15,15 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.nilson.appsportmate.MainActivity;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.databinding.FragmentFormUsuarioBinding;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
-import com.nilson.appsportmate.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +41,7 @@ public class FormUsuarioFragment extends Fragment {
     private final List<DocumentSnapshot> pueblosDocs     = new ArrayList<>();
 
     private String comunidadIdSel, provinciaIdSel, ciudadIdSel, ayuntamientoIdSel;
+    private String puebloIdSel;   // ⭐ ID REAL DEL PUEBLO
     private boolean aliasUpdating = false;
 
     @Nullable
@@ -74,10 +73,10 @@ public class FormUsuarioFragment extends Fragment {
                         getTxt(binding.etDescripcionEvento),   // comunidadNombre
                         getTxt(binding.etReglasEvento),        // provinciaNombre
                         getTxt(binding.etMateriales),          // ciudadNombre
-                        getTxt(binding.etPuebloUsuario),       // pueblo
-                        "",                                    // razón social NO aplica
+                        getTxt(binding.etPuebloUsuario),       // puebloNombre
+                        puebloIdSel,                           // ⭐ ID REAL DEL PUEBLO
                         "usuario",
-                        ayuntamientoIdSel,                     // AYUNTAMIENTO detectado por pueblo
+                        ayuntamientoIdSel,                     // ayuntamiento detectado
                         comunidadIdSel,
                         provinciaIdSel,
                         ciudadIdSel
@@ -149,6 +148,8 @@ public class FormUsuarioFragment extends Fragment {
     // SPINNERS
     // =============================
     private void configurarSpinners() {
+
+        // COMUNIDAD --------------------
         binding.spComunidad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= comunidadesDocs.size()) return;
@@ -160,6 +161,7 @@ public class FormUsuarioFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // PROVINCIA --------------------
         binding.spProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= provinciasDocs.size()) return;
@@ -171,6 +173,7 @@ public class FormUsuarioFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // CIUDAD ------------------------
         binding.spCiudad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 0 || position >= ciudadesDocs.size()) return;
@@ -182,13 +185,18 @@ public class FormUsuarioFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // PUEBLO ------------------------
         binding.spPuebloUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 if (position < 0 || position >= pueblosDocs.size()) return;
+
                 DocumentSnapshot d = pueblosDocs.get(position);
 
+                // Nombre del pueblo en el TextInput
                 binding.etPuebloUsuario.setText(d.getString("nombre"));
 
+                // Detectar ayuntamiento
                 String aytoNombre = safe(d.getString("ayuntamientoNombre"));
                 String aytoId = safe(d.getString("ayuntamientoId"));
                 String creadorUid = safe(d.getString("createdByUid"));
@@ -199,6 +207,9 @@ public class FormUsuarioFragment extends Fragment {
                 binding.etAyuntamientoUsuario.setText(
                         aytoNombre != null ? aytoNombre : "(Ayuntamiento)"
                 );
+
+                // ⭐⭐ ID REAL DEL PUEBLO ⭐⭐
+                puebloIdSel = d.getId();
             }
             public void onNothingSelected(AdapterView<?> parent) {}
         });

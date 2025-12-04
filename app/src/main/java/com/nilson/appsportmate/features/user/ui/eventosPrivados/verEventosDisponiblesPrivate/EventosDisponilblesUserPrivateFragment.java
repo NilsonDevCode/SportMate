@@ -2,7 +2,6 @@ package com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDispo
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -10,45 +9,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentEventosDisponiblesUserPrivateBinding;
 import com.nilson.appsportmate.features.user.ui.eventosPrivados.eventosAdapterPrivate.EventosDisponiblesUserPrivateAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 public class EventosDisponilblesUserPrivateFragment extends Fragment
         implements EventosDisponiblesUserPrivateAdapter.Listener {
 
     private FragmentEventosDisponiblesUserPrivateBinding binding;
 
-    private FirebaseFirestore db;
-
-    private String uid;
-    private String alias;
-    private String localidad;
-
-    private final List<Map<String, Object>> listaDisponibles = new ArrayList<>();
+    private EventosDisponiblesUserPrivateViewModel vm;
     private EventosDisponiblesUserPrivateAdapter adapter;
 
-    private boolean accionEnProgreso = false;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true); // NECESARIO PARA QUE EL TOOLBAR ENVÍE LOS EVENTOS DE MENÚ
-    }
+    private String uid, alias, puebloId, puebloNombre;
+    private String lastPuebloId;
 
     @Nullable
     @Override
@@ -65,174 +48,102 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
+        vm = new ViewModelProvider(this).get(EventosDisponiblesUserPrivateViewModel.class);
 
         if (getContext() != null) {
-            uid       = Preferencias.obtenerUid(getContext());
-            alias     = Preferencias.obtenerAlias(getContext());
-            localidad = Preferencias.obtenerLocalidad(getContext());
+            uid          = Preferencias.obtenerUid(getContext());
+            alias        = Preferencias.obtenerAlias(getContext());
+            puebloId     = Preferencias.obtenerPuebloId(getContext());       // ID REAL
+            puebloNombre = Preferencias.obtenerPuebloNombre(getContext());   // visible
+            lastPuebloId = puebloId;
         }
 
-        // Nombre del pueblo
-        binding.tvPuebloNombre.setText(localidad != null ? localidad : "—");
+        binding.tvPuebloNombre.setText(puebloNombre != null ? puebloNombre : "—");
 
         // RecyclerView
         binding.rvDisponibles.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new EventosDisponiblesUserPrivateAdapter(listaDisponibles, this);
+
+        adapter = new EventosDisponiblesUserPrivateAdapter(
+                vm.uiState.getValue() != null ?
+                        vm.uiState.getValue().disponibles :
+                        Collections.emptyList(),
+                this
+        );
+
         binding.rvDisponibles.setAdapter(adapter);
 
-        // Cargar eventos privados de todos los usuarios
-        cargarEventosDisponibles();
+        // INIT y cargar datos
+        vm.init(uid, alias, puebloId);
+        vm.loadAll();
 
-        // Botón salir
+        observeUi();
+
         binding.btnSalir.setOnClickListener(v -> {
             NavOptions opts = new NavOptions.Builder()
                     .setPopUpTo(R.id.inicioFragment, true)
                     .build();
-
             Navigation.findNavController(v)
                     .navigate(R.id.action_global_inicioFragment, null, opts);
         });
     }
 
-    // ==========================================================
-    // OPCIÓN DEL MENÚ (CREAR EVENTO PRIVADO)
-    // ==========================================================
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public void onResume() {
+        super.onResume();
 
-        if (item.getItemId() == R.id.action_crear_evento_privado) {
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_global_crearEventoUserPrivateFragment);
-            return true;
+        if (getContext() != null) {
+            String nuevoPuebloId     = Preferencias.obtenerPuebloId(getContext());
+            String nuevoPuebloNombre = Preferencias.obtenerPuebloNombre(getContext());
+
+            // Si el pueblo cambia, recargar
+            if (nuevoPuebloId == null ? lastPuebloId != null :
+                    !nuevoPuebloId.equals(lastPuebloId)) {
+
+                puebloId     = nuevoPuebloId;
+                puebloNombre = nuevoPuebloNombre;
+                lastPuebloId = nuevoPuebloId;
+
+                binding.tvPuebloNombre.setText(
+                        puebloNombre != null ? puebloNombre : "—"
+                );
+
+                vm.init(uid, alias, puebloId);
+                vm.loadAll();
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // ==========================================================
-    // CARGAR EVENTOS
+    // OBSERVAR UI STATE
     // ==========================================================
-    private void cargarEventosDisponibles() {
-        listaDisponibles.clear();
+    private void observeUi() {
+        vm.uiState.observe(getViewLifecycleOwner(), state -> {
+            if (state == null) return;
 
-        db.collection("eventos_user_private")
-                .get(Source.SERVER)
-                .addOnSuccessListener(owners -> {
+            if (state.message != null) {
+                Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
+                vm.consumeMessage();
+            }
 
-                    if (!isAdded()) return;
+            adapter.update(state.disponibles != null ? state.disponibles : Collections.emptyList());
 
-                    for (DocumentSnapshot ownerDoc : owners) {
-                        String ownerId = ownerDoc.getId();
-
-                        ownerDoc.getReference()
-                                .collection("lista")
-                                .get(Source.SERVER)
-                                .addOnSuccessListener(lista -> {
-
-                                    for (DocumentSnapshot d : lista.getDocuments()) {
-
-                                        Map<String, Object> m = d.getData();
-                                        if (m == null) continue;
-
-                                        m = new HashMap<>(m);
-                                        m.put("idDoc", d.getId());
-                                        m.put("ownerId", ownerId);
-
-                                        listaDisponibles.add(m);
-                                    }
-
-                                    adapter.notifyDataSetChanged();
-
-                                    boolean vacio = listaDisponibles.isEmpty();
-                                    binding.tvEmptyDisponibles.setVisibility(vacio ? View.VISIBLE : View.GONE);
-                                    binding.rvDisponibles.setVisibility(vacio ? View.GONE : View.VISIBLE);
-                                });
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (!isAdded()) return;
-                    Toast.makeText(requireContext(),
-                            "Error cargando eventos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            boolean vacio = state.disponibles == null || state.disponibles.isEmpty();
+            binding.tvEmptyDisponibles.setVisibility(vacio ? View.VISIBLE : View.GONE);
+            binding.rvDisponibles.setVisibility(vacio ? View.GONE : View.VISIBLE);
+        });
     }
 
     // ==========================================================
-    // APUNTARSE
+    // LISTENER — APUNTARSE / DESAPUNTARSE
     // ==========================================================
     @Override
     public void onApuntarse(Map<String, Object> evento) {
-        if (!isAdded()) return;
-        if (uid == null || uid.isEmpty()) {
-            Toast.makeText(requireContext(), "Inicia sesión para participar", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (accionEnProgreso) return;
-        accionEnProgreso = true;
+        vm.apuntarse(evento);
+    }
 
-        String docId = String.valueOf(evento.get("idDoc"));
-        String ownerId = String.valueOf(evento.get("ownerId"));
-
-        DocumentReference refEvento = db.collection("eventos_user_private")
-                .document(ownerId)
-                .collection("lista")
-                .document(docId);
-
-        DocumentReference refInscrito = refEvento
-                .collection("inscritos_privados")
-                .document(uid);
-
-        DocumentReference refUser = db.collection("usuarios")
-                .document(uid)
-                .collection("inscripciones_privadas")
-                .document(docId);
-
-        db.runTransaction(tx -> {
-
-            DocumentSnapshot snapEvt = tx.get(refEvento);
-            Long plazas = snapEvt.getLong("plazasDisponibles");
-            if (plazas == null) plazas = 0L;
-            if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
-
-            if (tx.get(refInscrito).exists())
-                throw new IllegalStateException("YA_INSCRITO");
-
-            tx.update(refEvento, "plazasDisponibles", plazas - 1);
-
-            Map<String, Object> ins = new HashMap<>();
-            ins.put("uid", uid);
-            ins.put("alias", alias);
-            ins.put("ts", System.currentTimeMillis());
-            tx.set(refInscrito, ins);
-
-            Map<String, Object> copia = new HashMap<>(evento);
-            copia.put("idDoc", docId);
-            copia.put("ownerId", ownerId);
-            tx.set(refUser, copia);
-
-            return null;
-        }).addOnSuccessListener(unused -> {
-            if (!isAdded()) return;
-
-            Toast.makeText(requireContext(), "Inscripción completada", Toast.LENGTH_SHORT).show();
-            adapter.markApuntado(docId);
-            cargarEventosDisponibles();
-
-            accionEnProgreso = false;
-
-        }).addOnFailureListener(e -> {
-            if (!isAdded()) return;
-
-            String msg = e.getMessage() != null ? e.getMessage() : "";
-            if (msg.contains("YA_INSCRITO"))
-                Toast.makeText(requireContext(), "Ya estás inscrito.", Toast.LENGTH_SHORT).show();
-            else if (msg.contains("NO_PLAZAS"))
-                Toast.makeText(requireContext(), "No hay plazas disponibles.", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(requireContext(), "Error: " + msg, Toast.LENGTH_SHORT).show();
-
-            accionEnProgreso = false;
-        });
+    @Override
+    public void onDesapuntarse(Map<String, Object> evento) {
+        vm.desapuntarse(evento);
     }
 
     @Override

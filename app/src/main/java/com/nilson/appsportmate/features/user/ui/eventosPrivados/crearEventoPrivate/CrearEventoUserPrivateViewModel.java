@@ -7,36 +7,28 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.nilson.appsportmate.common.utils.Preferencias;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * ViewModel para creación de eventos privados del usuario.
- * Adaptado totalmente para eventos de tipo PARTICULAR.
- */
 public class CrearEventoUserPrivateViewModel extends ViewModel {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    // Estado
     private String uidUsuario;
+    private String puebloId;
 
-    // Señales UI
     private final MutableLiveData<String> toast = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navigateToGestionEventos = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> navigateToLogin = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> clearForm = new MutableLiveData<>(false);
 
-    // ---------------------------
-    // Setters / Getters
-    // ---------------------------
-
-    public void setUidUsuario(String uid) {
-        this.uidUsuario = uid;
-    }
+    public void setUidUsuario(String uid) { this.uidUsuario = uid; }
+    public void setPuebloId(String id) { this.puebloId = id; }
 
     public LiveData<String> getToast() { return toast; }
     public void consumeToast() { toast.setValue(null); }
@@ -50,10 +42,6 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
     public LiveData<Boolean> getClearForm() { return clearForm; }
     public void onFormCleared() { clearForm.setValue(false); }
 
-    // ---------------------------
-    // LÓGICA PRINCIPAL
-    // ---------------------------
-
     public void crearEventoParticular(String nombre,
                                       Integer cantidad,
                                       String fecha,
@@ -63,7 +51,6 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
                                       String materiales,
                                       String url) {
 
-        // ❗❗❗ **CORREGIDO — ESTA VALIDACIÓN ERA TU PROBLEMA**
         if (isEmpty(nombre) || cantidad == null || cantidad < 1 ||
                 isEmpty(fecha) || isEmpty(hora) ||
                 isEmpty(descripcion) || isEmpty(reglas) ||
@@ -79,8 +66,20 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
             return;
         }
 
-        // Mapa del evento PARTICULAR
+        if (isEmpty(puebloId)) {
+            toast.postValue("Error: pueblo no encontrado. Vuelve a iniciar sesión.");
+            navigateToLogin.postValue(true);
+            return;
+        }
+
+        // ============================
+        // CREAR EVENTO
+        // ============================
+
+        String idDoc = generarDocId(nombre, fecha, hora);
+
         Map<String, Object> evento = new HashMap<>();
+        evento.put("idDoc", idDoc);
         evento.put("nombre", nombre);
         evento.put("plazasDisponibles", cantidad);
         evento.put("fecha", fecha);
@@ -91,15 +90,29 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
         evento.put("url", url);
 
         evento.put("uidCreador", uidUsuario);
-        evento.put("tipo", "PARTICULAR"); // ← MUY IMPORTANTE
-        evento.put("idDoc", generarDocId(nombre, fecha, hora));
+        evento.put("tipo", "PARTICULAR");
+        evento.put("puebloId", puebloId);
 
-        // RUTA EN FIRESTORE PARA USUARIOS PARTICULARES
-        db.collection("eventos_user_private")
+        // ============================
+        // GUARDAR EN DOS SITIOS
+        // ============================
+
+        WriteBatch batch = db.batch();
+
+        DocumentReference refUser = db.collection("eventos_user_private")
                 .document(uidUsuario)
                 .collection("lista")
-                .document(evento.get("idDoc").toString())
-                .set(evento)
+                .document(idDoc);
+
+        DocumentReference refPueblo = db.collection("eventos_privados_por_pueblo")
+                .document(puebloId)
+                .collection("lista")
+                .document(idDoc);
+
+        batch.set(refUser, evento);
+        batch.set(refPueblo, evento);
+
+        batch.commit()
                 .addOnSuccessListener(unused -> {
                     toast.postValue("Evento creado correctamente.");
                     clearForm.postValue(true);
@@ -109,18 +122,11 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
                         toast.postValue("Error al crear el evento: " + e.getMessage()));
     }
 
-    // ---------------------------
-    // Logout (si fuese necesario)
-    // ---------------------------
     public void logout(Context ctx) {
         FirebaseAuth.getInstance().signOut();
         Preferencias.guardarRol(ctx, null);
         navigateToLogin.postValue(true);
     }
-
-    // ---------------------------
-    // Helpers
-    // ---------------------------
 
     public static String generarDocId(String nombre, String fecha, String hora) {
         return nombre.replace(" ", "_")

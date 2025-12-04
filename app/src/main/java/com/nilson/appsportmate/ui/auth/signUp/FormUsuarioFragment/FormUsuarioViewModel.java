@@ -53,8 +53,8 @@ public class FormUsuarioViewModel extends ViewModel {
             String comunidadNom,
             String provinciaNom,
             String ciudadNom,
-            String puebloNom,
-            String ign,
+            String puebloNom,     // nombre visible seleccionado
+            String puebloId,      // ⬅️ ANTES "ign" – AHORA ID REAL DEL PUEBLO
             String rol,
             String ayuntamientoId,
             String comunidadId,
@@ -76,6 +76,13 @@ public class FormUsuarioViewModel extends ViewModel {
         if (nombre.isEmpty()) { eNombre.setValue("Nombre requerido"); return; }
         if (apellidos.isEmpty()) { eApellidos.setValue("Apellidos requeridos"); return; }
         if (puebloNom.isEmpty()) { message.setValue("Selecciona un pueblo"); return; }
+
+        // PuebloId real obligatorio para poder filtrar eventos por pueblo
+        if (puebloId == null || puebloId.trim().isEmpty()) {
+            message.setValue("Error interno: pueblo no válido. Vuelve a seleccionar el pueblo.");
+            return;
+        }
+
         if (ayuntamientoId == null || ayuntamientoId.isEmpty()) {
             message.setValue("No se pudo obtener el ayuntamiento del pueblo");
             return;
@@ -92,7 +99,7 @@ public class FormUsuarioViewModel extends ViewModel {
                     }
                     crear(ctx, email, pass1, aliasInput, nombre, apellidos,
                             comunidadNom, provinciaNom, ciudadNom, puebloNom,
-                            ayuntamientoId);
+                            puebloId, ayuntamientoId);
                 })
                 .addOnFailureListener(e -> message.setValue("Error: " + e.getMessage()));
     }
@@ -108,6 +115,7 @@ public class FormUsuarioViewModel extends ViewModel {
             String provinciaNom,
             String ciudadNom,
             String puebloNom,
+            String puebloId,
             String ayuntamientoId
     ) {
         auth.createUserWithEmailAndPassword(email, pass)
@@ -126,6 +134,7 @@ public class FormUsuarioViewModel extends ViewModel {
                     perfil.put("provincia", provinciaNom);
                     perfil.put("ciudad", ciudadNom);
                     perfil.put("pueblo", puebloNom);
+                    perfil.put("puebloId", puebloId);          // ⬅️ ID REAL DEL PUEBLO
                     perfil.put("ayuntamientoId", ayuntamientoId);
 
                     Map<String, Object> authDoc = new HashMap<>();
@@ -139,10 +148,15 @@ public class FormUsuarioViewModel extends ViewModel {
                     batch.set(db.collection("usuariosAuth").document(uid), authDoc, SetOptions.merge());
 
                     batch.commit().addOnSuccessListener(unused -> {
+                        // Guardamos todo lo necesario para eventos privados
                         Preferencias.guardarUid(ctx, uid);
                         Preferencias.guardarAlias(ctx, alias);
                         Preferencias.guardarRol(ctx, "usuario");
                         Preferencias.guardarAyuntamientoId(ctx, ayuntamientoId);
+
+                        // Clave: guardamos el ID REAL del pueblo + nombre
+                        Preferencias.guardarPuebloId(ctx, puebloId);
+                        Preferencias.guardarPuebloNombre(ctx, puebloNom);
 
                         navUser.setValue(true);
                         message.setValue("Registro exitoso.");

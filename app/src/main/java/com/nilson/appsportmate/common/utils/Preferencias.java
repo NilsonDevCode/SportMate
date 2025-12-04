@@ -50,8 +50,13 @@ public class Preferencias {
     public static void borrarTodo(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constantes.PREFS_FILE, Context.MODE_PRIVATE);
         prefs.edit().clear().apply();
+
         SharedPreferences appPrefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         appPrefs.edit().clear().apply();
+
+        // Limpia también APP_PREFS por si se usó en algún punto
+        SharedPreferences appPrefs2 = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
+        appPrefs2.edit().clear().apply();
     }
 
     /* ==== Rol / App prefs ==== */
@@ -127,6 +132,7 @@ public class Preferencias {
         return prefs.getString("foto_url_usuario", null);
     }
 
+    // Estos dos los dejo por compatibilidad, pero ya no los usamos en el flujo de eventos privados
     public static String obtenerLocalidad(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
         return prefs.getString("localidad", null);

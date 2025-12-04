@@ -1,7 +1,6 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDisponiblesPrivate;
 
 import androidx.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,102 +8,81 @@ import java.util.Map;
 public class EventosDisponiblesUserPrivateUiState {
 
     public final boolean loading;
-    public final boolean actionInProgress;
-
-    @Nullable
-    public final String message;
-
     public final List<Map<String, Object>> disponibles;
     public final List<Map<String, Object>> mis;
+    public final @Nullable String message;
+    public final boolean actionInProgress;
 
-    // -------------------------------------------------------------------------
-    // CONSTRUCTOR PRIVADO
-    // -------------------------------------------------------------------------
     private EventosDisponiblesUserPrivateUiState(
             boolean loading,
-            boolean actionInProgress,
-            @Nullable String message,
             List<Map<String, Object>> disponibles,
-            List<Map<String, Object>> mis
+            List<Map<String, Object>> mis,
+            @Nullable String message,
+            boolean actionInProgress
     ) {
         this.loading = loading;
-        this.actionInProgress = actionInProgress;
-        this.message = message;
         this.disponibles = disponibles;
         this.mis = mis;
+        this.message = message;
+        this.actionInProgress = actionInProgress;
     }
 
-    // -------------------------------------------------------------------------
-    // FACTORY: LOADING
-    // -------------------------------------------------------------------------
     public static EventosDisponiblesUserPrivateUiState loading() {
         return new EventosDisponiblesUserPrivateUiState(
                 true,
-                false,
-                null,
                 Collections.emptyList(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                null,
+                false
         );
     }
 
-    // -------------------------------------------------------------------------
-    // FACTORY: SUCCESS
-    // -------------------------------------------------------------------------
     public static EventosDisponiblesUserPrivateUiState success(
             List<Map<String, Object>> disponibles,
             List<Map<String, Object>> mis
     ) {
         return new EventosDisponiblesUserPrivateUiState(
                 false,
-                false,
-                null,
                 disponibles,
-                mis
+                mis,
+                null,
+                false
         );
     }
 
-    // -------------------------------------------------------------------------
-    // FACTORY: MENSAJE
-    // -------------------------------------------------------------------------
     public static EventosDisponiblesUserPrivateUiState message(
             EventosDisponiblesUserPrivateUiState prev,
             String msg
     ) {
         return new EventosDisponiblesUserPrivateUiState(
                 prev.loading,
-                prev.actionInProgress,
-                msg,
                 prev.disponibles,
-                prev.mis
+                prev.mis,
+                msg,
+                prev.actionInProgress
         );
     }
 
-    // -------------------------------------------------------------------------
-    // FACTORY: ACTION PROGRESS
-    // -------------------------------------------------------------------------
     public static EventosDisponiblesUserPrivateUiState withAction(
             EventosDisponiblesUserPrivateUiState prev,
             boolean inProgress
     ) {
         return new EventosDisponiblesUserPrivateUiState(
                 prev.loading,
-                inProgress,
-                prev.message,
                 prev.disponibles,
-                prev.mis
+                prev.mis,
+                prev.message,
+                inProgress
         );
     }
 
-    // -------------------------------------------------------------------------
-    // BORRAR MENSAJE
-    // -------------------------------------------------------------------------
     public EventosDisponiblesUserPrivateUiState clearMessage() {
         return new EventosDisponiblesUserPrivateUiState(
-                this.loading,
-                this.actionInProgress,
+                loading,
+                disponibles,
+                mis,
                 null,
-                this.disponibles,
-                this.mis
+                actionInProgress
         );
     }
 }

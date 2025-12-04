@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -88,7 +87,6 @@ public class FormAytoViewModel extends ViewModel {
         if (razonSocial.isEmpty()) { eRazon.setValue("Razón social requerida"); return; }
         if (puebloCreado.isEmpty()) { message.setValue("Debes crear un pueblo"); return; }
 
-        // 🚫 BLOQUEA FIREBASE EN TESTS
         if (disableFirebaseForTest) {
             message.setValue("TEST_MODE");
             return;
@@ -153,7 +151,7 @@ public class FormAytoViewModel extends ViewModel {
                     batch.set(db.collection("usuariosAuth").document(uid), authDoc, SetOptions.merge());
 
                     batch.commit().addOnSuccessListener(unused -> {
-                        crearPueblo(uid, puebloCreado, comunidadId, provinciaId, ciudadId,
+                        crearPueblo(ctx, uid, puebloCreado, comunidadId, provinciaId, ciudadId,
                                 comunidadNom, provinciaNom, ciudadNom, nombreAyto);
 
                         Preferencias.guardarUid(ctx, uid);
@@ -169,6 +167,7 @@ public class FormAytoViewModel extends ViewModel {
     }
 
     private void crearPueblo(
+            Context ctx,
             String uid,
             String puebloCreado,
             String comunidadId,
@@ -192,7 +191,15 @@ public class FormAytoViewModel extends ViewModel {
         pueblo.put("ayuntamientoId", uid);
         pueblo.put("ayuntamientoNombre", nombreAyto);
 
-        db.collection("pueblos").add(pueblo);
+        db.collection("pueblos")
+                .add(pueblo)
+                .addOnSuccessListener(docRef -> {
+                    String puebloId = docRef.getId();
+
+                    // 🔥 Guardar en preferencias (lo ÚNICO que se añade)
+                    Preferencias.guardarPuebloId(ctx, puebloId);
+                    Preferencias.guardarPuebloNombre(ctx, puebloCreado);
+                });
     }
 
     public void consumeMessage() { message.setValue(null); }
