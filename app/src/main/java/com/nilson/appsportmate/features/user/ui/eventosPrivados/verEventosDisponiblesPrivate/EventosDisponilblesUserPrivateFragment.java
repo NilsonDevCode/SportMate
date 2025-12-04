@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentEventosDisponiblesUserPrivateBinding;
-import com.nilson.appsportmate.features.user.ui.eventosPrivados.eventosAdapterPrivate.EventosDisponiblesUserPrivateAdapter;
+import com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPrivate.EventosDisponiblesUserPrivateAdapter;
 
 import java.util.Map;
 import java.util.Collections;

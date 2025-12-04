@@ -1,4 +1,4 @@
-package com.nilson.appsportmate.features.user.ui.eventosPrivados.eventosAdapterPrivate;
+package com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPrivate;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -24,8 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
-import com.nilson.appsportmate.features.user.ui.eventosPrivados.eventosAdapterPrivate.EventosUserPrivateAdapter;
-import com.nilson.appsportmate.features.user.ui.eventosPrivados.eventosAdapterPrivate.InscritosUserPrivateAdapter;
+import com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPrivate.EventosUserPrivateAdapter;
 import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFragment;
 
 import java.util.ArrayList;
