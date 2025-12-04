@@ -78,6 +78,11 @@ public class InicioFragment extends Fragment {
                         .navigate(R.id.action_global_eventosDisponiblesUserPrivateFragment);
                 return true;
 
+            } else if (id == R.id.action_ver_eventos_creados_privado) {
+                Navigation.findNavController(binding.getRoot())
+                        .navigate(R.id.action_global_verEventosApuntadoPrivateFragment);
+                return true;
+
             } else if (id == R.id.action_cerrarSesion) {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Cerrar sesión")

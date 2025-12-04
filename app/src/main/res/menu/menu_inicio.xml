@@ -26,6 +26,10 @@
                 android:id="@+id/action_ver_evento_privado"
                 android:title="@string/ver_evento_privado"
                 tools:ignore="DuplicateIds" />
+            <item
+                android:id="@+id/action_ver_eventos_creados_privado"
+                android:title="@string/ver_eventos_apuntado_privado"
+                tools:ignore="DuplicateIds" />
 
         </menu>
     </item>
