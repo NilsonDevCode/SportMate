@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Opción principal del menú (Editar info) -->
@@ -17,8 +18,15 @@
             <item
                 android:id="@+id/action_cambiar_ayuntamiento"
                 android:title="@string/cambiar_ayuntamiento" />
+            <item
+                android:id="@+id/action_crear_evento_privado"
+                android:title="@string/crear_evento_privado"
+                tools:ignore="DuplicateIds" />
+
         </menu>
     </item>
+
+
 
     <!-- Nueva opción: Salir -->
     <item

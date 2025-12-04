@@ -180,10 +180,55 @@
     <action android:id="@+id/action_global_seleccionarNuevoAyuntamientoFragment" app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
     <action android:id="@+id/action_global_menuAyuntamientoFragment" app:destination="@id/menuAyuntamientoFragment" />
 
-    <!-- ✅ CORRECCIÓN AÑADIDA -->
+    <!-- 🔥 AÑADIDA (NO TOCA NADA MÁS) -->
+    <!-- ===================================================== -->
+    <!-- 📌 MÓDULO DE EVENTOS PRIVADOS DE USUARIO -->
+    <!-- ===================================================== -->
+
+    <!-- 1️⃣ Crear evento -->
+    <fragment
+        android:id="@+id/crearEventoUserPrivateFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.crearEventoPrivate.CrearEventoUserPrivateFragment"
+        android:label="Crear evento privado"
+        tools:layout="@layout/fragment_crear_evento_user_private">
+
+        <!-- Crear → Ver eventos creados -->
+        <action
+            android:id="@+id/action_crearEventoUserPrivateFragment_to_eventosDisponiblesUserPrivateFragment"
+            app:destination="@id/eventosDisponiblesUserPrivateFragment" />
+
+    </fragment>
+
+    <!-- 2️⃣ Ver eventos creados -->
+    <fragment
+        android:id="@+id/eventosDisponiblesUserPrivateFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDisponiblesPrivate.EventosDisponilblesUserPrivateFragment"
+        android:label="Eventos creados"
+        tools:layout="@layout/fragment_eventos_disponibles_user_private">
+
+        <!-- Ver eventos → Gestión -->
+        <action
+            android:id="@+id/action_eventosDisponiblesUserPrivateFragment_to_gestionEventosUserPrivateFragment"
+            app:destination="@id/gestionEventosUserPrivateFragment" />
+
+    </fragment>
+
+    <!-- 3️⃣ Gestión de eventos -->
+    <fragment
+        android:id="@+id/gestionEventosUserPrivateFragment"
+        android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.gestionEventosPrivate.GestionEventosUserPrivateFragment"
+        android:label="Gestión de mis eventos"
+        tools:layout="@layout/fragment_gestion_eventos_user_private" />
+    <action
+        android:id="@+id/action_global_crearEventoUserPrivateFragment"
+        app:destination="@id/crearEventoUserPrivateFragment" />
+
+    <!-- 🔥 Manteniendo sin cambios -->
     <action
         android:id="@+id/action_global_rolSelectionFragment"
         app:destination="@id/rolSelectionFragment" />
+
+
 
     <!-- ========================= -->
     <!-- Selección de rol -->

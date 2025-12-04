@@ -74,6 +74,8 @@
     <string name="login_create_here">Crea una aquí.</string>
     <string name="rol_usuario">Usuario Estándar</string>
     <string name="rol_ayuntamiento">Ayuntamiento</string>
+    <string name="crear_evento_privado">Crear evento privado</string>
+
 
     <!-- Mensajes -->
     <string name="welcome">¡Bienvenido!</string>

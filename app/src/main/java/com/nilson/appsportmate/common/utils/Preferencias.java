@@ -126,4 +126,15 @@ public class Preferencias {
         SharedPreferences prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         return prefs.getString("foto_url_usuario", null);
     }
+
+    public static String obtenerLocalidad(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
+        return prefs.getString("localidad", null);
+    }
+
+    public static void guardarLocalidad(Context context, String localidad) {
+        SharedPreferences prefs = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
+        prefs.edit().putString("localidad", localidad).apply();
+    }
+
 }

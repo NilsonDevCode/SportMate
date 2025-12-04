@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -168,6 +169,37 @@ public class FirestoreManager {
         });
     }
 
+    /**
+     * Firestore Manager dedicado a eventos particulares del usuario.
+     * Mantiene la ruta y acciones centralizadas.
+     */
+    public class CrearEventoUserPrivateFirestoreManager {
+
+        private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        public interface Callback {
+            void onSuccess();
+            void onFailure(Exception e);
+        }
+
+        /**
+         * Guarda un evento particular en:
+         * eventos_user_private/{uid}/lista/{idDoc}
+         */
+        public void crearEventoParticular(@NonNull String uidUsuario,
+                                          @NonNull String idDoc,
+                                          @NonNull Map<String, Object> evento,
+                                          @NonNull Callback callback) {
+
+            db.collection("eventos_user_private")
+                    .document(uidUsuario)
+                    .collection("lista")
+                    .document(idDoc)
+                    .set(evento)
+                    .addOnSuccessListener(unused -> callback.onSuccess())
+                    .addOnFailureListener(callback::onFailure);
+        }
+    }
     private static void createUsuariosAuth(FirebaseFirestore db, String uid, String alias, String rol, RoleCallback cb) {
         Map<String, Object> authDoc = new HashMap<>();
         authDoc.put("uid", uid);          // SIEMPRE UID, no alias

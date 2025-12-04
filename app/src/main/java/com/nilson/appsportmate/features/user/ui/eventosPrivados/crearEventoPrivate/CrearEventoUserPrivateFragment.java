@@ -1,63 +1,243 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.crearEventoPrivate;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.nilson.appsportmate.R;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CrearEventoUserPrivateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
+import com.google.android.material.button.MaterialButton;
+import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.common.utils.Preferencias;
+
+import java.util.Calendar;
+
 public class CrearEventoUserPrivateFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // UI
+    private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
+            etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private MaterialButton btnCrearEvento, btnGestionEventos;
+    private Button btnLogout;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CrearEventoUserPrivateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CrearEventoUserPrivateFragment newInstance(String param1, String param2) {
-        CrearEventoUserPrivateFragment fragment = new CrearEventoUserPrivateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    // VM
+    private CrearEventoUserPrivateViewModel vm;
+
+    // Estado
+    private String uidUsuario;
+
+    public CrearEventoUserPrivateFragment() {}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true); // NECESARIO PARA RECIBIR LAS OPCIONES DE MENÚ
     }
 
-    public CrearEventoUserPrivateFragment() {
-        // Required empty public constructor
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_crear_evento_user_private, container, false);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        vm = new ViewModelProvider(this).get(CrearEventoUserPrivateViewModel.class);
+
+        uidUsuario = Preferencias.obtenerUid(requireContext());
+        if (TextUtils.isEmpty(uidUsuario)) {
+            Toast.makeText(requireContext(), "Error: UID no encontrado.", Toast.LENGTH_LONG).show();
+            Navigation.findNavController(view).navigate(R.id.loginFragment);
+            return;
+        }
+
+        vm.setUidUsuario(uidUsuario);
+
+        bindViews(view);
+        setupClicks();
+        observeVm();
+    }
+
+    // ---------------------------
+    // OPCIONES DE MENÚ
+    // ---------------------------
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_crear_evento_privado) {
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_global_crearEventoUserPrivateFragment);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // ---------------------------
+    // Bind Views
+    // ---------------------------
+
+    private void bindViews(View v) {
+        etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);
+        etCantidadJugadores  = v.findViewById(R.id.etCantidadJugadores);
+        etFecha              = v.findViewById(R.id.etFecha);
+        etHora               = v.findViewById(R.id.etHora);
+        etDescripcionEvento  = v.findViewById(R.id.etDescripcionEvento);
+        etReglasEvento       = v.findViewById(R.id.etReglasEvento);
+        etMateriales         = v.findViewById(R.id.etMateriales);
+        etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);
+
+        btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);
+        btnGestionEventos    = v.findViewById(R.id.btnGestionEventos);
+        btnLogout            = v.findViewById(R.id.btnLogout);
+    }
+
+    // ---------------------------
+    // Click Listeners
+    // ---------------------------
+
+    private void setupClicks() {
+
+        etFecha.setOnClickListener(v -> mostrarDatePicker());
+        etHora.setOnClickListener(v -> mostrarTimePicker());
+
+        btnCrearEvento.setOnClickListener(v -> vm.crearEventoParticular(
+                txt(etNombreDeporte),
+                txtInt(etCantidadJugadores),
+                txt(etFecha),
+                txt(etHora),
+                txt(etDescripcionEvento),
+                txt(etReglasEvento),
+                txt(etMateriales),
+                txt(etUrlPueblo)
+        ));
+
+        btnGestionEventos.setOnClickListener(v -> {
+            NavController nav = Navigation.findNavController(requireView());
+            nav.navigate(R.id.action_crearEventoUserPrivateFragment_to_eventosDisponiblesUserPrivateFragment);
+
+        });
+
+
+        btnLogout.setOnClickListener(v -> {
+            NavController nav = Navigation.findNavController(v);
+            boolean popped = nav.popBackStack(R.id.inicioFragment, false);
+            if (!popped) {
+                nav.navigate(R.id.action_global_inicioFragment);
+            }
+        });
+    }
+
+    // ---------------------------
+    // Observers
+    // ---------------------------
+
+    private void observeVm() {
+
+        vm.getToast().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                vm.consumeToast();
+            }
+        });
+
+        vm.getClearForm().observe(getViewLifecycleOwner(), clear -> {
+            if (clear != null && clear) {
+                limpiarFormulario();
+                vm.onFormCleared();
+            }
+        });
+
+        vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -> {
+            if (go != null && go) {
+                NavController nav = Navigation.findNavController(requireView());
+                nav.navigate(R.id.action_eventosDisponiblesUserPrivateFragment_to_gestionEventosUserPrivateFragment);
+
+                vm.onNavigatedToGestionEventos();
+            }
+        });
+    }
+
+    // ---------------------------
+    // Pickers
+    // ---------------------------
+
+    private void mostrarDatePicker() {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(
+                requireContext(),
+                (view, year, month, dayOfMonth) ->
+                        etFecha.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH)
+        ).show();
+    }
+
+    private void mostrarTimePicker() {
+        Calendar c = Calendar.getInstance();
+        new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) ->
+                        etHora.setText(String.format("%02d:%02d", hourOfDay, minute)),
+                c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE),
+                true
+        ).show();
+    }
+
+    // ---------------------------
+    // Utils
+    // ---------------------------
+
+    private static String txt(EditText et) {
+        return et.getText() == null ? "" : et.getText().toString().trim();
+    }
+
+    private static Integer txtInt(EditText et) {
+        try {
+            String t = txt(et);
+            return t.isEmpty() ? null : Integer.parseInt(t);
+        } catch (Exception e) {
+            et.setError("Número inválido");
+            return null;
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_crear_evento_user_private, container, false);
+    private void limpiarFormulario() {
+        etNombreDeporte.setText("");
+        etCantidadJugadores.setText("");
+        etFecha.setText("");
+        etHora.setText("");
+        etDescripcionEvento.setText("");
+        etReglasEvento.setText("");
+        etMateriales.setText("");
+        etUrlPueblo.setText("");
+
+        etNombreDeporte.setError(null);
+        etCantidadJugadores.setError(null);
+        etFecha.setError(null);
+        etHora.setError(null);
+        etDescripcionEvento.setError(null);
+        etReglasEvento.setError(null);
+        etMateriales.setError(null);
+        etUrlPueblo.setError(null);
     }
 }
