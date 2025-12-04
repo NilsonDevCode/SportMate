@@ -3,25 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootInicio"
+    android:id="@+id/rootEventosApuntados"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
     android:padding="16dp"
-    tools:context=".features.user.ui.menuPrincipal.InicioFragment">
+    tools:context=".features.user.ui.eventosPrivados.VerEventosApuntadoPrivate.VerEventosApuntadoPrivateFragment">
 
-    <!-- Toolbar con menú (sin avatar) -->
+    <!-- 🔥 TOOLBAR CON MENÚ -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:title=""
+        app:menu="@menu/menu_inicio"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:title=""
-        app:menu="@menu/menu_inicio" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Foto de perfil ARRIBA a la IZQUIERDA -->
+    <!-- FOTO PERFIL -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardFotoPerfil"
         android:layout_width="120dp"
@@ -36,30 +36,19 @@
             android:id="@+id/imgFotoPerfil"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/foto_de_perfil"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="Foto perfil"/>
     </com.google.android.material.card.MaterialCardView>
 
-
-
-    <!-- Barrier para alinear lo de abajo bajo la fila (foto + título) -->
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barTopRowBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="cardFotoPerfil" />
-
-    <!-- 💠 Caja con el nombre del ayuntamiento (a todo el ancho) -->
+    <!-- UBICACIÓN -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardAyuntamiento"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        app:cardUseCompatPadding="true"
         app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@id/barTopRowBottom"
+        app:layout_constraintTop_toBottomOf="@id/cardFotoPerfil"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -73,7 +62,7 @@
                 android:id="@+id/tvUbicacionTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ubicacion Actual"
+                android:text="Ubicación Actual"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
 
@@ -81,26 +70,24 @@
                 android:id="@+id/tvAytoNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:text="—"
-                android:textSize="15sp"/>
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Lista de deportes apuntados (AHORA a TODO el ancho) -->
+    <!-- LISTA -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDeportesApuntados"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintTop_toBottomOf="@id/cardAyuntamiento"
+        app:layout_constraintBottom_toTopOf="@id/btnVerDeportes"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnVerDeportes"
         tools:listitem="@layout/adapter_deporte_apuntado_user" />
 
-    <!-- Texto cuando no hay deportes -->
+    <!-- TEXTO VACÍO -->
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
@@ -110,9 +97,9 @@
         app:layout_constraintTop_toTopOf="@id/rvDeportesApuntados"
         app:layout_constraintBottom_toBottomOf="@id/rvDeportesApuntados"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Loading -->
+    <!-- LOADING -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="48dp"
@@ -121,9 +108,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Botón: Ver deportes disponibles -->
+    <!-- BOTÓN VER DEPORTES -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVerDeportes"
         android:layout_width="0dp"
@@ -131,6 +118,5 @@
         android:text="@string/ver_deportes_disponibles"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

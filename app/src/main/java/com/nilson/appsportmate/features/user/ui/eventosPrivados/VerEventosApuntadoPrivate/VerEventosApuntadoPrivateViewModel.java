@@ -1,7 +1,9 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.VerEventosApuntadoPrivate;
 
+import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,6 +14,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +66,27 @@ public class VerEventosApuntadoPrivateViewModel extends ViewModel {
             this.plazas = plazas;
             this.inscritos = inscritos;
         }
+    }
+
+    public void subirFotoPerfilUsuario(@NonNull Uri uri, @NonNull Runnable onSuccess, @NonNull java.util.function.Consumer<String> onError) {
+        if (uid == null) {
+            onError.accept("Usuario no autenticado.");
+            return;
+        }
+
+        FirebaseStorage.getInstance().getReference("logos_usuarios/" + uid + ".jpg")
+                .putFile(uri)
+                .addOnSuccessListener(taskSnapshot ->
+                        taskSnapshot.getStorage().getDownloadUrl()
+                                .addOnSuccessListener(downloadUri -> {
+                                    db.collection("usuarios").document(uid)
+                                            .update("fotoUrl", downloadUri.toString())
+                                            .addOnSuccessListener(aVoid -> onSuccess.run())
+                                            .addOnFailureListener(e -> onError.accept("Error guardando URL: " + e.getMessage()));
+                                })
+                                .addOnFailureListener(e -> onError.accept("Error obteniendo URL: " + e.getMessage()))
+                )
+                .addOnFailureListener(e -> onError.accept("Error subiendo imagen: " + e.getMessage()));
     }
 
     // ============================================================
