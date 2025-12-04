@@ -75,6 +75,7 @@
     <string name="rol_usuario">Usuario Estándar</string>
     <string name="rol_ayuntamiento">Ayuntamiento</string>
     <string name="crear_evento_privado">Crear evento privado</string>
+    <string name="ver_evento_privado">Ver eventos privados dsponibles</string>
 
 
     <!-- Mensajes -->

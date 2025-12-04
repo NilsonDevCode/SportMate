@@ -59,13 +59,25 @@ public class InicioFragment extends Fragment {
 
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
+
             if (id == R.id.action_cambiar_foto_perfil) {
                 pickImage.launch("image/*");
                 return true;
+
             } else if (id == R.id.action_cambiar_ayuntamiento) {
                 Navigation.findNavController(binding.getRoot())
                         .navigate(R.id.action_global_seleccionarNuevoAyuntamientoFragment);
                 return true;
+
+            } else if (id == R.id.action_crear_evento_privado) {
+                Navigation.findNavController(binding.getRoot())
+                        .navigate(R.id.action_global_crearEventoUserPrivateFragment);
+                return true;
+            } else if (id == R.id.action_ver_evento_privado) {
+                Navigation.findNavController(binding.getRoot())
+                        .navigate(R.id.action_global_eventosDisponiblesUserPrivateFragment);
+                return true;
+
             } else if (id == R.id.action_cerrarSesion) {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Cerrar sesión")
@@ -75,8 +87,10 @@ public class InicioFragment extends Fragment {
                         .show();
                 return true;
             }
+
             return false;
         });
+
 
         pintarSaludo();
 

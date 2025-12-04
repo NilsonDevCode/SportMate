@@ -5,21 +5,23 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
-    <!-- ========================= -->
-    <!-- Splash -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🚀 1. SPLASH -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.nilson.appsportmate.ui.splash.SplashFragment"
         android:label="@string/splash_fragment_label"
         tools:layout="@layout/fragment_splash">
 
+        <!-- Splash → Auth -->
         <action
             android:id="@+id/action_splashFragment_to_authFragment"
             app:destination="@id/authFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
+        <!-- Splash → Inicio (si hay sesión) -->
         <action
             android:id="@+id/action_splashFragment_to_inicioFragment"
             app:destination="@id/inicioFragment"
@@ -27,45 +29,50 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- ========================= -->
-    <!-- Auth -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🔐 2. AUTH -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/authFragment"
         android:name="com.nilson.appsportmate.ui.auth.AuthFragment"
         android:label="@string/auth_fragment_label"
         tools:layout="@layout/fragment_auth">
 
+        <!-- Auth → Login -->
         <action
             android:id="@+id/action_authFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
 
+        <!-- Auth → Selección de rol -->
         <action
             android:id="@+id/action_authFragment_to_rolSelectionFragment"
             app:destination="@id/rolSelectionFragment" />
     </fragment>
 
-    <!-- ========================= -->
-    <!-- Login -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🔑 3. LOGIN -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nilson.appsportmate.ui.auth.login.LoginFragment"
         android:label="@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
 
+        <!-- Login → Usuario normal -->
         <action
             android:id="@+id/action_loginFragment_to_inicioFragment"
             app:destination="@id/inicioFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
+        <!-- Login → Ayuntamiento -->
         <action
             android:id="@+id/action_loginFragment_to_menuAyuntamientoFragment"
             app:destination="@id/menuAyuntamientoFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
+        <!-- Login → Gestión deportes Ayto -->
         <action
             android:id="@+id/action_loginFragment_to_gestionDeportesAyuntamientoFragment"
             app:destination="@id/gestionDeportesAyuntamientoFragment"
@@ -73,15 +80,16 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- ========================= -->
-    <!-- Registro Usuario -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🧍‍♂️ 4. REGISTRO USUARIO -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/formUsuarioFragment"
         android:name="com.nilson.appsportmate.ui.auth.signUp.FormUsuarioFragment.FormUsuarioFragment"
         android:label="Registro usuario"
         tools:layout="@layout/fragment_form_usuario">
 
+        <!-- Registro usuario → Inicio -->
         <action
             android:id="@+id/action_formUsuarioFragment_to_inicioFragment"
             app:destination="@id/inicioFragment"
@@ -89,15 +97,16 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- ========================= -->
-    <!-- Registro Ayuntamiento -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🏛️ 5. REGISTRO AYUNTAMIENTO -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/formAyuntamientoFragment"
         android:name="com.nilson.appsportmate.ui.auth.signUp.FormAytoFragment.FormAytoFragment"
         android:label="Registro ayuntamiento"
         tools:layout="@layout/fragment_form_ayuntamiento">
 
+        <!-- Registro ayto → Inicio -->
         <action
             android:id="@+id/action_formAyuntamientoFragment_to_inicioFragment"
             app:destination="@id/inicioFragment"
@@ -105,54 +114,61 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- ========================= -->
-    <!-- Inicio -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🏡 6. INICIO USUARIO -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/inicioFragment"
         android:name="com.nilson.appsportmate.features.user.ui.menuPrincipal.InicioFragment"
         android:label="@string/inicio"
         tools:layout="@layout/fragment_inicio">
 
+        <!-- Inicio → Deportes disponibles -->
         <action
             android:id="@+id/action_inicioFragment_to_deportesDisponiblesFragment"
             app:destination="@id/deportesDisponiblesFragment" />
 
+        <!-- Inicio → Cambiar ayuntamiento -->
         <action
             android:id="@+id/action_inicioFragment_to_seleccionarNuevoAyuntamientoFragment"
             app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
     </fragment>
 
+    <!-- Lista de deportes disponibles del ayuntamiento -->
     <fragment
         android:id="@+id/deportesDisponiblesFragment"
         android:name="com.nilson.appsportmate.features.user.ui.deportesdisponiblesAyto.DeportesDisponiblesFragment"
         android:label="Deportes disponibles"
         tools:layout="@layout/activity_deportes_disponibles" />
 
+    <!-- Selección de nuevo ayuntamiento -->
     <fragment
         android:id="@+id/seleccionarNuevoAyuntamientoFragment"
         android:name="com.nilson.appsportmate.features.user.ui.menuPrincipal.opcionesMenu.SeleccionarNuevoAyuntamientoFragment"
         android:label="@string/cambiar_ayuntamiento"
         tools:layout="@layout/fragment_seleccionar_nuevo_ayuntamiento" />
 
-    <!-- ========================= -->
-    <!-- Ayuntamiento -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🏢 7. MENU AYUNTAMIENTO -->
+    <!-- ========================================================= -->
     <fragment
         android:id="@+id/menuAyuntamientoFragment"
         android:name="com.nilson.appsportmate.features.townhall.ui.menuTownhall.menuAyuntamientoFragment"
         android:label="@string/inicio_ayuntamiento"
         tools:layout="@layout/fragment_menu_ayuntamiento">
 
+        <!-- Ayto → Gestión deportes -->
         <action
             android:id="@+id/action_menuAyuntamientoFragment_to_gestionDeportesAyuntamientoFragment"
             app:destination="@id/gestionDeportesAyuntamientoFragment" />
 
+        <!-- Ayto → Gestión eventos oficiales -->
         <action
             android:id="@+id/action_menuAyuntamientoFragment_to_gestionEventosMasPlazasFragment"
             app:destination="@id/gestionEventosMasPlazasFragment" />
     </fragment>
 
+    <!-- Gestión deportes ayto -->
     <fragment
         android:id="@+id/gestionDeportesAyuntamientoFragment"
         android:name="com.nilson.appsportmate.features.townhall.ui.gestiondeportes.GestionDeportesAyuntamientoFragment"
@@ -164,15 +180,16 @@
             app:destination="@id/gestionEventosMasPlazasFragment" />
     </fragment>
 
+    <!-- Gestión eventos oficiales -->
     <fragment
         android:id="@+id/gestionEventosMasPlazasFragment"
         android:name="com.nilson.appsportmate.features.townhall.ui.gestioneventos.GestionEventosMasPlazasFragment"
         android:label="Eventos publicados"
         tools:layout="@layout/activity_gestion_eventos_mas_plazas" />
 
-    <!-- ========================= -->
-    <!-- Acciones globales -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!-- 🌍 8. ACCIONES GLOBALES -->
+    <!-- ========================================================= -->
     <action android:id="@+id/action_global_inicioFragment" app:destination="@id/inicioFragment" />
     <action android:id="@+id/action_global_deportesDisponiblesFragment" app:destination="@id/deportesDisponiblesFragment" />
     <action android:id="@+id/action_global_gestionDeportesAyuntamientoFragment" app:destination="@id/gestionDeportesAyuntamientoFragment" />
@@ -180,59 +197,68 @@
     <action android:id="@+id/action_global_seleccionarNuevoAyuntamientoFragment" app:destination="@id/seleccionarNuevoAyuntamientoFragment" />
     <action android:id="@+id/action_global_menuAyuntamientoFragment" app:destination="@id/menuAyuntamientoFragment" />
 
-    <!-- 🔥 AÑADIDA (NO TOCA NADA MÁS) -->
-    <!-- ===================================================== -->
-    <!-- 📌 MÓDULO DE EVENTOS PRIVADOS DE USUARIO -->
-    <!-- ===================================================== -->
+    <!-- ⭐ YA EXISTÍA Y SE MANTIENE -->
+    <action
+        android:id="@+id/action_global_eventosDisponiblesUserPrivateFragment"
+        app:destination="@id/eventosDisponiblesUserPrivateFragment" />
 
-    <!-- 1️⃣ Crear evento -->
+    <!-- ⭐ AÑADIDO EXACTAMENTE LO QUE ME PEDISTE -->
+    <!-- ⭐ ACCIÓN GLOBAL → Gestión de eventos privados -->
+    <action
+        android:id="@+id/action_global_gestionEventosUserPrivateFragment"
+        app:destination="@id/gestionEventosUserPrivateFragment" />
+
+    <!-- ========================================================= -->
+    <!-- 👤 9. EVENTOS PRIVADOS DE USUARIO -->
+    <!-- ========================================================= -->
+
+    <!-- Crear evento privado -->
     <fragment
         android:id="@+id/crearEventoUserPrivateFragment"
         android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.crearEventoPrivate.CrearEventoUserPrivateFragment"
         android:label="Crear evento privado"
         tools:layout="@layout/fragment_crear_evento_user_private">
 
-        <!-- Crear → Ver eventos creados -->
         <action
             android:id="@+id/action_crearEventoUserPrivateFragment_to_eventosDisponiblesUserPrivateFragment"
             app:destination="@id/eventosDisponiblesUserPrivateFragment" />
 
+        <action
+            android:id="@+id/action_crearEventoUserPrivateFragment_to_gestionEventosUserPrivateFragment"
+            app:destination="@id/gestionEventosUserPrivateFragment" />
     </fragment>
 
-    <!-- 2️⃣ Ver eventos creados -->
+    <!-- Ver eventos creados -->
     <fragment
         android:id="@+id/eventosDisponiblesUserPrivateFragment"
         android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDisponiblesPrivate.EventosDisponilblesUserPrivateFragment"
         android:label="Eventos creados"
         tools:layout="@layout/fragment_eventos_disponibles_user_private">
 
-        <!-- Ver eventos → Gestión -->
         <action
             android:id="@+id/action_eventosDisponiblesUserPrivateFragment_to_gestionEventosUserPrivateFragment"
             app:destination="@id/gestionEventosUserPrivateFragment" />
-
     </fragment>
 
-    <!-- 3️⃣ Gestión de eventos -->
+    <!-- Gestión de eventos -->
     <fragment
         android:id="@+id/gestionEventosUserPrivateFragment"
         android:name="com.nilson.appsportmate.features.user.ui.eventosPrivados.gestionEventosPrivate.GestionEventosUserPrivateFragment"
         android:label="Gestión de mis eventos"
         tools:layout="@layout/fragment_gestion_eventos_user_private" />
+
+    <!-- Global → Crear evento privado -->
     <action
         android:id="@+id/action_global_crearEventoUserPrivateFragment"
         app:destination="@id/crearEventoUserPrivateFragment" />
 
-    <!-- 🔥 Manteniendo sin cambios -->
+    <!-- ========================================================= -->
+    <!-- 🎭 10. Selección de rol -->
+    <!-- ========================================================= -->
     <action
         android:id="@+id/action_global_rolSelectionFragment"
         app:destination="@id/rolSelectionFragment" />
 
-
-
-    <!-- ========================= -->
-    <!-- Selección de rol -->
-    <!-- ========================= -->
     <fragment
         android:id="@+id/rolSelectionFragment"
         android:name="com.nilson.appsportmate.ui.auth.signUp.rol.RolSelectionFragment"

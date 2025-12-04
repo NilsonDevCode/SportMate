@@ -77,18 +77,7 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         observeVm();
     }
 
-    // ---------------------------
-    // OPCIONES DE MENÚ
-    // ---------------------------
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_crear_evento_privado) {
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_global_crearEventoUserPrivateFragment);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     // ---------------------------
     // Bind Views
@@ -131,9 +120,9 @@ public class CrearEventoUserPrivateFragment extends Fragment {
 
         btnGestionEventos.setOnClickListener(v -> {
             NavController nav = Navigation.findNavController(requireView());
-            nav.navigate(R.id.action_crearEventoUserPrivateFragment_to_eventosDisponiblesUserPrivateFragment);
-
+            nav.navigate(R.id.action_crearEventoUserPrivateFragment_to_gestionEventosUserPrivateFragment);
         });
+
 
 
         btnLogout.setOnClickListener(v -> {
@@ -168,11 +157,11 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -> {
             if (go != null && go) {
                 NavController nav = Navigation.findNavController(requireView());
-                nav.navigate(R.id.action_eventosDisponiblesUserPrivateFragment_to_gestionEventosUserPrivateFragment);
-
+                nav.navigate(R.id.action_global_gestionEventosUserPrivateFragment);
                 vm.onNavigatedToGestionEventos();
             }
         });
+
     }
 
     // ---------------------------

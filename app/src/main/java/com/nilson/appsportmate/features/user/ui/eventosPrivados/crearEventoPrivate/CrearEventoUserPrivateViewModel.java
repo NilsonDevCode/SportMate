@@ -15,8 +15,7 @@ import java.util.Map;
 
 /**
  * ViewModel para creación de eventos privados del usuario.
- * Mismo estilo profesional que GestionDeportesAyuntamientoViewModel
- * pero adaptado totalmente a eventos de tipo PARTICULAR.
+ * Adaptado totalmente para eventos de tipo PARTICULAR.
  */
 public class CrearEventoUserPrivateViewModel extends ViewModel {
 
@@ -64,10 +63,11 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
                                       String materiales,
                                       String url) {
 
+        // ❗❗❗ **CORREGIDO — ESTA VALIDACIÓN ERA TU PROBLEMA**
         if (isEmpty(nombre) || cantidad == null || cantidad < 1 ||
                 isEmpty(fecha) || isEmpty(hora) ||
                 isEmpty(descripcion) || isEmpty(reglas) ||
-                isEmpty(materials(materiales)) || isEmpty(url)) {
+                isEmpty(materiales) || isEmpty(url)) {
 
             toast.postValue("Completa todos los campos");
             return;
@@ -91,7 +91,7 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
         evento.put("url", url);
 
         evento.put("uidCreador", uidUsuario);
-        evento.put("tipo", "PARTICULAR"); // ← CLAVE IMPORTANTE
+        evento.put("tipo", "PARTICULAR"); // ← MUY IMPORTANTE
         evento.put("idDoc", generarDocId(nombre, fecha, hora));
 
         // RUTA EN FIRESTORE PARA USUARIOS PARTICULARES
@@ -130,9 +130,5 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
 
     private boolean isEmpty(String s) {
         return s == null || s.trim().isEmpty();
-    }
-
-    private String materials(String m) {
-        return m == null ? "" : m.trim();
     }
 }
