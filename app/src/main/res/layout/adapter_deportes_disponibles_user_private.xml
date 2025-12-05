@@ -48,11 +48,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- Se desactiva autolink para poder controlar manualmente qué URL es clicable -->
     <TextView
         android:id="@+id/tvUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web" />
+        android:linksClickable="true" />
 
     <Button
         android:id="@+id/btnApuntarse"

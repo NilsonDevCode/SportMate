@@ -89,7 +89,7 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
         if (puebloId != null) {
             // Caso normal: ya hay pueblo guardado en Preferencias
             vm.init(uid, alias, puebloId);
-            vm.loadAll();
+            vm.activarListeners();
         } else {
             // ⚠ Fallback: leer pueblo desde Firestore (usuarios/{uid})
             if (uid != null) {
@@ -159,7 +159,7 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
 
                     // Ahora sí, inicializar VM con el pueblo correcto
                     vm.init(uid, alias, puebloIdDoc);
-                    vm.loadAll();
+                    vm.activarListeners();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error leyendo usuario para obtener puebloId", e);
@@ -182,11 +182,12 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
                     (nuevoNombre != null && !nuevoNombre.isEmpty()) ? nuevoNombre : "—"
             );
 
-            // Avisar al ViewModel si ha cambiado
-            vm.ensurePuebloId(nuevoId);
+            // Ya NO se llama a vm.ensurePuebloId()
+
             lastPuebloId = nuevoId;
         }
     }
+
 
     // ==========================================================
     // OBSERVAR UI STATE
@@ -228,14 +229,14 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
 
     @Override
     public void onDesapuntarse(Map<String, Object> evento) {
-        Log.e(TAG, "onDesapuntarse evento=" + evento);
-        vm.desapuntarse(evento);
+
     }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.e(TAG, "onDestroyView()");
+        if (vm != null) vm.detenerListeners();
         binding = null;
     }
 

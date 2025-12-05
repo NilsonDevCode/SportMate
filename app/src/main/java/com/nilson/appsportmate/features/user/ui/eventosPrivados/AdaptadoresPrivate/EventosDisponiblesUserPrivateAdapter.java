@@ -1,9 +1,14 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPrivate;
 
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -33,7 +38,6 @@ public class EventosDisponiblesUserPrivateAdapter
 
     private final Set<String> apuntados = new HashSet<>();
 
-    // 🔥 Cache local de puebloId → nombre
     private final Map<String, String> cachePueblos = new HashMap<>();
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -75,48 +79,13 @@ public class EventosDisponiblesUserPrivateAdapter
         String plazas      = str(d.get("plazasDisponibles"));
         String descripcion = str(d.get("descripcion"));
         String reglas      = str(d.get("reglas"));
+        String urlPueblo   = str(d.get("urlPueblo"));
         String material    = firstNonEmpty(str(d.get("materiales")), str(d.get("material")));
 
-        // ------- AQUÍ ES DONDE MEJORAMOS -------
-        String puebloId = str(d.get("puebloId"));
-        String url      = str(d.get("url"));
+        String puebloId    = str(d.get("puebloId"));
+        String urlEvento   = str(d.get("url"));
 
-        // Texto final a mostrar (nombre pueblo + url si existe)
-        String infoPueblo = "—";
-
-        if (!TextUtils.isEmpty(puebloId)) {
-
-            if (cachePueblos.containsKey(puebloId)) {
-                // ✔ Ya lo tenemos en cache → instantáneo
-                String nombrePueblo = cachePueblos.get(puebloId);
-                infoPueblo = "Pueblo: " + nombrePueblo +
-                        (!TextUtils.isEmpty(url) ? "\nUbi: " + url : "");
-            } else {
-                // ✔ Lo cargamos de Firestore solo una vez
-                db.collection("pueblos")
-                        .document(puebloId)
-                        .get()
-                        .addOnSuccessListener(doc -> {
-                            String nombreReal = doc.getString("nombre");
-                            if (!TextUtils.isEmpty(nombreReal)) {
-
-                                cachePueblos.put(puebloId, nombreReal);
-
-                                // refrescar item concreto
-                                notifyItemChanged(h.getAdapterPosition());
-                            }
-                        });
-                // Mientras carga mostramos provisionalmente
-                infoPueblo = !TextUtils.isEmpty(url) ? url : "Cargando pueblo…";
-            }
-
-        } else {
-            // Si no hay puebloId, mostramos solo la URL
-            infoPueblo = TextUtils.isEmpty(url) ? "—" : url;
-        }
-
-        // ------- FIN MEJORA -------
-
+        // ---------- DATOS VISUALES ----------
         h.tvNombre.setText(nonEmpty(nombre, "(Sin nombre)"));
         h.tvFecha.setText("Fecha: " + nonEmpty(fecha, "—"));
         h.tvHora.setText("Hora: " + nonEmpty(hora, "—"));
@@ -125,9 +94,31 @@ public class EventosDisponiblesUserPrivateAdapter
         h.tvReglas.setText("Reglas: " + nonEmpty(reglas, "—"));
         h.tvMaterial.setText("Material: " + nonEmpty(material, "—"));
 
-        // ✔ Ahora sí mostramos el NOMBRE del pueblo
-        h.tvUrl.setText(infoPueblo);
+        // -------------- URL EVENTO + URL PUEBLO -----------------
 
+        String textoFinal = "URL del evento : " + nonEmpty(urlPueblo, "—");
+
+        SpannableString spannable = new SpannableString(textoFinal);
+
+        if (!TextUtils.isEmpty(urlPueblo)) {
+            int start = textoFinal.indexOf(urlPueblo);
+            int end = start + urlPueblo.length();
+
+            if (start >= 0) {
+                spannable.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlPueblo));
+                        widget.getContext().startActivity(intent);
+                    }
+                }, start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+        h.tvUrl.setText(spannable);
+        h.tvUrl.setMovementMethod(LinkMovementMethod.getInstance()); // Solo el pueblo es clicable
+
+        // -------- BOTÓN APUNTARSE --------
         boolean yaApuntado = apuntados.contains(idDoc);
 
         h.btnApuntarse.setText(yaApuntado ? "Apuntado" : "Apuntarse");
