@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -97,7 +98,7 @@ public class VerEventosApuntadoPrivateFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Cerrar sesión")
                         .setMessage("¿Seguro que quieres cerrar sesión?")
-                        .setPositiveButton("Sí, salir", (d, w) -> cerrarSesion())
+                        .setPositiveButton("Sí, salir", (d, w) -> cerrarSesionYVolver())
                         .setNegativeButton("Cancelar", null)
                         .show();
                 return true;
@@ -291,6 +292,18 @@ public class VerEventosApuntadoPrivateFragment extends Fragment {
                 .addOnFailureListener(e -> binding.tvAytoNombre.setText("(desconocido)"));
     }
 
+
+    private void cerrarSesionYVolver() {
+        FirebaseAuth.getInstance().signOut();
+        if (getContext() != null) Preferencias.borrarTodo(getContext());
+
+        NavOptions opts = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build();
+
+        Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.authFragment, null, opts);
+    }
 
     @Override
     public void onDestroyView() {
