@@ -27,7 +27,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    // 🔥 EJECUTOR PROPIO PARA EVITAR EL ERROR “Must not be called on main thread”
+    // 🔥 EJECUTOR para evitar errores por await en MAIN
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final MutableLiveData<EventosDisponiblesUserPrivateUiState> _uiState =
@@ -36,7 +36,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
     private @Nullable String uid;
     private @Nullable String alias;
-    private @Nullable String puebloIdFiltro;
+    private @Nullable String puebloId;
 
     private final List<Map<String, Object>> cacheDisponibles = new ArrayList<>();
     private final List<Map<String, Object>> cacheMis = new ArrayList<>();
@@ -48,86 +48,101 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     public void init(@Nullable String uid, @Nullable String alias, @Nullable String puebloId) {
         this.uid = emptyToNull(uid);
         this.alias = emptyToNull(alias);
-        this.puebloIdFiltro = emptyToNull(puebloId);
+        this.puebloId = emptyToNull(puebloId);
 
-        Log.e(TAG, "INIT → uid=" + uid + " alias=" + alias + " puebloIdFiltro=" + puebloId);
+        Log.e(TAG, "INIT → uid=" + this.uid + " alias=" + this.alias + " puebloId=" + this.puebloId);
+    }
+
+    public void ensurePuebloId(@Nullable String nuevoId) {
+        nuevoId = emptyToNull(nuevoId);
+        Log.e(TAG, "ensurePuebloId() nuevo=" + nuevoId + " actual=" + puebloId);
+
+        if ((nuevoId == null && puebloId != null) || (nuevoId != null && !nuevoId.equals(puebloId))) {
+            Log.e(TAG, "→ Cambio detectado, recargando...");
+            this.puebloId = nuevoId;
+            loadAll();
+        }
     }
 
 
     // ==========================================================
-    // CARGAR TODO — YA NO BLOQUEA EL MAIN
+    // LOAD ALL
     // ==========================================================
     public void loadAll() {
-        Log.e(TAG, "🔄 loadAll() llamado");
+        Log.e(TAG, "loadAll() llamado");
+
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.loading());
 
         Tasks.whenAll(
                 Tasks.call(executor, () -> {
-                    loadDisponiblesSafe();
+                    Log.e(TAG, "📌 Ejecutando cargarDisponiblesInternal...");
+                    cargarDisponiblesInternal();
                     return null;
                 }),
                 Tasks.call(executor, () -> {
-                    loadMisSafe();
+                    Log.e(TAG, "📌 Ejecutando cargarMisInternal...");
+                    cargarMisInternal();
                     return null;
                 })
-        ).addOnSuccessListener(x -> {
+        ).addOnSuccessListener(v -> {
 
-            Log.e(TAG, "✔ loadAll completado → disponibles=" + cacheDisponibles.size()
-                    + " misInscripciones=" + cacheMis.size());
+            Log.e(TAG, "✔ loadAll COMPLETADO → disponibles=" + cacheDisponibles.size()
+                    + " mis=" + cacheMis.size());
 
-            _uiState.setValue(EventosDisponiblesUserPrivateUiState.success(
-                    new ArrayList<>(cacheDisponibles),
-                    new ArrayList<>(cacheMis)
-            ));
-
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "❌ loadAll ERROR", e);
-
-            _uiState.setValue(EventosDisponiblesUserPrivateUiState.message(
+            _uiState.setValue(
                     EventosDisponiblesUserPrivateUiState.success(
                             new ArrayList<>(cacheDisponibles),
                             new ArrayList<>(cacheMis)
-                    ),
-                    "Error cargando datos"
-            ));
+                    )
+            );
+
+        }).addOnFailureListener(e -> {
+
+            Log.e(TAG, "❌ ERROR en loadAll()", e);
+
+            _uiState.setValue(
+                    EventosDisponiblesUserPrivateUiState.message(
+                            EventosDisponiblesUserPrivateUiState.success(
+                                    new ArrayList<>(cacheDisponibles),
+                                    new ArrayList<>(cacheMis)
+                            ),
+                            "Error cargando datos: " + (e != null ? e.getMessage() : "")
+                    )
+            );
         });
     }
 
 
     // ==========================================================
-    // DISPONIBLES — FILTRADOS POR PUEBLO
+    // CARGA DE DISPONIBLES (POR PUEBLO)
     // ==========================================================
-    private void loadDisponiblesSafe() throws Exception {
+    private void cargarDisponiblesInternal() throws Exception {
 
-        Log.e(TAG, "🔍 loadDisponiblesSafe() puebloIdFiltro=" + puebloIdFiltro);
+        Log.e(TAG, "cargarDisponiblesInternal() puebloId=" + puebloId);
 
         cacheDisponibles.clear();
-        if (puebloIdFiltro == null) {
-            Log.e(TAG, "⛔ ERROR → puebloIdFiltro es NULL");
+
+        if (puebloId == null) {
+            Log.e(TAG, "⛔ puebloId es NULL, no se cargan eventos");
             return;
         }
 
-        var ref = db.collection("eventos_privados_por_pueblo")
-                .document(puebloIdFiltro)
-                .collection("lista");
-
-        Log.e(TAG, "📂 Consultando → eventos_privados_por_pueblo/" + puebloIdFiltro + "/lista");
+        Log.e(TAG, "Consultando ruta: eventos_privados_por_pueblo/" + puebloId + "/lista");
 
         List<DocumentSnapshot> docs = Tasks.await(
-                ref.get(Source.SERVER)
+                db.collection("eventos_privados_por_pueblo")
+                        .document(puebloId)
+                        .collection("lista")
+                        .get(Source.SERVER)
         ).getDocuments();
 
-        Log.e(TAG, "📄 Documentos encontrados: " + docs.size());
+        Log.e(TAG, "Documentos encontrados: " + docs.size());
 
         for (DocumentSnapshot d : docs) {
-
-            Log.e(TAG, "➡ Documento → " + d.getId() + " → " + d.getData());
+            Log.e(TAG, "➡ Evento: " + d.getId() + " → " + d.getData());
 
             Map<String, Object> m = d.getData();
-            if (m == null) {
-                Log.e(TAG, "⚠ Evento sin data → ignorado");
-                continue;
-            }
+            if (m == null) continue;
 
             m = new HashMap<>(m);
             m.put("idDoc", d.getId());
@@ -141,15 +156,16 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
 
     // ==========================================================
-    // MIS INSCRIPCIONES
+    // CARGA DE MIS INSCRIPCIONES
     // ==========================================================
-    private void loadMisSafe() throws Exception {
+    private void cargarMisInternal() throws Exception {
 
-        Log.e(TAG, "🔍 loadMisSafe() uid=" + uid);
+        Log.e(TAG, "cargarMisInternal() uid=" + uid);
 
         cacheMis.clear();
+
         if (uid == null) {
-            Log.e(TAG, "⛔ ERROR → uid es NULL");
+            Log.e(TAG, "⛔ uid NULL, no se cargan inscripciones");
             return;
         }
 
@@ -160,7 +176,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
                         .get(Source.SERVER)
         ).getDocuments();
 
-        Log.e(TAG, "📄 Inscripciones encontradas: " + snaps.size());
+        Log.e(TAG, "Inscripciones encontradas: " + snaps.size());
 
         if (snaps.isEmpty()) return;
 
@@ -169,7 +185,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
         for (DocumentSnapshot d : snaps) {
 
-            Log.e(TAG, "➡ Inscripción → " + d.getId() + " → " + d.getData());
+            Log.e(TAG, "➡ Inscripción: " + d.getId() + " → " + d.getData());
 
             Map<String, Object> m = d.getData();
             if (m == null) continue;
@@ -177,7 +193,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             String eventId = d.getId();
             String ownerId = valueOf(m.get("ownerId"));
 
-            Log.e(TAG, "🔎 Verificando evento " + eventId + " del owner " + ownerId);
+            Log.e(TAG, "Verificando evento real → ownerId=" + ownerId + " eventId=" + eventId);
 
             DocumentSnapshot snapEvt = Tasks.await(
                     db.collection("eventos_user_private")
@@ -188,22 +204,22 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             );
 
             if (!snapEvt.exists()) {
-                Log.e(TAG, "⚠ Evento YA NO EXISTE → limpiando inscripción");
+                Log.e(TAG, "⚠ Evento eliminado → limpiando inscripción");
                 limpieza.delete(d.getReference());
                 continue;
             }
 
             m = new HashMap<>(m);
             m.put("idDoc", eventId);
-
             tmp.add(m);
         }
 
         Tasks.await(limpieza.commit());
 
+        cacheMis.clear();
         cacheMis.addAll(tmp);
 
-        Log.e(TAG, "✔ Mis eventos válidos: " + cacheMis.size());
+        Log.e(TAG, "✔ Inscripciones válidas: " + cacheMis.size());
     }
 
 
@@ -224,14 +240,14 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
         String eventId = valueOf(evento.get("idDoc"));
         String ownerId = valueOf(evento.get("ownerId"));
 
-        Log.e(TAG, "📌 Apuntarse eventId=" + eventId + " ownerId=" + ownerId);
+        Log.e(TAG, "→ Apuntarse eventId=" + eventId + " ownerId=" + ownerId);
 
-        DocumentReference refEvento = db.collection("eventos_user_private")
+        DocumentReference refEvt = db.collection("eventos_user_private")
                 .document(ownerId)
                 .collection("lista")
                 .document(eventId);
 
-        DocumentReference refInscrito = refEvento.collection("inscritos_privados").document(uid);
+        DocumentReference refInscrito = refEvt.collection("inscritos_privados").document(uid);
         DocumentReference refUser = db.collection("usuarios")
                 .document(uid)
                 .collection("inscripciones_privadas")
@@ -239,22 +255,26 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
         db.runTransaction(tx -> {
 
-            DocumentSnapshot snapEvt = tx.get(refEvento);
+            Log.e(TAG, "🔄 Ejecutando transacción APUNTARSE...");
+
+            DocumentSnapshot snapEvt = tx.get(refEvt);
             Long plazas = snapEvt.getLong("plazasDisponibles");
 
             Log.e(TAG, "📊 plazasDisponibles=" + plazas);
 
             if (plazas == null) plazas = 0L;
-
             if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
             if (tx.get(refInscrito).exists()) throw new IllegalStateException("YA_INSCRITO");
 
-            tx.update(refEvento, "plazasDisponibles", plazas - 1);
+            tx.update(refEvt, "plazasDisponibles", plazas - 1);
 
             Map<String, Object> ins = new HashMap<>();
             ins.put("uid", uid);
             ins.put("alias", alias);
             ins.put("ts", System.currentTimeMillis());
+
+            Log.e(TAG, "Añadiendo inscrito → " + ins);
+
             tx.set(refInscrito, ins);
 
             Map<String, Object> copia = new HashMap<>(evento);
@@ -264,17 +284,14 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
             return null;
 
-        }).addOnSuccessListener(unused -> {
-
-            Log.e(TAG, "✔ Apuntado correctamente");
+        }).addOnSuccessListener(v -> {
+            Log.e(TAG, "✔ APUNTADO CORRECTAMENTE");
             postMessage("Inscripción completada");
             reloadAfterAction();
-
         }).addOnFailureListener(e -> {
 
             Log.e(TAG, "❌ Error apuntándose", e);
-
-            String msg = (e.getMessage() == null) ? "" : e.getMessage();
+            String msg = e != null ? e.getMessage() : "";
 
             if (msg.contains("YA_INSCRITO"))
                 postMessage("Ya estás inscrito");
@@ -296,7 +313,7 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
         Log.e(TAG, "🔴 desapuntarse() evento=" + evento);
 
         if (uid == null) {
-            postMessage("Debes iniciar sesión");
+            postMessage("Inicia sesión");
             return;
         }
 
@@ -305,14 +322,14 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
         String eventId = valueOf(evento.get("idDoc"));
         String ownerId = valueOf(evento.get("ownerId"));
 
-        Log.e(TAG, "📌 Desapuntarse eventId=" + eventId + " ownerId=" + ownerId);
+        Log.e(TAG, "→ Desapuntarse eventId=" + eventId + " ownerId=" + ownerId);
 
-        DocumentReference refEvento = db.collection("eventos_user_private")
+        DocumentReference refEvt = db.collection("eventos_user_private")
                 .document(ownerId)
                 .collection("lista")
                 .document(eventId);
 
-        DocumentReference refInscrito = refEvento.collection("inscritos_privados").document(uid);
+        DocumentReference refInscrito = refEvt.collection("inscritos_privados").document(uid);
         DocumentReference refUser = db.collection("usuarios")
                 .document(uid)
                 .collection("inscripciones_privadas")
@@ -320,33 +337,31 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
         db.runTransaction(tx -> {
 
-            DocumentSnapshot snapEvt = tx.get(refEvento);
+            Log.e(TAG, "🔄 Ejecutando transacción DESAPUNTARSE...");
+
+            DocumentSnapshot snapEvt = tx.get(refEvt);
             Long plazas = snapEvt.getLong("plazasDisponibles");
 
-            Log.e(TAG, "📊 plazasDisponibles antes=" + plazas);
+            Log.e(TAG, "📊 plazasDisponibles=" + plazas);
 
             if (plazas == null) plazas = 0L;
-
             if (!tx.get(refInscrito).exists())
                 throw new IllegalStateException("NO_ESTABA_INSCRITO");
 
-            tx.update(refEvento, "plazasDisponibles", plazas + 1);
+            tx.update(refEvt, "plazasDisponibles", plazas + 1);
             tx.delete(refInscrito);
             tx.delete(refUser);
 
             return null;
 
-        }).addOnSuccessListener(unused -> {
-
-            Log.e(TAG, "✔ Desapuntado correctamente");
-            postMessage("Inscripción cancelada");
+        }).addOnSuccessListener(v -> {
+            Log.e(TAG, "✔ DESAPUNTADO CORRECTAMENTE");
+            postMessage("Inscripción eliminada");
             reloadAfterAction();
-
         }).addOnFailureListener(e -> {
 
-            Log.e(TAG, "❌ Error desapuntarse", e);
-
-            String msg = (e.getMessage() == null) ? "" : e.getMessage();
+            Log.e(TAG, "❌ Error al desapuntarse", e);
+            String msg = e != null ? e.getMessage() : "";
 
             if (msg.contains("NO_ESTABA_INSCRITO"))
                 postMessage("No estabas inscrito");
@@ -363,25 +378,29 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     // ==========================================================
     private void reloadAfterAction() {
 
-        Log.e(TAG, "🔄 Recargando datos...");
+        Log.e(TAG, "🔄 reloadAfterAction() → recargando...");
 
         Tasks.whenAll(
                 Tasks.call(executor, () -> {
-                    loadDisponiblesSafe();
+                    Log.e(TAG, "→ Recargando disponibles");
+                    cargarDisponiblesInternal();
                     return null;
                 }),
                 Tasks.call(executor, () -> {
-                    loadMisSafe();
+                    Log.e(TAG, "→ Recargando mis inscripciones");
+                    cargarMisInternal();
                     return null;
                 })
         ).addOnSuccessListener(v -> {
 
             Log.e(TAG, "✔ Recarga completada OK");
 
-            _uiState.setValue(EventosDisponiblesUserPrivateUiState.success(
-                    new ArrayList<>(cacheDisponibles),
-                    new ArrayList<>(cacheMis)
-            ));
+            _uiState.setValue(
+                    EventosDisponiblesUserPrivateUiState.success(
+                            new ArrayList<>(cacheDisponibles),
+                            new ArrayList<>(cacheMis)
+                    )
+            );
 
             setActionInProgress(false);
 
@@ -399,24 +418,29 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     // HELPERS
     // ==========================================================
     private void postMessage(String msg) {
-        Log.e(TAG, "📢 Mensaje UI → " + msg);
+        Log.e(TAG, "📢 postMessage() → " + msg);
+
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
         if (prev == null) prev = EventosDisponiblesUserPrivateUiState.loading();
+
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.message(prev, msg));
     }
 
     public void consumeMessage() {
+        Log.e(TAG, "🧹 consumeMessage()");
+
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
         if (prev != null && prev.message != null) {
-            Log.e(TAG, "🧹 Limpiando mensaje UI");
             _uiState.setValue(prev.clearMessage());
         }
     }
 
     private void setActionInProgress(boolean inProgress) {
-        Log.e(TAG, "⏳ Acción en progreso = " + inProgress);
+        Log.e(TAG, "⏳ setActionInProgress=" + inProgress);
+
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
         if (prev == null) prev = EventosDisponiblesUserPrivateUiState.loading();
+
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.withAction(prev, inProgress));
     }
 

@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.MainActivity;
 import com.nilson.appsportmate.R;
+import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentFormUsuarioBinding;
 import com.nilson.appsportmate.common.utils.AuthAliasHelper;
 
@@ -189,18 +190,19 @@ public class FormUsuarioFragment extends Fragment {
         binding.spPuebloUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+
+
                 if (position < 0 || position >= pueblosDocs.size()) return;
 
                 DocumentSnapshot d = pueblosDocs.get(position);
 
-                // Nombre del pueblo en el TextInput
+                // Nombre del pueblo
                 binding.etPuebloUsuario.setText(d.getString("nombre"));
 
-                // Detectar ayuntamiento
+                // Ayuntamiento detectado
                 String aytoNombre = safe(d.getString("ayuntamientoNombre"));
                 String aytoId = safe(d.getString("ayuntamientoId"));
                 String creadorUid = safe(d.getString("createdByUid"));
-
                 if (aytoId == null) aytoId = creadorUid;
                 ayuntamientoIdSel = aytoId;
 
@@ -210,6 +212,10 @@ public class FormUsuarioFragment extends Fragment {
 
                 // ⭐⭐ ID REAL DEL PUEBLO ⭐⭐
                 puebloIdSel = d.getId();
+
+                // 🚨 GUARDAR SIEMPRE QUE SE SELECCIONA
+                Preferencias.guardarPuebloId(requireContext(), puebloIdSel);
+                Preferencias.guardarPuebloNombre(requireContext(), d.getString("nombre"));
             }
             public void onNothingSelected(AdapterView<?> parent) {}
         });
