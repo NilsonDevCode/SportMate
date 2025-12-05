@@ -87,7 +87,7 @@ public class CrearEventoUserPrivateViewModel extends ViewModel {
         evento.put("descripcion", descripcion);
         evento.put("reglas", reglas);
         evento.put("materiales", materiales);
-        evento.put("url", url);
+        evento.put("urlPueblo", url);
 
         evento.put("uidCreador", uidUsuario);
         evento.put("tipo", "PARTICULAR");

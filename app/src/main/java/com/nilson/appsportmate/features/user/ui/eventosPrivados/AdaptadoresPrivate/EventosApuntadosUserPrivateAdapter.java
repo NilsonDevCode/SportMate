@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.features.user.ui.eventosPrivados.VerEventosApuntadoPrivate.VerEventosApuntadoPrivateViewModel.EventoUi;
 
-import java.util.Objects;
-
 public class EventosApuntadosUserPrivateAdapter
         extends ListAdapter<EventoUi, EventosApuntadosUserPrivateAdapter.VH> {
 
@@ -31,38 +29,41 @@ public class EventosApuntadosUserPrivateAdapter
         this.listener = listener;
     }
 
+    // ============================
+    // 🔥 DIFFUTIL PROFESIONAL
+    // Igual al del adapter que funciona
+    // ============================
     private static final DiffUtil.ItemCallback<EventoUi> DIFF =
             new DiffUtil.ItemCallback<EventoUi>() {
-
                 @Override
                 public boolean areItemsTheSame(@NonNull EventoUi a, @NonNull EventoUi b) {
-                    return Objects.equals(a.docId, b.docId);
+                    return a.docId != null && a.docId.equals(b.docId);
                 }
 
                 @Override
                 public boolean areContentsTheSame(@NonNull EventoUi a, @NonNull EventoUi b) {
-                    return eq(a.nombre, b.nombre) &&
-                            eq(a.descripcion, b.descripcion) &&
-                            eq(a.fecha, b.fecha) &&
-                            eq(a.hora, b.hora) &&
-                            eq(a.lugar, b.lugar) &&
+                    return str(a.nombre).equals(str(b.nombre)) &&
+                            str(a.descripcion).equals(str(b.descripcion)) &&
+                            str(a.fecha).equals(str(b.fecha)) &&
+                            str(a.hora).equals(str(b.hora)) &&
+                            str(a.lugar).equals(str(b.lugar)) &&
                             a.plazas == b.plazas &&
                             a.inscritos == b.inscritos;
                 }
 
-                private boolean eq(String a, String b) {
-                    if (a == null) a = "";
-                    if (b == null) b = "";
-                    return a.equals(b);
-                }
+                private String str(String s){ return s == null ? "" : s; }
             };
 
-    public static class VH extends RecyclerView.ViewHolder {
+
+    // ============================
+    // VIEW HOLDER
+    // ============================
+    static class VH extends RecyclerView.ViewHolder {
 
         TextView tvNombre, tvDescripcion, tvFecha, tvHora, tvLugar, tvPlazas, tvInscritos;
-        ImageView ivChevrons;
+        ImageView ivDummy1, ivDummy2;
 
-        public VH(@NonNull View v) {
+        VH(@NonNull View v) {
             super(v);
 
             tvNombre      = v.findViewById(R.id.tvNombreDeporte);
@@ -72,10 +73,14 @@ public class EventosApuntadosUserPrivateAdapter
             tvLugar       = v.findViewById(R.id.tvLugar);
             tvPlazas      = v.findViewById(R.id.tvPlazas);
             tvInscritos   = v.findViewById(R.id.tvInscritos);
-            ivChevrons    = v.findViewById(R.id.ivChevrons);
+
+
         }
     }
 
+    // ============================
+    // ON CREATE
+    // ============================
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -84,9 +89,11 @@ public class EventosApuntadosUserPrivateAdapter
         return new VH(v);
     }
 
+    // ============================
+    // ON BIND (MISMO FORMATO DE INICIO)
+    // ============================
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
-
         EventoUi it = getItem(pos);
 
         h.tvNombre.setText(nz(it.nombre));
@@ -108,7 +115,5 @@ public class EventosApuntadosUserPrivateAdapter
         });
     }
 
-    private String nz(String s) {
-        return s == null ? "" : s;
-    }
+    private String nz(String s){ return s == null ? "" : s; }
 }
