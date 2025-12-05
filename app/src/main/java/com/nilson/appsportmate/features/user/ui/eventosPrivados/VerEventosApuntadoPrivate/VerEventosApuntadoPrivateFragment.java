@@ -228,23 +228,69 @@ public class VerEventosApuntadoPrivateFragment extends Fragment {
     private void cargarUbicacionActual() {
         if (!isAdded()) return;
 
+        // 1️⃣ Intentar leer de preferencias
         ubicacionActualId = Preferencias.obtenerPuebloId(requireContext());
         binding.tvUbicacionTitulo.setText("Ubicación Actual");
 
+        // 2️⃣ SI NO EXISTE → LEERLO DE FIRESTORE IGUAL QUE INICIOFRAGMENT
         if (ubicacionActualId == null) {
-            binding.tvAytoNombre.setText("—");
-            return;
+
+            String uid = FirebaseAuth.getInstance().getUid();
+            if (uid == null) {
+                binding.tvAytoNombre.setText("—");
+                return;
+            }
+
+            db.collection("usuarios").document(uid)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (!doc.exists()) {
+                            binding.tvAytoNombre.setText("—");
+                            return;
+                        }
+
+                        String puebloId = doc.getString("puebloId");
+                        String puebloNombre = doc.getString("puebloNombre");
+
+                        if (puebloId != null && !puebloId.isEmpty()) {
+                            // Guardar en preferencias para que no falle por defecto
+                            Preferencias.guardarPuebloId(requireContext(), puebloId);
+                            if (puebloNombre != null)
+                                Preferencias.guardarPuebloNombre(requireContext(), puebloNombre);
+
+                            ubicacionActualId = puebloId;
+
+                            // Recargar la UI
+                            binding.tvAytoNombre.setText(
+                                    puebloNombre != null ? puebloNombre : "—"
+                            );
+                        } else {
+                            binding.tvAytoNombre.setText("—");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        binding.tvAytoNombre.setText("—");
+                    });
+
+            return; // <- Importante
         }
 
+        // 3️⃣ SI SÍ EXISTE → CARGAR DESDE COLECCIÓN PUEBLOS
         db.collection("pueblos")
                 .document(ubicacionActualId)
                 .get()
                 .addOnSuccessListener(doc -> {
                     String nombre = doc.getString("nombre");
                     binding.tvAytoNombre.setText(nombre != null ? nombre : "—");
+
+                    // Guardar nombre en preferencias si está bien
+                    if (nombre != null && !nombre.isEmpty()) {
+                        Preferencias.guardarPuebloNombre(requireContext(), nombre);
+                    }
                 })
                 .addOnFailureListener(e -> binding.tvAytoNombre.setText("(desconocido)"));
     }
+
 
     @Override
     public void onDestroyView() {
