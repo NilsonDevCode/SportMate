@@ -9,22 +9,15 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
-/**
- * Servicio Firestore – Eventos Privados
- */
 public class FirestoreTransaccionesPrivate {
 
-    /* ==========================================================
-     * Interfaces / Callbacks
-     * ========================================================== */
     public interface SimpleResult {
         void onSuccess();
         void onError(@NonNull Exception e);
@@ -46,9 +39,6 @@ public class FirestoreTransaccionesPrivate {
         void onError(@NonNull Exception e);
     }
 
-    /* ==========================================================
-     * Campos
-     * ========================================================== */
     private final FirebaseFirestore db;
     private final String ownerId;
 
@@ -58,9 +48,6 @@ public class FirestoreTransaccionesPrivate {
         this.ownerId = ownerId;
     }
 
-    /* ==========================================================
-     * Referencias
-     * ========================================================== */
     public CollectionReference eventosRef() {
         return db.collection("eventos_user_private")
                 .document(ownerId)
@@ -73,9 +60,10 @@ public class FirestoreTransaccionesPrivate {
                 .collection("inscritos_privados");
     }
 
-    /* ==========================================================
-     * Listado y tiempo real
-     * ========================================================== */
+    /* NECESARIO PARA EL VIEWMODEL */
+    public CollectionReference getInscritosRef(String idDoc) {
+        return inscritosRef(idDoc);
+    }
 
     public void listarEventos(@NonNull EventsResult cb) {
         eventosRef().get()
@@ -145,9 +133,6 @@ public class FirestoreTransaccionesPrivate {
         });
     }
 
-    /* ==========================================================
-     * Plazas (+ / -)
-     * ========================================================== */
     public void incrementarPlazas(@NonNull String idDoc,
                                   @NonNull SimpleResult cb) {
 
@@ -185,9 +170,6 @@ public class FirestoreTransaccionesPrivate {
                 .addOnFailureListener(cb::onError);
     }
 
-    /* ==========================================================
-     * Borrar / Actualizar / Migración
-     * ========================================================== */
     public void borrarEvento(@NonNull String idDoc,
                              @NonNull SimpleResult cb) {
 
@@ -259,9 +241,6 @@ public class FirestoreTransaccionesPrivate {
                 .addOnFailureListener(cb::onError);
     }
 
-    /* ==========================================================
-     * Expulsar inscrito
-     * ========================================================== */
     public void expulsarInscrito(
             String idDoc,
             String uidUser,

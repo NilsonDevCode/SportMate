@@ -103,8 +103,36 @@ public class GestionEventosUserPrivateViewModel extends ViewModel {
         fx.borrarEvento(idDoc, simpleToastReload("Evento borrado"));
     }
 
-    public void editarEvento(Map<String,Object> evento) {
-        mensaje.postValue("Editar evento privado (pendiente)");
+    /* ==========================================================
+     * *** EDITAR EVENTO PRIVADO COMPLETO ***
+     * ========================================================== */
+    public void editarEvento(String oldId, String newId, Map<String,Object> nuevos) {
+        if (oldId.equals(newId)) {
+            fx.actualizarEventoCampos(oldId, nuevos, new FirestoreTransaccionesPrivate.SimpleResult() {
+                @Override public void onSuccess() {
+                    mensaje.postValue("Evento actualizado");
+                }
+                @Override public void onError(@NonNull Exception e) {
+                    mensaje.postValue("Error actualizando: " + e.getMessage());
+                }
+            });
+        } else {
+            fx.crearEventoConMigracion(oldId, newId, nuevos, new FirestoreTransaccionesPrivate.SimpleResult() {
+                @Override public void onSuccess() {
+                    mensaje.postValue("Actualizado y migrado");
+                }
+                @Override public void onError(@NonNull Exception e) {
+                    mensaje.postValue("Error migrando: " + e.getMessage());
+                }
+            });
+        }
+    }
+
+    public static String generarDocIdPrivado(String nombre, String fecha, String hora) {
+        if (nombre == null) nombre = "";
+        if (fecha  == null) fecha  = "";
+        if (hora   == null) hora   = "";
+        return nombre + "_" + fecha.replace("/", "_") + "_" + hora.replace(":", "_");
     }
 
     /* ==========================================================
@@ -149,7 +177,7 @@ public class GestionEventosUserPrivateViewModel extends ViewModel {
     }
 
     public CollectionReference getInscritosRef(String idDoc) {
-        return fx.inscritosRef(idDoc);
+        return fx.getInscritosRef(idDoc);
     }
 
     /* ==========================================================

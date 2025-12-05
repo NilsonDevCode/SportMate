@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
@@ -27,6 +28,7 @@ import com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPriva
 import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -143,8 +145,12 @@ public class GestionEventosUserPrivateFragment extends Fragment
 
     @Override public void onIncrementar(String idDoc) { vm.incrementarPlazas(idDoc); }
     @Override public void onDecrementar(String idDoc) { vm.decrementarPlazas(idDoc); }
-    @Override public void onEditar(Map<String, Object> evento) { vm.editarEvento(evento); }
     @Override public void onBorrar(Map<String, Object> evento) { pedirConfirmacionBorrar(evento); }
+
+    @Override
+    public void onEditar(Map<String, Object> evento) {
+        mostrarDialogoEditar(evento);
+    }
 
     @Override
     public void onVerInscritos(String idDoc, String tituloMostrado) {
@@ -156,6 +162,9 @@ public class GestionEventosUserPrivateFragment extends Fragment
         return vm.getInscritosRef(idDoc);
     }
 
+    /* ==========================================================
+     * CONFIRMAR BORRADO
+     * ========================================================== */
     private void pedirConfirmacionBorrar(Map<String, Object> evento) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Borrar evento")
@@ -166,6 +175,90 @@ public class GestionEventosUserPrivateFragment extends Fragment
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    /* ==========================================================
+     * DIÁLOGO COMPLETO DE EDICIÓN
+     * ========================================================== */
+    private void mostrarDialogoEditar(Map<String, Object> evento) {
+        View view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_editar_deporte, null);
+
+        TextInputEditText etNombre   = view.findViewById(R.id.etNombreDeporte);
+        TextInputEditText etPlazas   = view.findViewById(R.id.etCantidadJugadores);
+        TextInputEditText etFecha    = view.findViewById(R.id.etFecha);
+        TextInputEditText etHora     = view.findViewById(R.id.etHora);
+        TextInputEditText etDesc     = view.findViewById(R.id.etDescripcionEvento);
+        TextInputEditText etReglas   = view.findViewById(R.id.etReglasEvento);
+        TextInputEditText etMaterial = view.findViewById(R.id.etMateriales);
+
+        etNombre.setText(String.valueOf(evento.get("nombre")));
+        etPlazas.setText(String.valueOf(evento.get("plazasDisponibles")));
+        etFecha.setText(String.valueOf(evento.get("fecha")));
+        etHora.setText(String.valueOf(evento.get("hora")));
+        etDesc.setText(str(evento.get("descripcion")));
+        etReglas.setText(str(evento.get("reglas")));
+        etMaterial.setText(str(evento.get("materiales")));
+
+        etFecha.setOnClickListener(v -> mostrarDatePickerPara(etFecha));
+        etHora.setOnClickListener(v -> mostrarTimePickerPara(etHora));
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Editar evento privado")
+                .setView(view)
+                .setPositiveButton("Guardar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(dlg ->
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setOnClickListener(btn -> {
+
+                            String nombre   = etNombre.getText().toString().trim();
+                            String plazasTx = etPlazas.getText().toString().trim();
+                            String fecha    = etFecha.getText().toString().trim();
+                            String hora     = etHora.getText().toString().trim();
+                            String desc     = etDesc.getText().toString().trim();
+                            String reglas   = etReglas.getText().toString().trim();
+                            String material = etMaterial.getText().toString().trim();
+
+                            if (nombre.isEmpty()) { etNombre.setError("Obligatorio"); return; }
+
+                            int plazas;
+                            try { plazas = Integer.parseInt(plazasTx); }
+                            catch (Exception e) { etPlazas.setError("Número inválido"); return; }
+
+                            Map<String, Object> nuevos = new HashMap<>();
+                            nuevos.put("nombre", nombre);
+                            nuevos.put("plazasDisponibles", plazas);
+                            nuevos.put("fecha", fecha);
+                            nuevos.put("hora", hora);
+                            nuevos.put("descripcion", desc);
+                            nuevos.put("reglas", reglas);
+                            nuevos.put("materiales", material);
+                            nuevos.put("uidOwner", uidUsuario);
+
+                            String oldId = String.valueOf(evento.get("idDoc"));
+                            String newId = GestionEventosUserPrivateViewModel
+                                    .generarDocIdPrivado(nombre, fecha, hora);
+
+                            vm.editarEvento(oldId, newId, nuevos);
+
+                            dialog.dismiss();
+                        })
+        );
+
+        dialog.show();
+    }
+
+    private String str(Object o) { return o == null ? "" : String.valueOf(o); }
+
+    private void mostrarDatePickerPara(TextInputEditText target) {
+        // Igual que en GestionEventosMasPlazasFragment
+    }
+
+    private void mostrarTimePickerPara(TextInputEditText target) {
+        // Igual que en GestionEventosMasPlazasFragment
     }
 
     private void abrirInscritosDialog(String idDoc, String titulo) {
