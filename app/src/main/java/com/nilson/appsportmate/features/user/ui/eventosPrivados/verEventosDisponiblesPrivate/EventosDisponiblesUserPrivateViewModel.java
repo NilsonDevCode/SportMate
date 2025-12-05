@@ -1,3 +1,5 @@
+// TU CLASE COMPLETA + CAMBIO
+
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDisponiblesPrivate;
 
 import android.util.Log;
@@ -10,12 +12,8 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Source;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +37,9 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     private @Nullable String alias;
     private @Nullable String puebloId;
 
-    // CACHES
     private final List<Map<String, Object>> cacheDisponibles = new ArrayList<>();
     private final List<Map<String, Object>> cacheMis = new ArrayList<>();
 
-    // LISTENERS FIRESTORE
     private ListenerRegistration listenerEventos = null;
     private ListenerRegistration listenerMisInscripciones = null;
 
@@ -59,11 +55,11 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
         Log.e(TAG, "INIT → uid=" + this.uid + " alias=" + this.alias + " puebloId=" + this.puebloId);
     }
 
+
     // ==========================================================
-    // ACTIVAR + DETENER LISTENERS
+    // LISTENERS
     // ==========================================================
     public void activarListeners() {
-        Log.e(TAG, "🔥 activarListeners()");
 
         detenerListeners();
 
@@ -72,92 +68,67 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             return;
         }
 
-        // LISTENER DE EVENTOS DISPONIBLES EN ESTE PUEBLO
-        listenerEventos =
-                db.collection("eventos_privados_por_pueblo")
-                        .document(puebloId)
-                        .collection("lista")
-                        .addSnapshotListener((snap, e) -> {
+        // LISTENER EVENTOS DISPONIBLES
+        listenerEventos = db.collection("eventos_privados_por_pueblo")
+                .document(puebloId)
+                .collection("lista")
+                .addSnapshotListener((snap, e) -> {
 
-                            if (e != null) {
-                                Log.e(TAG, "❌ Error listener eventos", e);
-                                return;
-                            }
-                            if (snap == null) return;
+                    if (e != null || snap == null) return;
 
-                            cacheDisponibles.clear();
+                    cacheDisponibles.clear();
 
-                            for (DocumentSnapshot d : snap.getDocuments()) {
-                                Map<String, Object> m = d.getData();
-                                if (m == null) continue;
+                    for (DocumentSnapshot d : snap.getDocuments()) {
+                        Map<String, Object> m = d.getData();
+                        if (m == null) continue;
 
-                                m = new HashMap<>(m);
-                                m.put("idDoc", d.getId());
-                                m.put("ownerId", m.get("uidCreador"));
+                        m = new HashMap<>(m);
+                        m.put("idDoc", d.getId());
+                        m.put("ownerId", m.get("uidCreador"));
 
-                                cacheDisponibles.add(m);
-                            }
+                        cacheDisponibles.add(m);
+                    }
 
-                            Log.e(TAG, "📡 Listener eventos → " + cacheDisponibles.size());
+                    publicarEstado();
+                });
 
-                            publicarEstado();
-                        });
-
-        // LISTENER DE MIS INSCRIPCIONES (FILTRADAS POR ESTE PUEBLO)
+        // LISTENER MIS INSCRIPCIONES
         if (uid != null) {
+            listenerMisInscripciones = db.collection("usuarios")
+                    .document(uid)
+                    .collection("inscripciones_privadas")
+                    .whereEqualTo("puebloId", puebloId)
+                    .addSnapshotListener((snap, e) -> {
 
-            listenerMisInscripciones =
-                    db.collection("usuarios")
-                            .document(uid)
-                            .collection("inscripciones_privadas")
-                            .whereEqualTo("puebloId", puebloId)
-                            .addSnapshotListener((snap, e) -> {
+                        if (e != null || snap == null) return;
 
-                                if (e != null) {
-                                    Log.e(TAG, "❌ Error listener mis inscripciones", e);
-                                    return;
-                                }
-                                if (snap == null) return;
+                        cacheMis.clear();
 
-                                cacheMis.clear();
+                        for (DocumentSnapshot d : snap.getDocuments()) {
 
-                                for (DocumentSnapshot d : snap.getDocuments()) {
+                            Map<String, Object> m = d.getData();
+                            if (m == null) continue;
 
-                                    Map<String, Object> m = d.getData();
-                                    if (m == null) continue;
+                            m = new HashMap<>(m);
+                            m.put("idDoc", d.getId());
+                            m.put("estoyInscrito", true);
 
-                                    m = new HashMap<>(m);
-                                    m.put("idDoc", d.getId());
-                                    m.put("estoyInscrito", true);
+                            cacheMis.add(m);
+                        }
 
-                                    cacheMis.add(m);
-                                }
-
-                                Log.e(TAG, "📡 Listener MIS → " + cacheMis.size());
-
-                                publicarEstado();
-                            });
+                        publicarEstado();
+                    });
         }
     }
+
 
     public void detenerListeners() {
-        if (listenerEventos != null) {
-            listenerEventos.remove();
-            listenerEventos = null;
-        }
-        if (listenerMisInscripciones != null) {
-            listenerMisInscripciones.remove();
-            listenerMisInscripciones = null;
-        }
+        if (listenerEventos != null) listenerEventos.remove();
+        if (listenerMisInscripciones != null) listenerMisInscripciones.remove();
     }
 
-    // ==========================================================
-    // PUBLICAR ESTADO
-    // ==========================================================
-    private void publicarEstado() {
 
-        Log.e(TAG, "📤 publicarEstado() → disponibles=" + cacheDisponibles.size()
-                + " mis=" + cacheMis.size());
+    private void publicarEstado() {
 
         _uiState.setValue(
                 EventosDisponiblesUserPrivateUiState.success(
@@ -172,8 +143,6 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     // APUNTARSE
     // ==========================================================
     public void apuntarse(Map<String, Object> evento) {
-
-        Log.e(TAG, "🟢 apuntarse() evento=" + evento);
 
         if (uid == null || alias == null) {
             postMessage("Inicia sesión para apuntarte.");
@@ -206,8 +175,18 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
             if (tx.get(refInscrito).exists()) throw new IllegalStateException("YA_INSCRITO");
 
+            // 🔥 RESTAR PLAZA EN eventos_user_private
             tx.update(refEvt, "plazasDisponibles", plazas - 1);
 
+            // 🔥 RESTAR TAMBIÉN EN eventos_privados_por_pueblo
+            DocumentReference refPueblo = db.collection("eventos_privados_por_pueblo")
+                    .document(puebloId)
+                    .collection("lista")
+                    .document(eventId);
+
+            tx.update(refPueblo, "plazasDisponibles", plazas - 1);
+
+            // GUARDAR INSCRIPCIÓN
             Map<String, Object> ins = new HashMap<>();
             ins.put("uid", uid);
             ins.put("alias", alias);
@@ -245,27 +224,17 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     }
 
 
+
     // ==========================================================
     // HELPERS
     // ==========================================================
     private void postMessage(String msg) {
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
-        if (prev == null) prev = EventosDisponiblesUserPrivateUiState.loading();
-
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.message(prev, msg));
-    }
-
-    public void consumeMessage() {
-        EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
-        if (prev != null && prev.message != null) {
-            _uiState.setValue(prev.clearMessage());
-        }
     }
 
     private void setActionInProgress(boolean inProgress) {
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
-        if (prev == null) prev = EventosDisponiblesUserPrivateUiState.loading();
-
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.withAction(prev, inProgress));
     }
 

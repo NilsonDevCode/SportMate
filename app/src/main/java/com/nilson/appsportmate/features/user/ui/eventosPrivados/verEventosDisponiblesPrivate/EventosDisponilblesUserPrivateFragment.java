@@ -202,7 +202,7 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
             if (state.message != null) {
                 Log.e(TAG, "Mensaje recibido: " + state.message);
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
-                vm.consumeMessage();
+
             }
 
             if (state.disponibles != null) {
