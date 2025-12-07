@@ -158,13 +158,18 @@ public class InicioViewModel extends ViewModel {
                             ui.lugar = str(r.get("lugar"));
                             ui.ayuntamiento = str(r.get("aytoNombre"));
 
+                            // Plazas declaradas
                             Object p = r.get("plazasMax");
                             ui.plazasMax = p instanceof Integer ? (Integer) p :
                                     (p instanceof Long ? ((Long) p).intValue() : 0);
 
+                            // Inscritos reales
                             Object ins = r.get("inscritos");
                             ui.inscritos = ins instanceof Integer ? (Integer) ins :
                                     (ins instanceof Long ? ((Long) ins).intValue() : 0);
+
+                            // 🔥 Ajuste AUTOMÁTICO → plazasDisponibles = max - inscritos
+                            ui.plazasMax = Math.max(ui.plazasMax - ui.inscritos, 0);
 
                             out.add(ui);
                         }
