@@ -188,7 +188,6 @@ public class VerEventosApuntadoPrivateViewModel extends ViewModel {
 
                         e.docId = str(r.get("docId"));
                         e.ownerId = str(r.get("ownerId"));
-
                         e.nombre = str(r.get("nombre"));
                         e.descripcion = str(r.get("descripcion"));
                         e.fecha = str(r.get("fecha"));
@@ -198,8 +197,13 @@ public class VerEventosApuntadoPrivateViewModel extends ViewModel {
                         e.plazas = toInt(r.get("plazas"));
                         e.inscritos = toInt(r.get("inscritos"));
 
+                        // 🔥 Ajuste AUTOMÁTICO
+                        // plazasDisponibles = plazasDeclaradas - inscritosReales
+                        e.plazas = Math.max(e.plazas - e.inscritos, 0);
+
                         salida.add(e);
                     }
+
 
                     _uiState.postValue(VerEventosApuntadoPrivateUiState.success(salida));
                 });
