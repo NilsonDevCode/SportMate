@@ -23,8 +23,8 @@
     <string name="sign_up_community_label">Comunidad</string>
     <string name="sign_up_province_label">Provincia</string>
     <string name="sign_up_city_label">Ciudad</string>
-    <string name="sign_up_town_label">Pueblo (existente)</string>
-    <string name="sign_up_townhall_label">Ayuntamiento (auto)</string>
+    <string name="sign_up_town_label">Pueblo </string>
+    <string name="sign_up_townhall_label">Ayuntamiento </string>
     <string name="sign_up_create_town_label">Pueblo (crear nuevo)</string>
     <string name="sign_up_password_label">Contraseña</string>
     <string name="sign_up_confirm_password_label">Repetir contraseña</string>
@@ -75,8 +75,8 @@
     <string name="rol_usuario">Usuario Estándar</string>
     <string name="rol_ayuntamiento">Ayuntamiento</string>
     <string name="crear_evento_privado">Crear evento privado</string>
-    <string name="ver_evento_privado">Ver eventos privados dsponibles</string>
-    <string name="ver_eventos_apuntado_privado">Mis eventos privados</string>
+    <string name="ver_evento_privado">Ver eventos disponibles de usuarios</string>
+    <string name="ver_eventos_apuntado_privado">Mis planes con amigos </string>
 
 
     <!-- Mensajes -->
@@ -121,7 +121,8 @@
     <string name="previous">Previous</string>
     <string name="inicio">Inicio</string>
     <string name="foto_de_perfil">Foto de perfil</string>
-    <string name="ver_deportes_disponibles">Ver deportes disponibles</string>
+    <string name="ver_deportes_disponibles">Ver Eventos disponibles Ayto</string>
+    <string name="ver_deportes_disponiblesPrivados">Reúnete y juega con usarios </string>
     <string name="deporte">Deporte</string>
     <string name="ayuntamiento">Ayuntamiento</string>
 
@@ -130,12 +131,12 @@
     <string name="cambiar_foto_de_perfil">Cambiar foto de perfil</string>
     <string name="cambiar_ayuntamiento">Cambiar ayuntamiento</string>
     <string name="inicio_ayuntamiento">inicio_ayuntamiento</string>
-    <string name="inscritos">inscritos</string>
+    <string name="inscritos">Inscritos</string>
     <string name="ubicacion">Ubicación</string>
 
     <!-- Rol -->
     <string name="elige_perfil">Elige tu perfil y</string>
-    <string name="crea_cuenta">crea una cuenta...</string>
+    <string name="crea_cuenta">Crea una cuenta...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
