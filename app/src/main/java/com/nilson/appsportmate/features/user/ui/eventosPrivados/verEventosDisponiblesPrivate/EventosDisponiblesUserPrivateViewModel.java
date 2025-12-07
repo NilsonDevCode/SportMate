@@ -1,5 +1,3 @@
-// TU CLASE COMPLETA + CAMBIO
-
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.verEventosDisponiblesPrivate;
 
 import android.util.Log;
@@ -19,15 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
     private static final String TAG = "EventosPrivadosVM";
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final MutableLiveData<EventosDisponiblesUserPrivateUiState> _uiState =
             new MutableLiveData<>(EventosDisponiblesUserPrivateUiState.loading());
@@ -43,10 +38,13 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     private ListenerRegistration listenerEventos = null;
     private ListenerRegistration listenerMisInscripciones = null;
 
+    // 👉 NUEVO: listeners por cada evento privado
+    private final List<ListenerRegistration> listenerEventosUserPrivate = new ArrayList<>();
 
-    // ==========================================================
+
+    // ============================================================
     // INIT
-    // ==========================================================
+    // ============================================================
     public void init(@Nullable String uid, @Nullable String alias, @Nullable String puebloId) {
         this.uid = emptyToNull(uid);
         this.alias = emptyToNull(alias);
@@ -56,9 +54,9 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     }
 
 
-    // ==========================================================
-    // LISTENERS
-    // ==========================================================
+    // ============================================================
+    // LISTENERS PRINCIPALES
+    // ============================================================
     public void activarListeners() {
 
         detenerListeners();
@@ -68,31 +66,66 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             return;
         }
 
-        // LISTENER EVENTOS DISPONIBLES
+        // ============================================================
+        // LISTENER EVENTOS DISPONIBLES (lista pública por pueblo)
+        // ============================================================
         listenerEventos = db.collection("eventos_privados_por_pueblo")
                 .document(puebloId)
                 .collection("lista")
                 .addSnapshotListener((snap, e) -> {
 
-                    if (e != null || snap == null) return;
+                    if (e != null || snap == null) {
+                        Log.e(TAG, "Error listener eventos: " + e);
+                        return;
+                    }
 
                     cacheDisponibles.clear();
+                    listenerEventosUserPrivate.forEach(ListenerRegistration::remove);
+                    listenerEventosUserPrivate.clear();
 
                     for (DocumentSnapshot d : snap.getDocuments()) {
+
                         Map<String, Object> m = d.getData();
                         if (m == null) continue;
 
                         m = new HashMap<>(m);
-                        m.put("idDoc", d.getId());
-                        m.put("ownerId", m.get("uidCreador"));
+                        String idDoc = d.getId();
+                        String ownerId = String.valueOf(m.get("uidCreador"));
+
+                        m.put("idDoc", idDoc);
+                        m.put("ownerId", ownerId);
 
                         cacheDisponibles.add(m);
+
+                        // ============================================================
+                        // 🔥 AÑADIMOS LISTENER DINÁMICO AL EVENTO REAL
+                        // ============================================================
+                        ListenerRegistration lr = db.collection("eventos_user_private")
+                                .document(ownerId)
+                                .collection("lista")
+                                .document(idDoc)
+                                .addSnapshotListener((evSnap, exEv) -> {
+
+                                    if (exEv != null || evSnap == null || !evSnap.exists())
+                                        return;
+
+                                    Long nuevasPlazas = evSnap.getLong("plazasDisponibles");
+
+                                    actualizarPlazasEnCache(idDoc, nuevasPlazas);
+
+                                    publicarEstado();
+                                });
+
+                        listenerEventosUserPrivate.add(lr);
                     }
 
                     publicarEstado();
                 });
 
-        // LISTENER MIS INSCRIPCIONES
+
+        // ============================================================
+        // LISTENER MIS INSCRIPCIONES PRIVADAS
+        // ============================================================
         if (uid != null) {
             listenerMisInscripciones = db.collection("usuarios")
                     .document(uid)
@@ -122,14 +155,34 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     }
 
 
+    // ============================================================
+    // METODO PARA ACTUALIZAR CACHE
+    // ============================================================
+    private void actualizarPlazasEnCache(String eventId, Long nuevasPlazas) {
+        if (nuevasPlazas == null) return;
+
+        for (Map<String, Object> m : cacheDisponibles) {
+            if (eventId.equals(m.get("idDoc"))) {
+                m.put("plazasDisponibles", nuevasPlazas);
+                break;
+            }
+        }
+    }
+
+
+    // ============================================================
+    // DETENER LISTENERS
+    // ============================================================
     public void detenerListeners() {
         if (listenerEventos != null) listenerEventos.remove();
         if (listenerMisInscripciones != null) listenerMisInscripciones.remove();
+
+        listenerEventosUserPrivate.forEach(ListenerRegistration::remove);
+        listenerEventosUserPrivate.clear();
     }
 
 
     private void publicarEstado() {
-
         _uiState.setValue(
                 EventosDisponiblesUserPrivateUiState.success(
                         new ArrayList<>(cacheDisponibles),
@@ -139,9 +192,9 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     }
 
 
-    // ==========================================================
-    // APUNTARSE
-    // ==========================================================
+    // ============================================================
+    // APUNTARSE (NO TOCO NADA, YA ESTABA PERFECTO)
+    // ============================================================
     public void apuntarse(Map<String, Object> evento) {
 
         if (uid == null || alias == null) {
@@ -175,10 +228,8 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
             if (plazas <= 0) throw new IllegalStateException("NO_PLAZAS");
             if (tx.get(refInscrito).exists()) throw new IllegalStateException("YA_INSCRITO");
 
-            // 🔥 RESTAR PLAZA EN eventos_user_private
             tx.update(refEvt, "plazasDisponibles", plazas - 1);
 
-            // 🔥 RESTAR TAMBIÉN EN eventos_privados_por_pueblo
             DocumentReference refPueblo = db.collection("eventos_privados_por_pueblo")
                     .document(puebloId)
                     .collection("lista")
@@ -186,7 +237,6 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
 
             tx.update(refPueblo, "plazasDisponibles", plazas - 1);
 
-            // GUARDAR INSCRIPCIÓN
             Map<String, Object> ins = new HashMap<>();
             ins.put("uid", uid);
             ins.put("alias", alias);
@@ -224,10 +274,9 @@ public class EventosDisponiblesUserPrivateViewModel extends ViewModel {
     }
 
 
-
-    // ==========================================================
+    // ============================================================
     // HELPERS
-    // ==========================================================
+    // ============================================================
     private void postMessage(String msg) {
         EventosDisponiblesUserPrivateUiState prev = _uiState.getValue();
         _uiState.setValue(EventosDisponiblesUserPrivateUiState.message(prev, msg));
