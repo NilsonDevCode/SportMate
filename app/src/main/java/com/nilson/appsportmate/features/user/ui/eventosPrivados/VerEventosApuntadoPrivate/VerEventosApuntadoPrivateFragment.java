@@ -1,7 +1,5 @@
 package com.nilson.appsportmate.features.user.ui.eventosPrivados.VerEventosApuntadoPrivate;
 
-import static com.nilson.appsportmate.common.datos.firebase.FirebaseAuthManager.cerrarSesion;
-
 import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -173,7 +171,7 @@ public class VerEventosApuntadoPrivateFragment extends Fragment {
             );
         });
 
-        viewModel.loadEventosApuntados();
+        viewModel.CargarEventosApuntados();
     }
 
     // =====================================================
