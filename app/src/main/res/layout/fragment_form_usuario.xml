@@ -33,7 +33,7 @@
             <!-- Header superior con título -->
             <LinearLayout
                 android:id="@+id/txtTituloPantalla"
-                android:background="@drawable/bg_blanco_degradado_generico"
+                android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:orientation="horizontal"
@@ -70,6 +70,7 @@
 
                 <!-- Alias -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutAlias"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,6 +85,7 @@
 
                 <!-- Nombre -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,6 +99,7 @@
 
                 <!-- Apellidos -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutApellidos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -163,6 +166,7 @@
                     android:weightSum="1">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
                         android:id="@+id/layoutProvincia"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -194,6 +198,7 @@
                     android:weightSum="1">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
                         android:id="@+id/layoutCiudad"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -233,6 +238,7 @@
                         android:weightSum="1">
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="?attr/textInputFilledStyle"
                             android:id="@+id/layoutPuebloUsuario"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -257,6 +263,7 @@
 
                     <!-- Ayuntamiento auto -->
                     <com.google.android.material.textfield.TextInputLayout
+                        style="?attr/textInputFilledStyle"
                         android:id="@+id/layoutAyuntamientoUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -287,6 +294,7 @@
 
                 <!-- Contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -302,6 +310,7 @@
 
                 <!-- Repetir contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutPassword2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

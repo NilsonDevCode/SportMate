@@ -6,13 +6,13 @@
     android:id="@+id/rootMenuAyto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="@drawable/gradient_background"
     tools:context=".features.townhall.ui.menuTownhall.menuAyuntamientoFragment">
 
     <!-- Toolbar con menú -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/AppToolbarMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

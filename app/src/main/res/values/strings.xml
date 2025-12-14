@@ -60,7 +60,7 @@
     <string name="action_sign_in_short">Iniciar sesión</string>
     <string name="registrarse">Registrarse</string>
     <string name="login">Login</string>
-    <string name="logout">Cerrar sesión</string>
+    <string name="logout">Cerrar Sesión</string>
     <string name="guardar">Guardar</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
@@ -68,16 +68,16 @@
     <string name="aceptar">Aceptar</string>
     <string name="volver">Volver</string>
     <string name="crear_evento">Crear evento</string>
-    <string name="gestionar_eventos">Gestionar eventos</string>
+    <string name="gestionar_eventos">Gestionar Eventos</string>
     <string name="inscribirse">Inscribirse</string>
     <string name="expulsar">Expulsar</string>
     <string name="login_no_account">¿No tienes cuenta?</string>
     <string name="login_create_here">Crea una aquí.</string>
     <string name="rol_usuario">Usuario Estándar</string>
     <string name="rol_ayuntamiento">Ayuntamiento</string>
-    <string name="crear_evento_privado">Nueva ACTIVIDAD</string>
-    <string name="ver_evento_privado">Ver eventos disponibles de usuarios</string>
-    <string name="ver_eventos_apuntado_privado">Mis planes con amigos </string>
+    <string name="crear_evento_privado">Crear Actividad</string>
+    <string name="ver_evento_privado">Buscar Actividades</string>
+    <string name="ver_eventos_apuntado_privado">Mis Actividades</string>
 
 
     <!-- Mensajes -->
@@ -123,15 +123,15 @@
     <string name="inicio">Inicio</string>
     <string name="foto_de_perfil">Foto de perfil</string>
     <string name="ver_deportes_disponibles">Ver eventos disponibles</string>
-    <string name="ver_deportes_disponiblesPrivados">Reúnete y juega con usarios </string>
+    <string name="ver_deportes_disponiblesPrivados">Busca actividades disponibles</string>
     <string name="deporte">Deporte</string>
     <string name="ayuntamiento">Ayuntamiento</string>
     <string name="deportes_disponibles">Deportes DISPONIBLES</string>
 
     <!-- Menú -->
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>
-    <string name="cambiar_foto_de_perfil">Cambiar foto de perfil</string>
-    <string name="cambiar_ayuntamiento">Cambiar ayuntamiento</string>
+    <string name="cambiar_foto_de_perfil">Cambiar Foto de Perfil</string>
+    <string name="cambiar_ayuntamiento">Cambiar Ayuntamiento</string>
     <string name="inicio_ayuntamiento">inicio_ayuntamiento</string>
     <string name="inscritos">Inscritos</string>
     <string name="ubicacion">Ubicación</string>

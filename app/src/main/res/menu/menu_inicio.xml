@@ -13,23 +13,27 @@
         <!-- Submenú con acciones específicas -->
         <menu>
             <item
-                android:id="@+id/action_cambiar_foto_perfil"
-                android:title="@string/cambiar_foto_de_perfil" />
-            <item
-                android:id="@+id/action_cambiar_ayuntamiento"
-                android:title="@string/cambiar_ayuntamiento" />
-            <item
                 android:id="@+id/action_crear_evento_privado"
                 android:title="@string/crear_evento_privado"
                 tools:ignore="DuplicateIds" />
-            <item
-                android:id="@+id/action_ver_evento_privado"
-                android:title="@string/ver_evento_privado"
-                tools:ignore="DuplicateIds" />
+
             <item
                 android:id="@+id/action_ver_eventos_creados_privado"
                 android:title="@string/ver_eventos_apuntado_privado"
                 tools:ignore="DuplicateIds" />
+
+            <item
+                android:id="@+id/action_ver_evento_privado"
+                android:title="@string/ver_evento_privado"
+                tools:ignore="DuplicateIds" />
+
+            <item
+                android:id="@+id/action_cambiar_ayuntamiento"
+                android:title="@string/cambiar_ayuntamiento" />
+
+            <item
+                android:id="@+id/action_cambiar_foto_perfil"
+                android:title="@string/cambiar_foto_de_perfil" />
 
             <item
                 android:id="@+id/action_cerrarSesion"
