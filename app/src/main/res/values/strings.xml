@@ -40,6 +40,7 @@
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="title_activity_register">Registro</string>
     <string name="title_activity_main">Inicio</string>
+    <string name="seleccion_ayuntamiento">Selección AYUNTAMIENTO</string>
 
     <!-- Formularios comunes -->
     <string name="prompt_alias">Alias</string>
@@ -74,7 +75,7 @@
     <string name="login_create_here">Crea una aquí.</string>
     <string name="rol_usuario">Usuario Estándar</string>
     <string name="rol_ayuntamiento">Ayuntamiento</string>
-    <string name="crear_evento_privado">Crear evento privado</string>
+    <string name="crear_evento_privado">Nueva ACTIVIDAD</string>
     <string name="ver_evento_privado">Ver eventos disponibles de usuarios</string>
     <string name="ver_eventos_apuntado_privado">Mis planes con amigos </string>
 
@@ -101,7 +102,7 @@
     <string name="hora">Hora</string>
     <string name="futbol">Fútbol</string>
     <string name="plazas">Plazas disponibles</string>
-    <string name="sin_eventos">No hay eventos disponibles</string>
+    <string name="sin_eventos">¡Sin actividades!\nParticipa en la que más te guste\ny la encontrarás aquí.</string>
     <string name="sin_inscritos">No hay inscritos en este evento</string>
     <string name="nuevo_usuario_header">Nuevo USUARIO</string>
     <string name="nuevo_ayuntamiento_header">Nuevo AYUNTAMIENTO</string>
@@ -121,10 +122,11 @@
     <string name="previous">Previous</string>
     <string name="inicio">Inicio</string>
     <string name="foto_de_perfil">Foto de perfil</string>
-    <string name="ver_deportes_disponibles">Ver Eventos disponibles Ayto</string>
+    <string name="ver_deportes_disponibles">Ver eventos disponibles</string>
     <string name="ver_deportes_disponiblesPrivados">Reúnete y juega con usarios </string>
     <string name="deporte">Deporte</string>
     <string name="ayuntamiento">Ayuntamiento</string>
+    <string name="deportes_disponibles">Deportes DISPONIBLES</string>
 
     <!-- Menú -->
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>
@@ -137,7 +139,7 @@
     <!-- Rol -->
     <string name="elige_perfil">Elige tu perfil y</string>
     <string name="crea_cuenta">Crea una cuenta...</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

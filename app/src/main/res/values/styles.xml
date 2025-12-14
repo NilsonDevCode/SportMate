@@ -7,6 +7,23 @@
         <item name="android:background">@drawable/btn_blanco</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingLeft">50dp</item>
+        <item name="android:paddingRight">50dp</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_width">250dp</item>
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="BotonGenericoAzul" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/btn_azul</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:minHeight">56dp</item>
         <item name="android:paddingLeft">50dp</item>
         <item name="android:paddingRight">50dp</item>
@@ -53,6 +70,25 @@
 
     <style name="FontPoppinsBlack">
         <item name="android:fontFamily">@font/poppins_black</item>
+    </style>
+
+    <!-- Menú Pop UP -->
+    <style name="CustomMenuMaterial3" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="backgroundInsetStart">0dp</item>
+        <item name="backgroundInsetEnd">0dp</item>
+        <item name="backgroundInsetTop">0dp</item>
+        <item name="backgroundInsetBottom">0dp</item>
+
+        <!-- Fondo del menú -->
+        <item name="android:colorBackground">@color/colorPrimary</item>
+
+        <!-- Bordes redondeados -->
+        <item name="shapeAppearance">@style/ShapeMenuRound</item>
+    </style>
+
+    <style name="ShapeMenuRound">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
 </resources>
