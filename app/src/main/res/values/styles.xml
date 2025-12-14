@@ -72,23 +72,34 @@
         <item name="android:fontFamily">@font/poppins_black</item>
     </style>
 
-    <!-- Menú Pop UP -->
-    <style name="CustomMenuMaterial3" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="backgroundInsetStart">0dp</item>
-        <item name="backgroundInsetEnd">0dp</item>
-        <item name="backgroundInsetTop">0dp</item>
-        <item name="backgroundInsetBottom">0dp</item>
-
-        <!-- Fondo del menú -->
-        <item name="android:colorBackground">@color/colorPrimary</item>
-
-        <!-- Bordes redondeados -->
-        <item name="shapeAppearance">@style/ShapeMenuRound</item>
-    </style>
-
     <style name="ShapeMenuRound">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Toolbar - Menu -->
+    <style name="AppToolbarMenu" parent="Widget.Material3.Toolbar">
+
+        <!-- Padding superior -->
+        <item name="android:paddingTop">40dp</item>
+
+        <!-- Paddings laterales -->
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+
+        <!-- Fondo -->
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+
+        <!-- Colores del título -->
+        <item name="titleTextColor">@android:color/white</item>
+
+        <!-- Iconos del menú + icono hamburguesa -->
+        <item name="navigationIconTint">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+
+        <!-- Quita márgenes automáticos del Toolbar -->
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
 </resources>
