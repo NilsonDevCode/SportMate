@@ -23,7 +23,8 @@
         app:backgroundTint="@color/colorPrimary"
         android:background="@color/colorPrimary"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"/>
+        android:paddingEnd="16dp"
+        android:paddingTop="40dp"/>
 
     <!-- CONTENEDOR DEL CONTENIDO (con padding) -->
     <LinearLayout
