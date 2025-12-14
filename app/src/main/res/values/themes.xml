@@ -1,23 +1,30 @@
 <resources>
+
+    <!-- Tema base -->
     <style name="Base.Theme.AppSportMate" parent="Theme.Material3.DayNight.NoActionBar">
+
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="textInputStyle">@style/WhiteTextInput</item>
-        <item name="textInputFilledStyle">@style/WhiteTextInput</item>
+
+        <!-- Tipografía -->
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins</item>
 
     </style>
 
+    <!-- Tema SportMate -->
     <style name="Theme" parent="Theme.AppSportMate">
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryContainer">@color/colorPrimaryContainer</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryContainer">@color/colorSecondaryContainer</item>
         <item name="colorTertiary">@color/colorTertiary</item>
-        <item name="colorSurface">@color/colorSurface</item>
-        <item name="colorSurfaceVariant">@color/colorSurfaceVariant</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
@@ -25,9 +32,7 @@
         <item name="colorError">@color/colorError</item>
         <item name="colorOnError">@color/colorOnError</item>
 
-        <!-- Tipografía -->
-        <item name="android:fontFamily">@font/poppins</item>
-        <item name="fontFamily">@font/poppins</item>
+        <!-- Menú -->
 
     </style>
 

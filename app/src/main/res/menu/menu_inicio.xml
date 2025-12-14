@@ -7,7 +7,7 @@
     <item
         android:id="@+id/action_editar_info_usuario"
         android:title="@string/editar_informacion_del_usuario"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_menu_burger"
         app:showAsAction="ifRoom">
 
         <!-- Submenú con acciones específicas -->
@@ -31,16 +31,12 @@
                 android:title="@string/ver_eventos_apuntado_privado"
                 tools:ignore="DuplicateIds" />
 
+            <item
+                android:id="@+id/action_cerrarSesion"
+                android:title="@string/logout"
+                android:icon="@android:drawable/ic_lock_power_off"
+                app:showAsAction="ifRoom" />
+
         </menu>
     </item>
-
-
-
-    <!-- Nueva opción: Salir -->
-    <item
-        android:id="@+id/action_cerrarSesion"
-        android:title="@string/logout"
-        android:icon="@android:drawable/ic_lock_power_off"
-        app:showAsAction="ifRoom" />
-
 </menu>

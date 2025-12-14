@@ -7,153 +7,170 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:padding="16dp"
+    android:padding="0dp"
     tools:context=".features.user.ui.menuPrincipal.InicioFragment">
 
-    <!-- Toolbar con menú (sin avatar) -->
+    <!-- TOOLBAR -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:title=""
+        app:menu="@menu/menu_inicio"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:title=""
-        app:menu="@menu/menu_inicio" />
+        app:backgroundTint="@color/colorPrimary"
+        android:background="@color/colorPrimary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"/>
 
-    <!-- Foto de perfil ARRIBA a la IZQUIERDA -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardFotoPerfil"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="12dp"
-        app:cardCornerRadius="16dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imgFotoPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/foto_de_perfil"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Caja grande: título A LA DERECHA de la foto -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTitulo"
+    <!-- CONTENEDOR DEL CONTENIDO (con padding) -->
+    <LinearLayout
+        android:id="@+id/contentContainer"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        app:cardCornerRadius="16dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toEndOf="@id/cardFotoPerfil"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/tvInicio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="Bienvenido, Usuario"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center_vertical" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Barrier para alinear lo de abajo bajo la fila (foto + título) -->
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barTopRowBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="cardFotoPerfil,cardTitulo" />
-
-    <!-- 💠 Caja con el nombre del ayuntamiento (a todo el ancho) -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardAyuntamiento"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:cardUseCompatPadding="true"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@id/barTopRowBottom"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.0">
 
+        <!-- FILA: FOTO + NOMBRE -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="14dp">
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvAytoTitulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ayuntamiento actual"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
+            <!-- FOTO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFotoPerfil"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/tvAytoNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="—"
-                android:textSize="15sp"/>
+                <ImageView
+                    android:id="@+id/imgFotoPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/foto_de_perfil"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD BIENVENIDO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTitulo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:id="@+id/tvInicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="20dp"
+                    android:text="Bienvenido, Usuario"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textFontWeight="800"/>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
-    <!-- Lista de deportes apuntados (AHORA a TODO el ancho) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDeportesApuntados"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardAyuntamiento"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnVerDeportes"
-        tools:listitem="@layout/adapter_deporte_apuntado_user" />
 
-    <!-- Texto cuando no hay deportes -->
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sin_eventos"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/rvDeportesApuntados"
-        app:layout_constraintBottom_toBottomOf="@id/rvDeportesApuntados"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- AYUNTAMIENTO -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAyuntamiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="5dp"
+            app:cardUseCompatPadding="true">
 
-    <!-- Loading -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
 
-    <!-- Botón: Ver deportes disponibles -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnVerDeportes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/ver_deportes_disponibles"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/tvAytoTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ayuntamiento actual"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="800"
+                    android:textAllCaps="true"/>
+
+                <TextView
+                    android:id="@+id/tvAytoNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="—"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="500"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- LISTA -->
+
+        <!-- TEXTO EMPTY -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDeportesApuntados"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_contenedor_glass"
+            app:layout_constraintHeight_default="wrap"
+            tools:listitem="@layout/adapter_deporte_apuntado_user" />
+
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/sin_eventos"
+            android:textColor="@android:color/white"
+            android:textFontWeight="800"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+        <!-- LOADING -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- BOTÓN VER EVENTOS -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerDeportes"
+            style="@style/BotonGenericoBlanco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/ver_deportes_disponibles"
+            android:textAllCaps="true" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
