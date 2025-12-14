@@ -7,15 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:padding="16dp"
     tools:context=".features.user.ui.eventosPrivados.VerEventosApuntadoPrivate.VerEventosApuntadoPrivateFragment">
 
-    <!-- 🔥 TOOLBAR CON MENÚ -->
+    <!-- TOOLBAR -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title=""
+        style="@style/AppToolbarMenu"
+        app:paddingTopSystemWindowInsets="true"
         app:menu="@menu/menu_inicio"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
