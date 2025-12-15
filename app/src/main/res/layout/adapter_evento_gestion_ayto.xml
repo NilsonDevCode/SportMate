@@ -103,7 +103,8 @@
                 android:layout_weight="1"
                 android:text="Inscritos"
                 android:textAllCaps="true"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:padding="5dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditar"
@@ -114,6 +115,7 @@
                 android:layout_weight="1"
                 android:text="Editar"
                 android:textSize="12sp"
+                android:padding="5dp"
                 android:textAllCaps="true"/>
 
         </LinearLayout>

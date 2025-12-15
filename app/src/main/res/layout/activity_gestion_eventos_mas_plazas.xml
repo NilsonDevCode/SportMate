@@ -19,6 +19,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Header superior con título -->
+    <LinearLayout
+        android:id="@+id/txtTituloPantalla"
+        android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:elevation="10dp"
+        android:gravity="center_vertical" >
+
+        <!-- Título de la Pantalla -->
+        <TextView
+            android:id="@+id/tvTituloPantalla"
+            android:text="@string/deportes_disponibles"
+            android:textFontWeight="700"
+            android:textSize="25sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:textAlignment="gravity" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"
@@ -38,6 +63,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEventos"
+        android:background="@drawable/bg_contenedor_glass"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
@@ -49,9 +75,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVolver"
         style="@style/BotonGenericoBlanco"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/Salir_button"
         android:textAllCaps="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"/>
 </LinearLayout>
