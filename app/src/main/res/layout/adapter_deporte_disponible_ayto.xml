@@ -18,6 +18,24 @@
         android:textColor="@color/white"
         android:textAlignment="center"/>
 
+    <!-- NOMBRE -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NOMBRE"
+        android:paddingLeft="10dp"
+        android:background="@color/colorSecondaryContainer"
+        android:textFontWeight="800"
+        android:textColor="@color/colorPrimary" />
+    <TextView
+        android:id="@+id/tvNombre"
+        android:text="Lorem ipsum dolor sit amet..."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textFontWeight="800"
+        android:textAllCaps="true" />
+
     <!-- DESCRIPCIÓN -->
     <TextView
         android:layout_width="match_parent"
@@ -27,7 +45,6 @@
         android:background="@color/colorSecondaryContainer"
         android:textFontWeight="800"
         android:textColor="@color/colorPrimary" />
-
     <TextView
         android:id="@+id/tvDescripcion"
         android:layout_width="match_parent"
@@ -36,7 +53,6 @@
         android:text="Lorem ipsum dolor sit amet..."
         android:textFontWeight="500"
         android:textColor="@color/colorPrimary"/>
-
 
     <!-- REGLAS -->
     <TextView
@@ -47,7 +63,6 @@
         android:background="@color/colorSecondaryContainer"
         android:textFontWeight="800"
         android:textColor="@color/colorPrimary" />
-
     <TextView
         android:id="@+id/tvReglas"
         android:layout_width="match_parent"
@@ -56,7 +71,6 @@
         android:text="Lorem ipsum dolor sit amet..."
         android:textFontWeight="500"
         android:textColor="@color/colorPrimary"/>
-
 
     <!-- MATERIAL -->
     <TextView
@@ -67,7 +81,6 @@
         android:background="@color/colorSecondaryContainer"
         android:textFontWeight="800"
         android:textColor="@color/colorPrimary" />
-
     <TextView
         android:id="@+id/tvMaterial"
         android:layout_width="match_parent"
@@ -148,7 +161,7 @@
             android:src="@drawable/ic_location" />
 
         <TextView
-            android:id="@+id/tvLugar"
+            android:id="@+id/tvUrl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -186,6 +199,7 @@
     <!-- BOTÓN QUIERO PARTICIPAR -->
     <Button
         android:id="@+id/btnApuntarse"
+        style="@style/BotonGenericoAzul"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="QUIERO PARTICIPAR"
@@ -193,8 +207,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/btn_azul"
         android:textColor="@color/white"
-        android:textFontWeight="2000"
+        android:textFontWeight="800"
         android:padding="12dp" />
 </LinearLayout>

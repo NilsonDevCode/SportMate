@@ -30,10 +30,12 @@
 
     <TextView
         android:id="@+id/tvNombre"
+        android:text="Lorem ipsum dolor sit amet..."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:padding="10dp"
+        android:textFontWeight="800"
+        android:textAllCaps="true"/>
 
     <!-- DESCRIPCIÓN -->
     <TextView
@@ -49,8 +51,10 @@
         android:id="@+id/tvDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="4"
-        android:ellipsize="end"/>
+        android:padding="10dp"
+        android:text="Lorem ipsum dolor sit amet..."
+        android:textFontWeight="500"
+        android:textColor="@color/colorPrimary"/>
 
     <!-- REGLAS -->
     <TextView
@@ -66,8 +70,10 @@
         android:id="@+id/tvReglas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="4"
-        android:ellipsize="end"/>
+        android:padding="10dp"
+        android:text="Lorem ipsum dolor sit amet..."
+        android:textFontWeight="500"
+        android:textColor="@color/colorPrimary"/>
 
     <!-- MATERIAL -->
     <TextView
@@ -82,7 +88,11 @@
     <TextView
         android:id="@+id/tvMaterial"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Lorem ipsum dolor sit amet..."
+        android:textFontWeight="500"
+        android:textColor="@color/colorPrimary" />
 
     <!-- Fecha y hora -->
     <LinearLayout
@@ -139,7 +149,6 @@
 
     </LinearLayout>
 
-
     <!-- Lugar -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -192,6 +201,7 @@
 
     <Button
         android:id="@+id/btnApuntarse"
+        style="@style/BotonGenericoAzul"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="QUIERO PARTICIPAR"
@@ -201,7 +211,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/btn_azul"
         android:textColor="@color/white"
-        android:textFontWeight="2000"
+        android:textFontWeight="800"
         android:padding="12dp"/>
 
 </LinearLayout>
