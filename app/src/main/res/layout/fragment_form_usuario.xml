@@ -75,12 +75,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/sign_up_alias_label"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="12dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAlias"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"/>
+                        android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Nombre -->
@@ -90,7 +93,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/sign_up_name_label"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="12dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombre"
                         android:layout_width="match_parent"
@@ -104,7 +109,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/sign_up_surname_label"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etApellidos"
                         android:layout_width="match_parent"
@@ -139,8 +146,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="@string/sign_up_community_label">
-
+                        android:hint="@string/sign_up_community_label"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#FFFFFFFF">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescripcionEvento"
                             android:layout_width="match_parent"
@@ -171,7 +179,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="@string/sign_up_province_label">
+                        android:hint="@string/sign_up_province_label"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#FFFFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etReglasEvento"
@@ -203,7 +213,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="@string/sign_up_city_label">
+                        android:hint="@string/sign_up_city_label"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#FFFFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etMateriales"
@@ -243,7 +255,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="@string/sign_up_town_label">
+                            android:hint="@string/sign_up_town_label"
+                            app:boxBackgroundMode="filled"
+                            app:boxBackgroundColor="#FFFFFFFF">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPuebloUsuario"
@@ -267,7 +281,9 @@
                         android:id="@+id/layoutAyuntamientoUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/sign_up_townhall_label" >
+                        android:hint="@string/sign_up_townhall_label"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#FFFFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAyuntamientoUsuario"
@@ -298,6 +314,8 @@
                     android:id="@+id/layoutPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF"
                     android:hint="@string/sign_up_password_label"
                     app:passwordToggleEnabled="true"
                     android:layout_marginBottom="12dp">
@@ -314,6 +332,8 @@
                     android:id="@+id/layoutPassword2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF"
                     android:hint="@string/sign_up_confirm_password_label"
                     app:passwordToggleEnabled="true" >
                     <com.google.android.material.textfield.TextInputEditText

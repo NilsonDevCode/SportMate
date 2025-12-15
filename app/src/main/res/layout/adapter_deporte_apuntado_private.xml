@@ -7,65 +7,67 @@
     android:layout_margin="10dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
-    android:background="#90CAF9"
-    app:cardCornerRadius="16dp"
-    android:elevation="6dp"
-    app:strokeColor="?attr/colorPrimary"
-    app:strokeWidth="1dp">
+    app:cardCornerRadius="5dp"
+    android:elevation="6dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:background="@drawable/bg_blanco_degradado_generico">
 
         <!-- TÍTULO -->
         <TextView
             android:id="@+id/tvNombreDeporte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
             android:text="BALONCESTO INDOOR"
-            android:textStyle="bold"
             android:textAllCaps="true"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textFontWeight="900"
+            android:textSize="20dp" />
 
         <!-- DESCRIPCIÓN (fondo azul claro) -->
         <TextView
             android:id="@+id/tvDescripcionActividad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:padding="8dp"
-            android:text="Descripción del evento o lugar..."
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            android:maxLines="3"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/colorSecondaryContainer"
             android:ellipsize="end"
-            android:background="@drawable/bg_descripcion_azul_claro" />
+            android:maxLines="5"
+            android:padding="15dp"
+            android:text="Descripción del evento o lugar..."
+            android:textColor="@android:color/black"
+            android:textFontWeight="400"
+            android:textSize="14sp"  />
 
         <!-- FILA: FECHA | HORA | LUGAR -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_marginTop="10dp"
-            android:weightSum="6">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
 
             <!-- FECHA -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.8"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_calendar"
-                    android:contentDescription="@string/fecha" />
+                    android:contentDescription="@string/fecha"
+                    android:src="@drawable/ic_calendar"/>
 
                 <TextView
                     android:id="@+id/tvFecha"
@@ -73,34 +75,33 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:text="12/10/2025"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="13sp" />
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:textFontWeight="700" />
             </LinearLayout>
 
             <!-- HORA -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_weight="1.3"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_time"
-                    android:contentDescription="@string/hora" />
-
+                    android:contentDescription="@string/hora"
+                    android:src="@drawable/ic_time" />
                 <TextView
                     android:id="@+id/tvHora"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:text="12:30"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="13sp" />
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:textFontWeight="700" />
             </LinearLayout>
 
             <!-- LUGAR -->
@@ -108,33 +109,34 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_location"
-                    android:contentDescription="@string/ubicacion" />
+                    android:contentDescription="@string/ubicacion"
+                    android:src="@drawable/ic_location" />
 
                 <TextView
                     android:id="@+id/tvLugar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="Centro Ins. de Deportes"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:ellipsize="end"
                     android:maxLines="1"
-                    android:ellipsize="end" />
+                    android:text="Centro Ins. de Deportes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:textFontWeight="700" />
             </LinearLayout>
         </LinearLayout>
 
         <!-- CINTA INFERIOR ESTILIZADA -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="35dp"
             android:layout_marginTop="10dp">
 
             <LinearLayout
@@ -149,16 +151,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/bg_strip_left"
+                    android:gravity="center_vertical"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:gravity="center_vertical">
+                    android:paddingEnd="5dp">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        app:tint="@android:color/white"
-                        android:src="@drawable/ic_people"
-                        android:contentDescription="@string/plazas" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="@string/plazas"
+                        android:src="@drawable/ic_people_plazas" />
 
                     <TextView
                         android:id="@+id/tvPlazas"
@@ -167,9 +168,9 @@
                         android:layout_marginStart="8dp"
                         android:text="PLAZAS > 8"
                         android:textAllCaps="true"
-                        android:textStyle="bold"
                         android:textColor="@android:color/white"
-                        android:textSize="13sp" />
+                        android:textSize="14sp"
+                        android:textFontWeight="700" />
                 </LinearLayout>
 
                 <!-- DERECHA: INSCRITOS -->
@@ -178,16 +179,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/bg_strip_right"
+                    android:gravity="center_vertical|end"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:gravity="center_vertical|end">
+                    android:paddingEnd="14dp">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        app:tint="@android:color/white"
-                        android:src="@drawable/ic_people"
-                        android:contentDescription="@string/inscritos" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="@string/inscritos"
+                        android:src="@drawable/ic_people_inscritos" />
 
                     <TextView
                         android:id="@+id/tvInscritos"
@@ -196,20 +196,21 @@
                         android:layout_marginStart="8dp"
                         android:text="INSCRITOS > 1"
                         android:textAllCaps="true"
-                        android:textStyle="bold"
                         android:textColor="@android:color/white"
-                        android:textSize="13sp" />
+                        android:textSize="14sp"
+                        android:textFontWeight="700" />
                 </LinearLayout>
             </LinearLayout>
 
             <!-- CHEVRONES -->
             <ImageView
                 android:id="@+id/ivChevrons"
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_chevrons"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_chevrons_sm" />
         </FrameLayout>
 
     </LinearLayout>

@@ -148,8 +148,6 @@
                 android:weightSum="2">
 
                 <!-- IZQUIERDA: PLAZAS -->
-
-                <!-- DERECHA: INSCRITOS -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -177,6 +175,7 @@
                         android:textFontWeight="700" />
                 </LinearLayout>
 
+                <!-- DERECHA: INSCRITOS -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

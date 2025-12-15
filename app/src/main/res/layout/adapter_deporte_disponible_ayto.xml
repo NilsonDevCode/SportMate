@@ -183,7 +183,6 @@
             android:textColor="@color/colorPrimary"/>
     </LinearLayout>
 
-
     <!-- BOTÓN QUIERO PARTICIPAR -->
     <Button
         android:id="@+id/btnApuntarse"

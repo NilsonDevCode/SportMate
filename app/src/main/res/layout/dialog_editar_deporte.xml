@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gradient_background">
 
     <LinearLayout
@@ -13,19 +14,25 @@
         <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNombreDeporte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre del deporte"/>
+                android:hint="Nombre del deporte"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Plazas -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCantidadJugadores"
                 android:layout_width="match_parent"
@@ -39,7 +46,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Fecha">
+            android:hint="Fecha"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFecha"
                 android:layout_width="match_parent"
@@ -54,7 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Hora">
+            android:hint="Hora"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etHora"
                 android:layout_width="match_parent"
@@ -68,7 +79,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDescripcionEvento"
                 android:layout_width="match_parent"
@@ -82,7 +95,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etReglasEvento"
                 android:layout_width="match_parent"
@@ -96,7 +111,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etMateriales"
                 android:layout_width="match_parent"
@@ -108,7 +125,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#FFFFFFFF">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUrlPueblo"
                 android:layout_width="match_parent"
