@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/gradient_background">
+
+    <!-- TOOLBAR -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/AppToolbarMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:paddingTopSystemWindowInsets="true"
+        app:menu="@menu/menu_ayuntamiento"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/tvEmpty"
@@ -27,7 +40,10 @@
         android:id="@+id/rvEventos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_weight="1" />
 
     <com.google.android.material.button.MaterialButton
@@ -36,5 +52,6 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/Salir_button"
-        android:textAllCaps="true" />
+        android:textAllCaps="true"
+        android:layout_marginBottom="20dp"/>
 </LinearLayout>

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/gradient_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -65,13 +66,15 @@
 
             <!-- Comunidad -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/colorSecondaryContainer"
                 android:layout_height="wrap_content"
                 android:text="@string/prompt_comunidad"
                 android:textFontWeight="800"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"/>
+                android:textSize="16dp"
+                android:paddingLeft="10dp" />
 
             <Spinner
                 android:id="@+id/spComunidad"
@@ -82,13 +85,15 @@
 
             <!-- Provincia -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/colorSecondaryContainer"
                 android:layout_height="wrap_content"
                 android:text="@string/prompt_provincia"
                 android:textFontWeight="800"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"/>
+                android:textSize="16dp"
+                android:paddingLeft="10dp" />
 
             <Spinner
                 android:id="@+id/spProvincia"
@@ -99,13 +104,15 @@
 
             <!-- Ciudad -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/colorSecondaryContainer"
                 android:layout_height="wrap_content"
                 android:text="@string/prompt_ciudad"
                 android:textFontWeight="800"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"/>
+                android:textSize="16dp"
+                android:paddingLeft="10dp" />
 
             <Spinner
                 android:id="@+id/spCiudad"
@@ -116,13 +123,15 @@
 
             <!-- Pueblo -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/colorSecondaryContainer"
                 android:layout_height="wrap_content"
                 android:text="@string/prompt_pueblo"
                 android:textFontWeight="800"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"/>
+                android:textSize="16dp"
+                android:paddingLeft="10dp" />
 
             <Spinner
                 android:id="@+id/spPueblo"
@@ -168,34 +177,35 @@
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Botón Guardar -->
+
+    <!-- Botón Cancelar cambio -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGuardar"
         style="@style/BotonGenericoBlanco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/guardar"
-        app:layout_constraintTop_toBottomOf="@id/cardSelector"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textAllCaps="true"/>
+        android:text="@string/guardar"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="576dp" />
 
-    <!-- Botón Cancelar cambio -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelar"
         style="@style/BotonGenericoBlanco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancelar cambio"
-        app:layout_constraintTop_toBottomOf="@id/btnGuardar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
-        android:textAllCaps="true"/>
+        android:text="Cancelar cambio"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnGuardar" />
 
 
     <ProgressBar
