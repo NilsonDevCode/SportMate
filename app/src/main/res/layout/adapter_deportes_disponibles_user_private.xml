@@ -3,9 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="12dp"
-    android:background="@android:color/white"
-    android:layout_marginBottom="8dp">
+    android:background="@color/white"
+    android:layout_margin="12dp" >
+
+    <!-- INFORMACIÓN DE LA ACTIVIDAD -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="INFORMACIÓN DE LA ACTIVIDAD"
+        android:paddingTop="5dp"
+        android:paddingLeft="10dp"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textAlignment="center"/>
+
+    <!-- DESCRIPCIÓN -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NOMBRE"
+        android:paddingLeft="10dp"
+        android:background="@color/colorSecondaryContainer"
+        android:textFontWeight="800"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/tvNombre"
@@ -14,20 +35,15 @@
         android:textStyle="bold"
         android:textSize="16sp" />
 
+    <!-- DESCRIPCIÓN -->
     <TextView
-        android:id="@+id/tvFecha"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tvHora"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tvPlazas"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="DESCRIPCIÓN"
+        android:paddingLeft="10dp"
+        android:background="@color/colorSecondaryContainer"
+        android:textFontWeight="800"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/tvDescripcion"
@@ -36,6 +52,16 @@
         android:maxLines="4"
         android:ellipsize="end"/>
 
+    <!-- REGLAS -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REGLAS"
+        android:paddingLeft="10dp"
+        android:background="@color/colorSecondaryContainer"
+        android:textFontWeight="800"
+        android:textColor="@color/colorPrimary" />
+
     <TextView
         android:id="@+id/tvReglas"
         android:layout_width="match_parent"
@@ -43,24 +69,139 @@
         android:maxLines="4"
         android:ellipsize="end"/>
 
+    <!-- MATERIAL -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MATERIAL NECESARIO"
+        android:paddingLeft="10dp"
+        android:background="@color/colorSecondaryContainer"
+        android:textFontWeight="800"
+        android:textColor="@color/colorPrimary" />
+
     <TextView
         android:id="@+id/tvMaterial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- Se desactiva autolink para poder controlar manualmente qué URL es clicable -->
-    <TextView
-        android:id="@+id/tvUrl"
+    <!-- Fecha y hora -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:linksClickable="true" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="5dp"
+        android:background="#19000000">
+
+        <!-- ICONO FECHA -->
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_calendar" />
+
+        <!-- FECHA -->
+        <TextView
+            android:id="@+id/tvFecha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="12/10/2025"
+            android:paddingStart="10dp"
+            android:textFontWeight="800"
+            android:textColor="@color/colorPrimary" />
+
+        <!-- CONTENEDOR HORA -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- ICONO HORA -->
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_time" />
+
+            <!-- TEXTO HORA -->
+            <TextView
+                android:id="@+id/tvHora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:30 h."
+                android:paddingStart="6dp"
+                android:textFontWeight="800"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- Lugar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="5dp" >
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_location" />
+
+        <TextView
+            android:id="@+id/tvUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Centro Ins. de Deportes"
+            android:paddingStart="10dp"
+            android:textFontWeight="800"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+    <!-- Plazas -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="5dp"
+        android:background="#19000000">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_people_inscritos" />
+
+        <TextView
+            android:id="@+id/tvPlazas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Número de Plazas > 8"
+            android:paddingStart="10dp"
+            android:textFontWeight="800"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnApuntarse"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Apuntarse"
-        android:layout_gravity="end"
-        android:paddingTop="6dp" />
+        android:text="QUIERO PARTICIPAR"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/btn_azul"
+        android:textColor="@color/white"
+        android:textFontWeight="2000"
+        android:padding="12dp"/>
 
 </LinearLayout>

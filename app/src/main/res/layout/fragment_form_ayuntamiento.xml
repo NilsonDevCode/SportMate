@@ -74,7 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_alias_label"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAlias"
                     android:layout_width="match_parent"
@@ -89,7 +91,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_name_label"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNombre"
                     android:layout_width="match_parent"
@@ -103,7 +107,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_social_reason_label"
-                android:visibility="visible">
+                android:visibility="visible"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNumero"
                     android:layout_width="match_parent"
@@ -140,7 +146,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/sign_up_community_label">
+                    android:hint="@string/sign_up_community_label"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDescripcionEvento"
@@ -172,8 +180,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/sign_up_province_label">
-
+                    android:hint="@string/sign_up_province_label"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etReglasEvento"
                         android:layout_width="match_parent"
@@ -204,8 +213,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/sign_up_city_label">
-
+                    android:hint="@string/sign_up_city_label"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMateriales"
                         android:layout_width="match_parent"
@@ -228,14 +238,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="visible"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="?attr/textInputFilledStyle"
                     android:id="@+id/layoutPuebloAyto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/sign_up_create_town_label" >
+                    android:hint="@string/sign_up_create_town_label"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFFFF">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPuebloAyto"
@@ -267,7 +281,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_password_label"
                 app:passwordToggleEnabled="true"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
@@ -282,7 +298,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_up_confirm_password_label"
-                app:passwordToggleEnabled="true" >
+                app:passwordToggleEnabled="true"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#FFFFFFFF">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword2"
                     android:layout_width="match_parent"

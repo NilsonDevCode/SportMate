@@ -124,40 +124,44 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- LISTA -->
-
-        <!-- TEXTO EMPTY -->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDeportesApuntados"
+        <!-- CONTENEDOR DE ACTIVIDADES -->
+        <FrameLayout
+            android:id="@+id/containerActividades"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_contenedor_glass"
-            app:layout_constraintHeight_default="wrap"
-            tools:listitem="@layout/adapter_deporte_apuntado_user" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp">
 
-        <TextView
-            android:id="@+id/tvEmpty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/sin_eventos"
-            android:textColor="@android:color/white"
-            android:textFontWeight="800"
-            android:textSize="20sp"
-            android:visibility="gone" />
+            <!-- ACTIVIDADES -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDeportesApuntados"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_contenedor_glass"
+                tools:listitem="@layout/adapter_deporte_apuntado_user" />
 
-        <!-- LOADING -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            <!-- TEXTO EMPTY -->
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/sin_eventos"
+                android:textColor="@android:color/white"
+                android:textFontWeight="800"
+                android:textSize="20sp"
+                android:visibility="gone"/>
+
+            <!-- LOADING -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+        </FrameLayout>
+
 
         <!-- BOTÓN VER EVENTOS -->
         <com.google.android.material.button.MaterialButton
