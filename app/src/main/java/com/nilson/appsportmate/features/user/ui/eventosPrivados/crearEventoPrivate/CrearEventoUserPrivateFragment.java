@@ -30,7 +30,7 @@ public class CrearEventoUserPrivateFragment extends Fragment {
     private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
             etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
 
-    private MaterialButton btnCrearEvento, btnGestionEventos;
+    private MaterialButton btnCrearEvento;
     private Button btnLogout;
 
     // VM
@@ -110,11 +110,7 @@ public class CrearEventoUserPrivateFragment extends Fragment {
                 txt(etMateriales),
                 txt(etUrlPueblo)
         ));
-
-        btnGestionEventos.setOnClickListener(v -> {
-            NavController nav = Navigation.findNavController(requireView());
-            nav.navigate(R.id.action_crearEventoUserPrivateFragment_to_gestionEventosUserPrivateFragment);
-        });
+        
 
         btnLogout.setOnClickListener(v -> {
             NavController nav = Navigation.findNavController(v);
