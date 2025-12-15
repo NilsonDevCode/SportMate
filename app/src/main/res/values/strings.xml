@@ -31,7 +31,7 @@
     <string name="sign_up_select_role">Selecciona tu rol:</string>
     <string name="sign_up_user_role">Usuario</string>
     <string name="sign_up_townhall_role">Ayuntamiento</string>
-    <string name="sign_up_button">Crear cuenta</string>
+    <string name="sign_up_button">Crear Cuenta</string>
 
     <!-- Actividades -->
     <string name="title_activity_formulario_usuario">Formulario Usuario</string>
@@ -40,7 +40,7 @@
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="title_activity_register">Registro</string>
     <string name="title_activity_main">Inicio</string>
-    <string name="seleccion_ayuntamiento">Selección AYUNTAMIENTO</string>
+    <string name="seleccion_ayuntamiento">Selección Ayuntamiento</string>
 
     <!-- Formularios comunes -->
     <string name="prompt_alias">Alias</string>
@@ -96,6 +96,7 @@
     <string name="evento_actualizado">Evento actualizado</string>
     <string name="evento_borrado">Evento eliminado</string>
     <string name="usuario_expulsado">Usuario expulsado</string>
+    <string name="gestor_actividades">Gestor de Actividades</string>
 
     <!-- Textos informativos -->
     <string name="fecha">Fecha</string>
@@ -104,8 +105,8 @@
     <string name="plazas">Plazas disponibles</string>
     <string name="sin_eventos">¡Sin actividades!\nParticipa en la que más te guste\ny la encontrarás aquí.</string>
     <string name="sin_inscritos">No hay inscritos en este evento</string>
-    <string name="nuevo_usuario_header">Nuevo USUARIO</string>
-    <string name="nuevo_ayuntamiento_header">Nuevo AYUNTAMIENTO</string>
+    <string name="nuevo_usuario_header">Nuevo Usuario</string>
+    <string name="nuevo_ayuntamiento_header">Nuevo Ayuntmiento</string>
 
     <!-- Arrays -->
     <string-array name="roles_array">
@@ -126,7 +127,7 @@
     <string name="ver_deportes_disponiblesPrivados">Busca actividades disponibles</string>
     <string name="deporte">Deporte</string>
     <string name="ayuntamiento">Ayuntamiento</string>
-    <string name="deportes_disponibles">Deportes DISPONIBLES</string>
+    <string name="deportes_disponibles">Deportes Disponibles</string>
 
     <!-- Menú -->
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>

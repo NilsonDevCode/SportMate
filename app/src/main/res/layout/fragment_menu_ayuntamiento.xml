@@ -9,123 +9,139 @@
     android:background="@drawable/gradient_background"
     tools:context=".features.townhall.ui.menuTownhall.menuAyuntamientoFragment">
 
-    <!-- Toolbar con menú -->
+    <!-- TOOLBAR -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/AppToolbarMenu"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:paddingTopSystemWindowInsets="true"
+        app:menu="@menu/menu_ayuntamiento"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:title="@string/title_activity_main"
-        app:menu="@menu/menu_ayuntamiento" />
-
-    <!-- Caja grande: título Inicio -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTitulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:cardCornerRadius="16dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/tvInicio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="@string/title_activity_main"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Caja con logo + nombre del ayuntamiento -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardAyto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:cardCornerRadius="16dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toBottomOf="@id/cardTitulo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="14dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgLogo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@mipmap/ic_launcher"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvAytoNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="—"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="Ayuntamiento de Huelva"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Eventos creados por este ayuntamiento"
-                    android:textSize="13sp"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Lista de eventos -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEventos"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintTop_toBottomOf="@+id/cardAyto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnGestionDeportes"
-        tools:listitem="@layout/adapter_evento_gestion_ayto"/>
-
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sin_eventos"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/cardAyto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Botón para ir a Gestión de deportes -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGestionDeportes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Ir a gestión de deportes"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- CONTENEDOR PRINCIPAL -->
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Header superior con título -->
+        <LinearLayout
+            android:id="@+id/txtTituloPantalla"
+            android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:elevation="10dp"
+            android:gravity="center_vertical" >
+
+            <!-- Título de la Pantalla -->
+            <TextView
+                android:id="@+id/tvTituloPantalla"
+                android:text="@string/gestor_actividades"
+                android:textFontWeight="700"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:textAlignment="gravity" />
+        </LinearLayout>
+
+        <!-- AYUNTAMIENTO -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAyto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="20dp"
+            app:cardCornerRadius="5dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="15dp">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAytoNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/colorPrimary"
+                        android:textFontWeight="800"
+                        android:textSize="20sp"
+                        tools:text="Ayuntamiento de Huelva" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- LISTA -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEventos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/adapter_evento_gestion_ayto"
+            android:background="@drawable/bg_contenedor_glass"/>
+
+        <!-- EMPTY -->
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/sin_eventos"
+            android:visibility="gone"/>
+
+        <!-- LOADING -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <!-- BOTÓN -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGestionDeportes"
+            style="@style/BotonGenericoBlanco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Ir a gestión de deportes"/>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

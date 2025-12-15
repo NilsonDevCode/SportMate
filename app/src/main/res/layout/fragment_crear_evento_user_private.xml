@@ -10,6 +10,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <!-- TOOLBAR -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/AppToolbarMenu"
+            app:paddingTopSystemWindowInsets="true"
+            app:menu="@menu/menu_inicio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <!-- Header superior con título y flecha -->
         <LinearLayout
             android:id="@+id/txtTituloPantalla"
@@ -168,17 +180,7 @@
             android:id="@+id/btnCrearEvento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear evento"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/BotonGenericoBlanco"
-            android:id="@+id/btnGestionEventos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gestionar eventos"
+            android:text="Guardar Actividad"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
@@ -188,7 +190,7 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Atras"
+            android:text="Cancelar"
             android:layout_gravity="end"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="20dp"

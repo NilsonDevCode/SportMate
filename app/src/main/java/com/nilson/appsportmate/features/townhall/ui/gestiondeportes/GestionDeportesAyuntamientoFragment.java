@@ -91,7 +91,6 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);
 
         btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);
-        btnGestionEventos    = v.findViewById(R.id.btnGestionEventos);
         btnLogout            = v.findViewById(R.id.btnLogout);
     }
 
