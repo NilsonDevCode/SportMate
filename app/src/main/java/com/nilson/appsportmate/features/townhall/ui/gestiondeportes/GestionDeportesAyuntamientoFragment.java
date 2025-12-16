@@ -33,10 +33,11 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
     // UI
     private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
             etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
+
     private MaterialButton btnCrearEvento, btnGestionEventos;
     private Button btnLogout;
 
-    // VM
+    // ViewModel
     private GestionDeportesAyuntamientoViewModel vm;
 
     // Estado
@@ -50,25 +51,40 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Usamos tu layout sin cambios
-        return inflater.inflate(R.layout.activity_gestion_deportes_ayuntamiento, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        return inflater.inflate(
+                R.layout.activity_gestion_deportes_ayuntamiento,
+                container,
+                false
+        );
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            @Nullable Bundle savedInstanceState
+    ) {
         super.onViewCreated(view, savedInstanceState);
 
-        vm = new ViewModelProvider(this).get(GestionDeportesAyuntamientoViewModel.class);
+        vm = new ViewModelProvider(this)
+                .get(GestionDeportesAyuntamientoViewModel.class);
 
         ayuntamientoId = Preferencias.obtenerAyuntamientoId(requireContext());
         if (TextUtils.isEmpty(ayuntamientoId)) {
-            Toast.makeText(requireContext(), "Error: ayuntamiento_id no encontrado.", Toast.LENGTH_LONG).show();
-            Navigation.findNavController(view).navigate(R.id.loginFragment);
+            Toast.makeText(
+                    requireContext(),
+                    "Error: ayuntamiento_id no encontrado",
+                    Toast.LENGTH_LONG
+            ).show();
+            Navigation.findNavController(view)
+                    .navigate(R.id.loginFragment);
             return;
         }
+
         vm.setAyuntamientoId(ayuntamientoId);
 
         bindViews(view);
@@ -77,87 +93,105 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
     }
 
     // ---------------------------
-    // Bind / Observers / Clicks
+    // Bind views
     // ---------------------------
 
     private void bindViews(View v) {
-        etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);
-        etCantidadJugadores  = v.findViewById(R.id.etCantidadJugadores);
-        etFecha              = v.findViewById(R.id.etFecha);
-        etHora               = v.findViewById(R.id.etHora);
-        etDescripcionEvento  = v.findViewById(R.id.etDescripcionEvento);
-        etReglasEvento       = v.findViewById(R.id.etReglasEvento);
-        etMateriales         = v.findViewById(R.id.etMateriales);
-        etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);
+        etNombreDeporte     = v.findViewById(R.id.etNombreDeporte);
+        etCantidadJugadores = v.findViewById(R.id.etCantidadJugadores);
+        etFecha             = v.findViewById(R.id.etFecha);
+        etHora              = v.findViewById(R.id.etHora);
+        etDescripcionEvento = v.findViewById(R.id.etDescripcionEvento);
+        etReglasEvento      = v.findViewById(R.id.etReglasEvento);
+        etMateriales        = v.findViewById(R.id.etMateriales);
+        etUrlPueblo         = v.findViewById(R.id.etUrlPueblo);
 
-        btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);
-        btnLogout            = v.findViewById(R.id.btnLogout);
+        btnCrearEvento    = v.findViewById(R.id.btnCrearEvento);
+        btnGestionEventos = v.findViewById(R.id.btnGestionEventos);
+        btnLogout         = v.findViewById(R.id.btnLogout);
     }
 
+    // ---------------------------
+    // Click listeners
+    // ---------------------------
+
     private void setupClicks() {
+
         etFecha.setOnClickListener(v -> mostrarDatePicker());
         etHora.setOnClickListener(v -> mostrarTimePicker());
 
-        btnCrearEvento.setOnClickListener(v -> vm.crearDeporte(
-                txt(etNombreDeporte),
-                txtInt(etCantidadJugadores),
-                txt(etFecha),
-                txt(etHora),
-                txt(etDescripcionEvento),
-                txt(etReglasEvento),
-                txt(etMateriales),
-                txt(etUrlPueblo)
-        ));
+        btnCrearEvento.setOnClickListener(v ->
+                vm.crearDeporte(
+                        txt(etNombreDeporte),
+                        txtInt(etCantidadJugadores),
+                        txt(etFecha),
+                        txt(etHora),
+                        txt(etDescripcionEvento),
+                        txt(etReglasEvento),
+                        txt(etMateriales),
+                        txt(etUrlPueblo)
+                )
+        );
 
         btnGestionEventos.setOnClickListener(v -> {
-            // Navegación a Fragment según tu grafo
             NavController nav = Navigation.findNavController(requireView());
             Bundle args = new Bundle();
             args.putString("ayuntamientoId", ayuntamientoId);
-            nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);
+            nav.navigate(
+                    R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment,
+                    args
+            );
         });
 
         btnLogout.setOnClickListener(v -> {
             NavController nav = Navigation.findNavController(v);
-            boolean popped = nav.popBackStack(R.id.menuAyuntamientoFragment, false);
+            boolean popped = nav.popBackStack(
+                    R.id.menuAyuntamientoFragment,
+                    false
+            );
             if (!popped) {
                 nav.navigate(R.id.action_global_menuAyuntamientoFragment);
             }
         });
-
     }
 
+    // ---------------------------
+    // Observers
+    // ---------------------------
+
     private void observeVm() {
+
         vm.getToast().observe(getViewLifecycleOwner(), msg -> {
-            if (msg != null && !msg.isEmpty()) {
+            if (!TextUtils.isEmpty(msg)) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                vm.consumeToast(); // evita que se repita al volver atrás
+                vm.consumeToast();
             }
         });
 
-
-        // NUEVO: limpiar el formulario al crear correctamente
         vm.getClearForm().observe(getViewLifecycleOwner(), clear -> {
-            if (clear != null && clear) {
+            if (Boolean.TRUE.equals(clear)) {
                 limpiarFormulario();
                 vm.onFormCleared();
             }
         });
 
         vm.getNavigateToLogin().observe(getViewLifecycleOwner(), go -> {
-            if (go != null && go) {
-                NavController nav = Navigation.findNavController(requireView());
-                nav.navigate(R.id.loginFragment);
+            if (Boolean.TRUE.equals(go)) {
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.loginFragment);
                 vm.onNavigatedToLogin();
             }
         });
 
         vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -> {
-            if (go != null && go) {
+            if (Boolean.TRUE.equals(go)) {
                 NavController nav = Navigation.findNavController(requireView());
                 Bundle args = new Bundle();
                 args.putString("ayuntamientoId", ayuntamientoId);
-                nav.navigate(R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment, args);
+                nav.navigate(
+                        R.id.action_gestionDeportesAyuntamientoFragment_to_gestionEventosMasPlazasFragment,
+                        args
+                );
                 vm.onNavigatedToGestionEventos();
             }
         });
@@ -171,8 +205,10 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(
                 requireContext(),
-                (view, year, month, dayOfMonth) ->
-                        etFecha.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                (view, year, month, day) ->
+                        etFecha.setText(
+                                String.format("%02d/%02d/%04d", day, month + 1, year)
+                        ),
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)
@@ -183,8 +219,10 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         new TimePickerDialog(
                 requireContext(),
-                (view, hourOfDay, minute) ->
-                        etHora.setText(String.format("%02d:%02d", hourOfDay, minute)),
+                (view, hour, minute) ->
+                        etHora.setText(
+                                String.format("%02d:%02d", hour, minute)
+                        ),
                 c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE),
                 true
@@ -196,7 +234,9 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
     // ---------------------------
 
     private static String txt(EditText et) {
-        return et.getText() == null ? "" : et.getText().toString().trim();
+        return et.getText() == null
+                ? ""
+                : et.getText().toString().trim();
     }
 
     private static Integer txtInt(EditText et) {
@@ -209,7 +249,6 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         }
     }
 
-    // NUEVO: limpiar inputs tras crear
     private void limpiarFormulario() {
         etNombreDeporte.setText("");
         etCantidadJugadores.setText("");
@@ -220,7 +259,6 @@ public class GestionDeportesAyuntamientoFragment extends Fragment {
         etMateriales.setText("");
         etUrlPueblo.setText("");
 
-        // limpiar errores (opcional)
         etNombreDeporte.setError(null);
         etCantidadJugadores.setError(null);
         etFecha.setError(null);

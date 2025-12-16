@@ -8,177 +8,182 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <!-- Header superior con título -->
+        <!-- ===================== -->
+        <!-- HEADER -->
+        <!-- ===================== -->
         <LinearLayout
-            android:id="@+id/txtTituloPantalla"
             android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:orientation="horizontal"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:elevation="10dp"
-            android:gravity="center_vertical" >
+            android:gravity="center_vertical">
 
-            <!-- Título de la Pantalla -->
             <TextView
                 android:id="@+id/tvTituloPantalla"
-                android:text="@string/crear_evento_privado"
-                android:textFontWeight="700"
-                android:textSize="25sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:textAlignment="gravity" />
+                android:text="Gestión de deportes"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:paddingLeft="20dp" />
         </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/containerFormGlass1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/bg_contenedor_glass"
-        android:elevation="8dp"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:translationZ="8dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
+        <!-- ===================== -->
+        <!-- FORMULARIO -->
+        <!-- ===================== -->
+        <LinearLayout
+            android:id="@+id/containerFormGlass1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="Nombre del deporte"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNombreDeporte"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_margin="20dp"
+            android:background="@drawable/bg_contenedor_glass"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cantidad de jugadores (plazas)"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCantidadJugadores"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Nombre del deporte"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombreDeporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fecha"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etFecha"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:clickable="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Cantidad de jugadores (plazas)"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCantidadJugadores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Hora"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etHora"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:clickable="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Fecha"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Descripción del evento"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etDescripcionEvento"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textMultiLine"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Hora"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etHora"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Reglas del evento"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etReglasEvento"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textMultiLine"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Descripción del evento"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescripcionEvento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences|textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Material necesario"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etMateriales"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Reglas del evento"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etReglasEvento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences|textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="URL exacta del evento"
-            android:layout_marginBottom="5dp"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#FFFFFFFF">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUrlPueblo"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textUri"/>
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+                android:hint="Material necesario"
+                android:layout_marginBottom="12dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMateriales"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="URL exacta del evento"
+                android:layout_marginBottom="5dp"
+                app:boxBackgroundColor="#FFFFFFFF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUrlPueblo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- ===================== -->
+        <!-- BOTONES -->
+        <!-- ===================== -->
 
         <com.google.android.material.button.MaterialButton
             style="@style/BotonGenericoBlanco"
             android:id="@+id/btnCrearEvento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar Actividad"
-            android:layout_marginTop="15dp"
+            android:text="Guardar actividad"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp" />
+
+        <!-- 🔴 BOTÓN QUE FALTABA -->
+        <com.google.android.material.button.MaterialButton
+            style="@style/BotonGenericoBlanco"
+            android:id="@+id/btnGestionEventos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestionar eventos"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp" />
 
         <Button
             style="@style/BotonGenericoBlanco"
@@ -186,10 +191,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cancelar"
-            android:layout_gravity="end"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_margin="20dp" />
+
     </LinearLayout>
 </ScrollView>
