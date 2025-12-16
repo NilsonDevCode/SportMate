@@ -9,24 +9,24 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.FragmentEventosDisponiblesUserPrivateBinding;
 import com.nilson.appsportmate.features.user.ui.eventosPrivados.AdaptadoresPrivate.EventosDisponiblesUserPrivateAdapter;
+import com.nilson.appsportmate.features.user.ui.eventosPrivados.menuBase.BaseUserPrivateFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-public class EventosDisponilblesUserPrivateFragment extends Fragment
+public class EventosDisponilblesUserPrivateFragment
+        extends BaseUserPrivateFragment
         implements EventosDisponiblesUserPrivateAdapter.Listener {
 
     private static final String TAG = "EventosPrivadosFrag";
@@ -43,6 +43,9 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
     private String puebloNombre;
     private String lastPuebloId;
 
+    // ==============================
+    // LAYOUT
+    // ==============================
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,11 +55,20 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
         return binding.getRoot();
     }
 
+    // ==============================
+    // ON VIEW CREATED
+    // ==============================
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 🔥 MENÚ COMÚN (BASE)
+        configurarMenuPrivado(binding.toolbar);
+
+        // ------------------------------------------------------
+        // VIEWMODEL + FIRESTORE
+        // ------------------------------------------------------
         db = FirebaseFirestore.getInstance();
         vm = new ViewModelProvider(this).get(EventosDisponiblesUserPrivateViewModel.class);
 
@@ -77,30 +89,28 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
                 (puebloNombre != null && !puebloNombre.isEmpty()) ? puebloNombre : "—"
         );
 
-        // RecyclerView
+        // ------------------------------------------------------
+        // RECYCLERVIEW
+        // ------------------------------------------------------
         binding.rvDisponibles.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new EventosDisponiblesUserPrivateAdapter(
-                new ArrayList<>(),
-                this
-        );
+        adapter = new EventosDisponiblesUserPrivateAdapter(new ArrayList<>(), this);
         binding.rvDisponibles.setAdapter(adapter);
 
-        // 🔥 INIT / LOAD
+        // ------------------------------------------------------
+        // INIT / LOAD
+        // ------------------------------------------------------
         if (puebloId != null) {
-            // Caso normal: ya hay pueblo guardado en Preferencias
             vm.init(uid, alias, puebloId);
             vm.activarListeners();
-        } else {
-            // ⚠ Fallback: leer pueblo desde Firestore (usuarios/{uid})
-            if (uid != null) {
-                cargarPuebloDesdeFirestore(uid);
-            } else {
-                Log.e(TAG, "uid es NULL, no se puede cargar pueblo");
-            }
+        } else if (uid != null) {
+            cargarPuebloDesdeFirestore(uid);
         }
 
         observeUiState();
 
+        // ------------------------------------------------------
+        // BOTÓN SALIR
+        // ------------------------------------------------------
         binding.btnSalir.setOnClickListener(v -> {
             NavOptions opts = new NavOptions.Builder()
                     .setPopUpTo(R.id.inicioFragment, true)
@@ -111,106 +121,55 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
         });
     }
 
-    /**
-     * Fallback cuando puebloId en Preferencias viene null.
-     * Lee usuarios/{uid} y rellena puebloId + puebloNombre.
-     */
+    // ==============================
+    // FIRESTORE FALLBACK
+    // ==============================
     private void cargarPuebloDesdeFirestore(@NonNull String uidLocal) {
-        Log.e(TAG, "cargarPuebloDesdeFirestore() uid=" + uidLocal);
-
         db.collection("usuarios")
                 .document(uidLocal)
                 .get()
                 .addOnSuccessListener(doc -> {
-                    if (doc == null || !doc.exists()) {
-                        Log.e(TAG, "Usuario no encontrado en Firestore para uid=" + uidLocal);
-                        return;
-                    }
+                    if (!doc.exists()) return;
 
                     String puebloIdDoc     = safe(doc.getString("puebloId"));
                     String puebloNombreDoc = safe(doc.getString("puebloNombre"));
 
-                    Log.e(TAG, "Firestore usuario → puebloId=" + puebloIdDoc +
-                            " puebloNombre=" + puebloNombreDoc);
+                    if (puebloIdDoc == null) return;
 
-                    if (puebloIdDoc == null) {
-                        Log.e(TAG, "El documento de usuario no tiene puebloId, no se puede filtrar.");
-                        return;
-                    }
-
-                    // Actualizar estado interno
                     puebloId     = puebloIdDoc;
                     puebloNombre = puebloNombreDoc;
                     lastPuebloId = puebloIdDoc;
 
-                    // Guardar en Preferencias para futuras pantallas
-                    if (getContext() != null) {
-                        Preferencias.guardarPuebloId(getContext(), puebloIdDoc);
-                        Preferencias.guardarPuebloNombre(getContext(),
-                                puebloNombreDoc != null ? puebloNombreDoc : "");
-                    }
-
-                    // Actualizar UI
-                    binding.tvPuebloNombre.setText(
-                            (puebloNombreDoc != null && !puebloNombreDoc.isEmpty())
-                                    ? puebloNombreDoc
-                                    : "—"
+                    Preferencias.guardarPuebloId(requireContext(), puebloIdDoc);
+                    Preferencias.guardarPuebloNombre(
+                            requireContext(),
+                            puebloNombreDoc != null ? puebloNombreDoc : ""
                     );
 
-                    // Ahora sí, inicializar VM con el pueblo correcto
+                    binding.tvPuebloNombre.setText(
+                            puebloNombreDoc != null ? puebloNombreDoc : "—"
+                    );
+
                     vm.init(uid, alias, puebloIdDoc);
                     vm.activarListeners();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error leyendo usuario para obtener puebloId", e);
                 });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (getContext() != null) {
-            String nuevoId     = Preferencias.obtenerPuebloId(getContext());
-            String nuevoNombre = Preferencias.obtenerPuebloNombre(getContext());
-
-            Log.e(TAG, "onResume → nuevoPuebloId=" + nuevoId +
-                    " lastPuebloId=" + lastPuebloId);
-
-            // Actualizar encabezado
-            binding.tvPuebloNombre.setText(
-                    (nuevoNombre != null && !nuevoNombre.isEmpty()) ? nuevoNombre : "—"
-            );
-
-            // Ya NO se llama a vm.ensurePuebloId()
-
-            lastPuebloId = nuevoId;
-        }
-    }
-
-
-    // ==========================================================
-    // OBSERVAR UI STATE
-    // ==========================================================
+    // ==============================
+    // OBSERVER
+    // ==============================
     private void observeUiState() {
         vm.uiState.observe(getViewLifecycleOwner(), state -> {
-
-            Log.e(TAG, "UI STATE → " + state);
 
             if (state == null) return;
 
             if (state.message != null) {
-                Log.e(TAG, "Mensaje recibido: " + state.message);
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show();
-
             }
 
-            if (state.disponibles != null) {
-                Log.e(TAG, "Actualizando adapter con " + state.disponibles.size() + " items");
-                adapter.update(state.disponibles);
-            } else {
-                adapter.update(Collections.emptyList());
-            }
+            adapter.update(state.disponibles != null
+                    ? state.disponibles
+                    : Collections.emptyList());
 
             boolean vacio = state.disponibles == null || state.disponibles.isEmpty();
             binding.tvEmptyDisponibles.setVisibility(vacio ? View.VISIBLE : View.GONE);
@@ -218,20 +177,18 @@ public class EventosDisponilblesUserPrivateFragment extends Fragment
         });
     }
 
-    // ==========================================================
+    // ==============================
     // LISTENERS
-    // ==========================================================
+    // ==============================
     @Override
     public void onApuntarse(Map<String, Object> evento) {
-        Log.e(TAG, "onApuntarse evento=" + evento);
         vm.apuntarse(evento);
     }
 
     @Override
     public void onDesapuntarse(Map<String, Object> evento) {
-
+        // No implementado
     }
-
 
     @Override
     public void onDestroyView() {

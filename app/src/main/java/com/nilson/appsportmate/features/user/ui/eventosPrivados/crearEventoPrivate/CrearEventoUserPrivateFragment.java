@@ -30,7 +30,7 @@ public class CrearEventoUserPrivateFragment extends Fragment {
     private EditText etNombreDeporte, etCantidadJugadores, etFecha, etHora,
             etDescripcionEvento, etReglasEvento, etMateriales, etUrlPueblo;
 
-    private MaterialButton btnCrearEvento;
+    private MaterialButton btnCrearEvento, btnGestionEventos;
     private Button btnLogout;
 
     // VM
@@ -44,21 +44,27 @@ public class CrearEventoUserPrivateFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         return inflater.inflate(R.layout.fragment_crear_evento_user_private, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            @Nullable Bundle savedInstanceState
+    ) {
         super.onViewCreated(view, savedInstanceState);
+
 
         vm = new ViewModelProvider(this).get(CrearEventoUserPrivateViewModel.class);
 
+
         uidUsuario = Preferencias.obtenerUid(requireContext());
-        puebloId   = Preferencias.obtenerPuebloId(requireContext());   // ID REAL DE PUEBLO
+        puebloId   = Preferencias.obtenerPuebloId(requireContext());
 
         if (TextUtils.isEmpty(uidUsuario)) {
             Toast.makeText(requireContext(), "Error: UID no encontrado.", Toast.LENGTH_LONG).show();
@@ -67,9 +73,13 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(puebloId)) {
-            Toast.makeText(requireContext(), "Error: no se encontró el pueblo asociado. Vuelve a iniciar sesión.", Toast.LENGTH_LONG).show();
-            // puedes llevarlo a selector de pueblo o al inicio
-            Navigation.findNavController(view).navigate(R.id.action_global_inicioFragment);
+            Toast.makeText(
+                    requireContext(),
+                    "Error: no se encontró el pueblo asociado. Vuelve a iniciar sesión.",
+                    Toast.LENGTH_LONG
+            ).show();
+            Navigation.findNavController(view)
+                    .navigate(R.id.action_global_inicioFragment);
             return;
         }
 
@@ -82,17 +92,18 @@ public class CrearEventoUserPrivateFragment extends Fragment {
     }
 
     private void bindViews(View v) {
-        etNombreDeporte      = v.findViewById(R.id.etNombreDeporte);
-        etCantidadJugadores  = v.findViewById(R.id.etCantidadJugadores);
-        etFecha              = v.findViewById(R.id.etFecha);
-        etHora               = v.findViewById(R.id.etHora);
-        etDescripcionEvento  = v.findViewById(R.id.etDescripcionEvento);
-        etReglasEvento       = v.findViewById(R.id.etReglasEvento);
-        etMateriales         = v.findViewById(R.id.etMateriales);
-        etUrlPueblo          = v.findViewById(R.id.etUrlPueblo);
+        etNombreDeporte     = v.findViewById(R.id.etNombreDeporte);
+        etCantidadJugadores = v.findViewById(R.id.etCantidadJugadores);
+        etFecha             = v.findViewById(R.id.etFecha);
+        etHora              = v.findViewById(R.id.etHora);
+        etDescripcionEvento = v.findViewById(R.id.etDescripcionEvento);
+        etReglasEvento      = v.findViewById(R.id.etReglasEvento);
+        etMateriales        = v.findViewById(R.id.etMateriales);
+        etUrlPueblo         = v.findViewById(R.id.etUrlPueblo);
 
-        btnCrearEvento       = v.findViewById(R.id.btnCrearEvento);
-        btnLogout            = v.findViewById(R.id.btnLogout);
+        btnCrearEvento    = v.findViewById(R.id.btnCrearEvento);
+        btnGestionEventos = v.findViewById(R.id.btnGestionEventos);
+        btnLogout         = v.findViewById(R.id.btnLogout);
     }
 
     private void setupClicks() {
@@ -100,17 +111,25 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         etFecha.setOnClickListener(v -> mostrarDatePicker());
         etHora.setOnClickListener(v -> mostrarTimePicker());
 
-        btnCrearEvento.setOnClickListener(v -> vm.crearEventoParticular(
-                txt(etNombreDeporte),
-                txtInt(etCantidadJugadores),
-                txt(etFecha),
-                txt(etHora),
-                txt(etDescripcionEvento),
-                txt(etReglasEvento),
-                txt(etMateriales),
-                txt(etUrlPueblo)
-        ));
-        
+        btnCrearEvento.setOnClickListener(v ->
+                vm.crearEventoParticular(
+                        txt(etNombreDeporte),
+                        txtInt(etCantidadJugadores),
+                        txt(etFecha),
+                        txt(etHora),
+                        txt(etDescripcionEvento),
+                        txt(etReglasEvento),
+                        txt(etMateriales),
+                        txt(etUrlPueblo)
+                )
+        );
+
+        btnGestionEventos.setOnClickListener(v -> {
+            NavController nav = Navigation.findNavController(requireView());
+            nav.navigate(
+                    R.id.action_crearEventoUserPrivateFragment_to_gestionEventosUserPrivateFragment
+            );
+        });
 
         btnLogout.setOnClickListener(v -> {
             NavController nav = Navigation.findNavController(v);
@@ -131,23 +150,24 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         });
 
         vm.getClearForm().observe(getViewLifecycleOwner(), clear -> {
-            if (clear != null && clear) {
+            if (Boolean.TRUE.equals(clear)) {
                 limpiarFormulario();
                 vm.onFormCleared();
             }
         });
 
         vm.getNavigateToGestionEventos().observe(getViewLifecycleOwner(), go -> {
-            if (go != null && go) {
-                NavController nav = Navigation.findNavController(requireView());
-                nav.navigate(R.id.action_global_gestionEventosUserPrivateFragment);
+            if (Boolean.TRUE.equals(go)) {
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_global_gestionEventosUserPrivateFragment);
                 vm.onNavigatedToGestionEventos();
             }
         });
 
         vm.getNavigateToLogin().observe(getViewLifecycleOwner(), go -> {
-            if (go != null && go) {
-                Navigation.findNavController(requireView()).navigate(R.id.loginFragment);
+            if (Boolean.TRUE.equals(go)) {
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.loginFragment);
                 vm.onNavigatedToLogin();
             }
         });
@@ -157,8 +177,10 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(
                 requireContext(),
-                (view, year, month, dayOfMonth) ->
-                        etFecha.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                (view, year, month, day) ->
+                        etFecha.setText(
+                                String.format("%02d/%02d/%04d", day, month + 1, year)
+                        ),
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)
@@ -169,8 +191,8 @@ public class CrearEventoUserPrivateFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         new TimePickerDialog(
                 requireContext(),
-                (view, hourOfDay, minute) ->
-                        etHora.setText(String.format("%02d:%02d", hourOfDay, minute)),
+                (view, hour, minute) ->
+                        etHora.setText(String.format("%02d:%02d", hour, minute)),
                 c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE),
                 true

@@ -8,65 +8,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <!-- TOOLBAR -->
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+
+
+        <!-- CONTENEDOR FORM -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/AppToolbarMenu"
-            app:paddingTopSystemWindowInsets="true"
-            app:menu="@menu/menu_inicio"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Header superior con título y flecha -->
-        <LinearLayout
-            android:id="@+id/txtTituloPantalla"
-            android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
-            android:elevation="10dp"
-            android:gravity="center_vertical" >
-
-            <!-- Título de la Pantalla -->
-            <TextView
-                android:id="@+id/tvTituloPantalla"
-                android:text="@string/crear_evento_privado"
-                android:textFontWeight="700"
-                android:textSize="25sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:textAlignment="gravity" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/containerFormGlass1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/bg_contenedor_glass"
-            android:elevation="8dp"
+            android:layout_margin="20dp"
             android:orientation="vertical"
-            android:padding="10dp"
-            android:translationZ="8dp">
+            android:background="@drawable/bg_contenedor_glass"
+            android:padding="16dp"
+            android:elevation="8dp">
 
+            <!-- Nombre deporte -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Nombre del deporte"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -75,13 +37,13 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Cantidad jugadores -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Cantidad de jugadores (plazas)"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -91,47 +53,47 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Fecha -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Fecha"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:clickable="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Hora -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Hora"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etHora"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:clickable="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Descripción -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Descripción del evento"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -141,13 +103,13 @@
                     android:inputType="textCapSentences|textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Reglas -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Reglas del evento"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -157,13 +119,13 @@
                     android:inputType="textCapSentences|textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Materiales -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:hint="Material necesario"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="12dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -173,13 +135,13 @@
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- URL -->
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:hint="URL exacta del evento"
-                app:boxBackgroundMode="filled"
+                android:layout_marginBottom="20dp"
                 app:boxBackgroundColor="#FFFFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -191,27 +153,34 @@
 
         </LinearLayout>
 
+        <!-- BOTONES -->
         <com.google.android.material.button.MaterialButton
-            style="@style/BotonGenericoBlanco"
             android:id="@+id/btnCrearEvento"
+            style="@style/BotonGenericoBlanco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar Actividad"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
+            android:text="Guardar actividad"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGestionEventos"
+            style="@style/BotonGenericoBlanco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestionar eventos"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp" />
 
         <Button
-            style="@style/BotonGenericoBlanco"
             android:id="@+id/btnLogout"
+            style="@style/BotonGenericoBlanco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cancelar"
-            android:layout_gravity="end"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_margin="20dp" />
 
     </LinearLayout>
 </ScrollView>

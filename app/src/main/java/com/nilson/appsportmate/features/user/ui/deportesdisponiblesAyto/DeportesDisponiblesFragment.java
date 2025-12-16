@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +20,14 @@ import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
 import com.nilson.appsportmate.databinding.ActivityDeportesDisponiblesBinding;
 import com.nilson.appsportmate.features.townhall.adaptadores.DeportesDisponiblesAdapter;
+import com.nilson.appsportmate.features.user.ui.eventosPrivados.menuBase.BaseUserPrivateFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DeportesDisponiblesFragment extends Fragment implements DeportesDisponiblesAdapter.Listener {
+public class DeportesDisponiblesFragment extends BaseUserPrivateFragment implements DeportesDisponiblesAdapter.Listener {
 
     private ActivityDeportesDisponiblesBinding binding;
 
@@ -53,6 +53,7 @@ public class DeportesDisponiblesFragment extends Fragment implements DeportesDis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        configurarMenuPrivado(binding.toolbar);
 
         db = FirebaseFirestore.getInstance();
 
