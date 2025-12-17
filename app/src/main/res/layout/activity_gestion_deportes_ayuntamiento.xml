@@ -10,16 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ===================== -->
-        <!-- HEADER -->
-        <!-- ===================== -->
+        <!-- Header superior -->
         <LinearLayout
             android:background="@drawable/bg_blanco_degradado_cabeceras_titulos"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:orientation="horizontal"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
             android:elevation="10dp"
             android:gravity="center_vertical">
 
@@ -27,16 +24,14 @@
                 android:id="@+id/tvTituloPantalla"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Gestión de deportes"
-                android:textSize="25sp"
-                android:textStyle="bold"
+                android:paddingLeft="20dp"
+                android:text="Crear Actividad"
                 android:textColor="@color/colorPrimary"
-                android:paddingLeft="20dp" />
+                android:textSize="25sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- ===================== -->
-        <!-- FORMULARIO -->
-        <!-- ===================== -->
+        <!-- Formulario -->
         <LinearLayout
             android:id="@+id/containerFormGlass1"
             android:layout_width="match_parent"
@@ -171,16 +166,14 @@
             android:layout_height="wrap_content"
             android:text="Guardar actividad"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginRight="20dp" />
 
-        <!-- 🔴 BOTÓN QUE FALTABA -->
         <com.google.android.material.button.MaterialButton
             style="@style/BotonGenericoBlanco"
             android:id="@+id/btnGestionEventos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gestionar eventos"
+            android:text="Gestionar Actividades"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="12dp" />
@@ -191,7 +184,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cancelar"
-            android:layout_margin="20dp" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 </ScrollView>

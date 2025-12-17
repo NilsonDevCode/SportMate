@@ -128,6 +128,7 @@
     <string name="deporte">Deporte</string>
     <string name="ayuntamiento">Ayuntamiento</string>
     <string name="deportes_disponibles">Deportes Disponibles</string>
+    <string name="actividades_creadas_ayto">Actividades</string>
 
     <!-- Menú -->
     <string name="editar_informacion_del_usuario">Editar información del usuario</string>
