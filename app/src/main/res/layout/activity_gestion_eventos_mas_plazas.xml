@@ -33,7 +33,7 @@
         <!-- Título de la Pantalla -->
         <TextView
             android:id="@+id/tvTituloPantalla"
-            android:text="@string/deportes_disponibles"
+            android:text="@string/gestor_actividades"
             android:textFontWeight="700"
             android:textSize="25sp"
             android:textColor="@color/colorPrimary"

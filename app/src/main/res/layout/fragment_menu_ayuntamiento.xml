@@ -46,7 +46,7 @@
             <!-- Título de la Pantalla -->
             <TextView
                 android:id="@+id/tvTituloPantalla"
-                android:text="@string/gestor_actividades"
+                android:text="@string/actividades_creadas_ayto"
                 android:textFontWeight="700"
                 android:textSize="25sp"
                 android:textColor="@color/colorPrimary"
@@ -141,7 +141,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:text="Ir a gestión de deportes"/>
+            android:text="Crear Actividad"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
