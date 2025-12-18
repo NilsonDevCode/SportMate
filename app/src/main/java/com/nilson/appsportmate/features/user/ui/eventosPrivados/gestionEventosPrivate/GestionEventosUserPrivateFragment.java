@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.nilson.appsportmate.R;
 import com.nilson.appsportmate.common.utils.Preferencias;
@@ -28,6 +29,7 @@ import com.nilson.appsportmate.features.townhall.ui.dialogos.InscritosDialogFrag
 import com.nilson.appsportmate.features.user.ui.eventosPrivados.menuBase.BaseUserPrivateFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,10 +84,7 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
         super.onViewCreated(v, savedInstanceState);
 
         bindViews(v);
-
-        // Se llama a la clase para que el menú sirva en todas las clases
         configurarMenuPrivado(toolbar);
-
         setupRecycler();
 
         uidUsuario = Preferencias.obtenerUid(requireContext());
@@ -219,10 +218,84 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
     }
 
     // ==============================
-    // EDITAR (sin tocar tu lógica)
+    // EDITAR (AQUÍ ESTABA EL PROBLEMA)
     // ==============================
     private void mostrarDialogoEditar(Map<String, Object> evento) {
-        // TU IMPLEMENTACIÓN ORIGINAL (no se toca)
+
+        View view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_editar_deporte, null);
+
+        TextInputEditText etNombre   = view.findViewById(R.id.etNombreDeporte);
+        TextInputEditText etPlazas   = view.findViewById(R.id.etCantidadJugadores);
+        TextInputEditText etFecha    = view.findViewById(R.id.etFecha);
+        TextInputEditText etHora     = view.findViewById(R.id.etHora);
+        TextInputEditText etDesc     = view.findViewById(R.id.etDescripcionEvento);
+        TextInputEditText etReglas   = view.findViewById(R.id.etReglasEvento);
+        TextInputEditText etMaterial = view.findViewById(R.id.etMateriales);
+
+        etNombre.setText(String.valueOf(evento.get("nombre")));
+        etPlazas.setText(String.valueOf(evento.get("plazasDisponibles")));
+        etFecha.setText(String.valueOf(evento.get("fecha")));
+        etHora.setText(String.valueOf(evento.get("hora")));
+        etDesc.setText(str(evento.get("descripcion")));
+        etReglas.setText(str(evento.get("reglas")));
+        etMaterial.setText(str(evento.get("materiales")));
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Editar evento privado")
+                .setView(view)
+                .setPositiveButton("Guardar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(dlg ->
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setOnClickListener(btn -> {
+
+                            String nombre = etNombre.getText().toString().trim();
+                            String plazasTx = etPlazas.getText().toString().trim();
+
+                            if (nombre.isEmpty()) {
+                                etNombre.setError("Obligatorio");
+                                return;
+                            }
+
+                            int plazas;
+                            try {
+                                plazas = Integer.parseInt(plazasTx);
+                            } catch (Exception e) {
+                                etPlazas.setError("Número inválido");
+                                return;
+                            }
+
+                            Map<String, Object> nuevos = new HashMap<>();
+                            nuevos.put("nombre", nombre);
+                            nuevos.put("plazasDisponibles", plazas);
+                            nuevos.put("fecha", etFecha.getText().toString().trim());
+                            nuevos.put("hora", etHora.getText().toString().trim());
+                            nuevos.put("descripcion", etDesc.getText().toString().trim());
+                            nuevos.put("reglas", etReglas.getText().toString().trim());
+                            nuevos.put("materiales", etMaterial.getText().toString().trim());
+                            nuevos.put("uidOwner", uidUsuario);
+
+                            String oldId = String.valueOf(evento.get("idDoc"));
+                            String newId = GestionEventosUserPrivateViewModel
+                                    .generarDocIdPrivado(
+                                            nombre,
+                                            String.valueOf(evento.get("fecha")),
+                                            String.valueOf(evento.get("hora"))
+                                    );
+
+                            vm.editarEvento(oldId, newId, nuevos);
+                            dialog.dismiss();
+                        })
+        );
+
+        dialog.show();
+    }
+
+    private String str(Object o) {
+        return o == null ? "" : String.valueOf(o);
     }
 
     // ==============================
@@ -234,9 +307,7 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
     }
 
     @Override
-    public void onDialogShown(String idDoc, String titulo) {
-
-    }
+    public void onDialogShown(String idDoc, String titulo) {}
 
     @Override
     public void onDialogDismissRequested() {
