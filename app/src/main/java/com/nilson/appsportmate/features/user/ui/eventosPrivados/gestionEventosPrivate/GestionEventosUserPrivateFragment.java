@@ -218,7 +218,7 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
     }
 
     // ==============================
-    // EDITAR (AQUÍ ESTABA EL PROBLEMA)
+    // EDITAR (MEJORA APLICADA AQUÍ)
     // ==============================
     private void mostrarDialogoEditar(Map<String, Object> evento) {
 
@@ -233,10 +233,13 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
         TextInputEditText etReglas   = view.findViewById(R.id.etReglasEvento);
         TextInputEditText etMaterial = view.findViewById(R.id.etMateriales);
 
+        String fechaOriginal = String.valueOf(evento.get("fecha"));
+        String horaOriginal  = String.valueOf(evento.get("hora"));
+
         etNombre.setText(String.valueOf(evento.get("nombre")));
         etPlazas.setText(String.valueOf(evento.get("plazasDisponibles")));
-        etFecha.setText(String.valueOf(evento.get("fecha")));
-        etHora.setText(String.valueOf(evento.get("hora")));
+        etFecha.setText(fechaOriginal);
+        etHora.setText(horaOriginal);
         etDesc.setText(str(evento.get("descripcion")));
         etReglas.setText(str(evento.get("reglas")));
         etMaterial.setText(str(evento.get("materiales")));
@@ -254,6 +257,8 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
 
                             String nombre = etNombre.getText().toString().trim();
                             String plazasTx = etPlazas.getText().toString().trim();
+                            String fecha = etFecha.getText().toString().trim();
+                            String hora  = etHora.getText().toString().trim();
 
                             if (nombre.isEmpty()) {
                                 etNombre.setError("Obligatorio");
@@ -268,11 +273,19 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
                                 return;
                             }
 
+                            boolean fechaCambiada =
+                                    !fecha.equals(fechaOriginal) || !hora.equals(horaOriginal);
+
+                            if (!fechaCambiada) {
+                                fecha = fechaOriginal;
+                                hora  = horaOriginal;
+                            }
+
                             Map<String, Object> nuevos = new HashMap<>();
                             nuevos.put("nombre", nombre);
                             nuevos.put("plazasDisponibles", plazas);
-                            nuevos.put("fecha", etFecha.getText().toString().trim());
-                            nuevos.put("hora", etHora.getText().toString().trim());
+                            nuevos.put("fecha", fecha);
+                            nuevos.put("hora", hora);
                             nuevos.put("descripcion", etDesc.getText().toString().trim());
                             nuevos.put("reglas", etReglas.getText().toString().trim());
                             nuevos.put("materiales", etMaterial.getText().toString().trim());
@@ -280,11 +293,7 @@ public class GestionEventosUserPrivateFragment extends BaseUserPrivateFragment
 
                             String oldId = String.valueOf(evento.get("idDoc"));
                             String newId = GestionEventosUserPrivateViewModel
-                                    .generarDocIdPrivado(
-                                            nombre,
-                                            String.valueOf(evento.get("fecha")),
-                                            String.valueOf(evento.get("hora"))
-                                    );
+                                    .generarDocIdPrivado(nombre, fecha, hora);
 
                             vm.editarEvento(oldId, newId, nuevos);
                             dialog.dismiss();
