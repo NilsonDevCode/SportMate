@@ -19,6 +19,7 @@
 - [📸 Capturas](#-capturas-flujos-principales)
 - [🎥 Demo](#-demo-plazas-en-tiempo-real)
 - [✅ Funcionalidades](#-funcionalidades-principales)
+- [📂 Estructura del proyecto](#-estructura-del-proyecto)
 - [🧩 Arquitectura](#-arquitectura-y-decisiones-técnicas)
 - [🧪 Testing](#-testing-y-calidad-del-software)
 - [🌍 Gestión de eventos](#-gestión-flexible-de-eventos)
