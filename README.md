@@ -27,20 +27,32 @@ Desarrollar una aplicación móvil que permita:
 
 Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de acceso seguro basado en roles.
 
-<table>
+## 📸 Capturas (flujos principales)
+
+<table align="center">
   <tr>
     <td align="center"><b>Login</b></td>
-    <td align="center"><b>Detalle del Evento</b></td>
-    <td align="center"><b>Inicio / Perfil</b></td>
+    <td align="center"><b>Detalle del evento</b></td>
+    <td align="center"><b>Perfil / Inicio</b></td>
   </tr>
   <tr>
-    <td><img src="docs/login.png" width="250"/></td>
-    <td><img src="docs/eventos.png" width="250"/></td>
-    <td><img src="docs/perfil.png" width="250"/></td>
+    <td><img src="docs/login.png" alt="Pantalla de Login" width="260"/></td>
+    <td><img src="docs/eventos.png" alt="Detalle del evento con plazas" width="260"/></td>
+    <td><img src="docs/perfil.png" alt="Pantalla de Perfil e Inicio" width="260"/></td>
   </tr>
 </table>
 
-![Plazas en tiempo real](docs/plazas_realtime.gif)
+<br/>
+
+## 🎥 Demo (plazas en tiempo real)
+
+<p align="center">
+  <img src="docs/plazas_realtime.gif" 
+       alt="Sincronización de plazas en tiempo real con Firebase" 
+       width="380"/>
+</p>
+<sub>Demo real de la sincronización automática de plazas al inscribirse o darse de baja de un evento, usando Cloud Firestore.</sub>
+
 
 
 
