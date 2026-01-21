@@ -51,7 +51,12 @@ Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de
        alt="Sincronización de plazas en tiempo real con Firebase" 
        width="380"/>
 </p>
-<sub>Demo real de la sincronización automática de plazas al inscribirse o darse de baja de un evento, usando Cloud Firestore.</sub>
+<p align="center">
+  <sub>
+    Demo real de la sincronización automática de plazas al inscribirse o darse de baja de un evento, usando Cloud Firestore.
+  </sub>
+</p>
+
 
 
 
