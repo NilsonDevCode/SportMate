@@ -7,6 +7,12 @@
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-039BE5?style=for-the-badge&logo=firebase&logoColor=white)
 ![Testing](https://img.shields.io/badge/Testing-White%20%26%20Black%20Box-success?style=for-the-badge)
 
+> **TL;DR técnico**  
+> App Android en Java con Clean Architecture + MVVM y Firebase,  
+> eventos oficiales y privados, control de plazas en tiempo real,  
+> roles, testing y enfoque social.
+
+
 
 Aplicación Android desarrollada como **Proyecto Final de Ciclo (TFG) – DAM**, diseñada para fomentar la **participación deportiva**, la **inclusión social** y la **conexión entre personas y ayuntamientos** a través de eventos deportivos con control de plazas en tiempo real.
 
@@ -97,39 +103,58 @@ Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de
 - Prevención de duplicados, inscripciones inconsistentes y estados inválidos.
 - Garantía de coherencia entre eventos, usuarios y participantes.
 
+## 📂 Estructura del proyecto
 
+```
+com.nilson.appsportmate
+├── common
+│ ├── datos.firebase // Configuración y utilidades comunes de Firebase
+│ ├── modelos // Modelos compartidos
+│ └── utils // Constantes, validaciones y helpers
+│
+├── data
+│ ├── local // Fuentes de datos locales (si aplica)
+│ ├── remote // Acceso a Firebase / Firestore
+│ └── repository // Implementaciones de repositorios
+│
+├── domain
+│ ├── models // Modelos de dominio
+│ ├── repository // Interfaces de repositorios
+│ └── usecase // Casos de uso (lógica de negocio)
+│
+├── di // Inyección de dependencias
+│
+├── features // Módulos por funcionalidad
+│ ├── townhall // Funcionalidades de ayuntamiento
+│ └── user.ui // Funcionalidades de usuario
+│
+├── ui
+│ ├── auth // Login y registro
+│ ├── splash // Pantalla inicial
+│ └── shared // Componentes reutilizables
+│
+├── App // Clase Application
+└── MainActivity // Activity principal
+```
+## 🧩 Arquitectura y decisiones técnicas
 
-## 🌍 Gestión flexible de eventos
+La aplicación está diseñada siguiendo **Clean Architecture + MVVM** con el objetivo de **separar responsabilidades**, **mejorar la mantenibilidad** y **facilitar la escalabilidad** del proyecto.
 
-SportMate permite una gestión de eventos **abierta y descentralizada**, combinando la organización institucional con la iniciativa personal de los usuarios.
+La lógica de negocio se encuentra **desacoplada de la capa de presentación**, lo que permite:
 
-### 🧩 Tipos de eventos soportados
-- **Eventos oficiales**, creados y gestionados por ayuntamientos.
-- **Eventos privados**, creados libremente por los propios usuarios.
-- Posibilidad de participar en eventos existentes o crear nuevos sin restricciones geográficas.
+- Cambiar la fuente de datos (**Firebase, local o mock**) sin afectar a la UI.
+- Testear los **casos de uso** de forma aislada.
+- Mantener un código más **limpio, predecible y fácil de evolucionar**.
 
+La arquitectura **MVVM** está implementada en toda la aplicación, con una separación clara de responsabilidades:
 
+- **UI**: Activities / Fragments (presentación)
+- **ViewModel**: gestión de estado y lógica de presentación
+- **Datos**: repositorios, Firebase y modelos
 
-### 📍 Uso real y alcance social
+Los **CRUDs están implementados manualmente** (sin FirebaseUI) para tener control total sobre la lógica de negocio y los flujos de datos.
 
-- Los usuarios pueden crear o unirse a eventos aunque se encuentren **fuera de su ayuntamiento habitual**.
-- La aplicación es útil tanto en el entorno local como en desplazamientos, viajes o estancias temporales.
-- Facilita la práctica deportiva espontánea y la conexión entre personas en cualquier punto del territorio.
-
-Este enfoque convierte a **SportMate** en una plataforma **social, inclusiva y escalable**, pensada para el uso cotidiano y no limitada a un contexto fijo.
-
-## 🧠 Arquitectura y enfoque técnico
-
-- Arquitectura **MVVM** implementada en toda la aplicación.
-- Separación clara de responsabilidades:
-  - **UI** (Activities / Fragments)
-  - **ViewModel** (lógica de presentación y estado)
-  - **Datos** (repositorios, Firebase, modelos)
-- CRUDs implementados **manualmente** (sin FirebaseUI) para tener control total sobre la lógica.
-- Arquitectura modular y escalable, facilitando mantenimiento, testing y futuras ampliaciones.
-
-
-
+La organización por **capas** (`data`, `domain`, `ui`) y por **features** refleja un enfoque profesional, similar al utilizado en **proyectos reales de producción**, y prepara la aplicación para futuras ampliaciones sin necesidad de reestructuraciones profundas.
 
 ## 🧪 Testing y calidad del software
 
@@ -149,7 +174,23 @@ El proyecto incluye **pruebas de software reales**, centradas en garantizar la f
 - Gestión de errores y mensajes al usuario.
 
 Estas pruebas se centran principalmente en los flujos de **Login** y **Sign Up**, garantizando seguridad y estabilidad.
+## 🌍 Gestión flexible de eventos
 
+SportMate permite una gestión de eventos **abierta y descentralizada**, combinando la organización institucional con la iniciativa personal de los usuarios.
+
+### 🧩 Tipos de eventos soportados
+- **Eventos oficiales**, creados y gestionados por ayuntamientos.
+- **Eventos privados**, creados libremente por los propios usuarios.
+- Posibilidad de participar en eventos existentes o crear nuevos sin restricciones geográficas.
+
+
+### 📍 Uso real y alcance social
+
+- Los usuarios pueden crear o unirse a eventos aunque se encuentren **fuera de su ayuntamiento habitual**.
+- La aplicación es útil tanto en el entorno local como en desplazamientos, viajes o estancias temporales.
+- Facilita la práctica deportiva espontánea y la conexión entre personas en cualquier punto del territorio.
+
+Este enfoque convierte a **SportMate** en una plataforma **social, inclusiva y escalable**, pensada para el uso cotidiano y no limitada a un contexto fijo.
 
 ## 🤝 Impacto social del proyecto
 
@@ -172,35 +213,6 @@ El enfoque abierto y participativo de la aplicación contribuye a crear entornos
 - Firebase Storage  
 - Material Design Components  
 - Git & GitHub  
-
-
-## 📂 Estructura del proyecto
-
-```
-com.nilson.appsportmate
-├── adapters
-│   └── RecyclerView adapters (usuarios, deportes, eventos)
-├── data
-│   ├── firebase
-│   │   ├── FirebaseAuthManager
-│   │   ├── FirestoreManager
-│   │   └── FirebaseRefs
-│   └── models
-│       ├── Usuario
-│       ├── Deporte
-│       ├── Ayuntamiento
-│       └── Evento
-├── ui
-│   ├── auth           // Login y registro
-│   ├── usuario        // Pantallas de usuario
-│   ├── ayuntamiento   // Pantallas de ayuntamiento
-│   └── main           // Pantalla principal y navegación
-└── utils
-    ├── Constants
-    ├── Validations
-    └── Preferences
-```
-
 
 ## 🚀 Instalación y ejecución
 
