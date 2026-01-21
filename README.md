@@ -36,7 +36,7 @@ Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de
   <tr>
     <td><img src="docs/login.png" width="250"/></td>
     <td><img src="docs/eventos.png" width="250"/></td>
-    <td><img src="docs/home.png" width="250"/></td>
+    <td><img src="docs/perfil.png" width="250"/></td>
   </tr>
 </table>
 
