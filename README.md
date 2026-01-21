@@ -27,6 +27,22 @@ Desarrollar una aplicación móvil que permita:
 
 Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de acceso seguro basado en roles.
 
+<table>
+  <tr>
+    <td align="center"><b>Login</b></td>
+    <td align="center"><b>Detalle del Evento</b></td>
+    <td align="center"><b>Inicio / Perfil</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/login.png" width="250"/></td>
+    <td><img src="docs/evento.png" width="250"/></td>
+    <td><img src="docs/home.png" width="250"/></td>
+  </tr>
+</table>
+
+![Plazas en tiempo real](docs/plazas_realtime.gif)
+
+
 
 
 ## ✅ Funcionalidades principales
