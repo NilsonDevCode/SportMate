@@ -67,29 +67,34 @@ Crear una aplicación móvil que permita a los **ayuntamientos** publicar deport
 
 ---
 
+
 ## 📂 Estructura del proyecto
- ## com.nilson.appsportmate
-## ├── adapters
-## │ └── RecyclerView Adapters (usuarios, deportes, eventos)
-## ├── data
-## │ ├── firebase
-## │ │ ├── FirebaseAuthManager
-## │ │ ├── FirestoreManager
-## │ │ └── FirebaseRefs
-## │ └── models
-## │ ├── Usuario
-## │ ├── Deporte
-## │ ├── Ayuntamiento
-## │ └── Evento
-## ├── ui
-## │ ├── auth // Login y registro
-## │ ├── usuario // Pantallas de usuario
-## │ ├── ayuntamiento // Pantallas de ayuntamiento
-## │ └── main // Pantalla principal y navegación
-## └── utils
-## ├── Constants
-## ├── Validations
-## └── Preferences
+
+```
+com.nilson.appsportmate
+├── adapters
+│   └── RecyclerView adapters (usuarios, deportes, eventos)
+├── data
+│   ├── firebase
+│   │   ├── FirebaseAuthManager
+│   │   ├── FirestoreManager
+│   │   └── FirebaseRefs
+│   └── models
+│       ├── Usuario
+│       ├── Deporte
+│       ├── Ayuntamiento
+│       └── Evento
+├── ui
+│   ├── auth           // Login y registro
+│   ├── usuario        // Pantallas de usuario
+│   ├── ayuntamiento   // Pantallas de ayuntamiento
+│   └── main           // Pantalla principal y navegación
+└── utils
+    ├── Constants
+    ├── Validations
+    └── Preferences
+```
+
 
 1. Clona el repositorio:
    ```bash
