@@ -14,7 +14,7 @@ SportMate permite tanto a **ayuntamientos** como a **usuarios** crear y gestiona
 
 El proyecto aborda problemas reales como el **sedentarismo**, el **aislamiento social** y la **falta de integración**, promoviendo la unión de personas de distintas edades, culturas y contextos mediante el deporte como elemento común.
 
----
+
 
 ## 🎯 Objetivo del proyecto
 
@@ -27,7 +27,7 @@ Desarrollar una aplicación móvil que permita:
 
 Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de acceso seguro basado en roles.
 
----
+
 
 ## ✅ Funcionalidades principales
 
@@ -64,7 +64,7 @@ Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de
 - Prevención de duplicados, inscripciones inconsistentes y estados inválidos.
 - Garantía de coherencia entre eventos, usuarios y participantes.
 
----
+
 
 ## 🌍 Gestión flexible de eventos
 
@@ -75,7 +75,7 @@ SportMate permite una gestión de eventos **abierta y descentralizada**, combina
 - **Eventos privados**, creados libremente por los propios usuarios.
 - Posibilidad de participar en eventos existentes o crear nuevos sin restricciones geográficas.
 
----
+
 
 ### 📍 Uso real y alcance social
 
@@ -96,7 +96,7 @@ Este enfoque convierte a **SportMate** en una plataforma **social, inclusiva y e
 - Arquitectura modular y escalable, facilitando mantenimiento, testing y futuras ampliaciones.
 
 
----
+
 
 ## 🧪 Testing y calidad del software
 
@@ -117,7 +117,6 @@ El proyecto incluye **pruebas de software reales**, centradas en garantizar la f
 
 Estas pruebas se centran principalmente en los flujos de **Login** y **Sign Up**, garantizando seguridad y estabilidad.
 
----
 
 ## 🤝 Impacto social del proyecto
 
@@ -130,7 +129,6 @@ SportMate es una aplicación con **impacto social real**, diseñada para ir más
 
 El enfoque abierto y participativo de la aplicación contribuye a crear entornos más saludables, inclusivos y socialmente conectados, tanto a nivel local como en contextos más amplios.
 
----
 
 ## 🛠️ Tecnologías utilizadas
 
@@ -142,7 +140,6 @@ El enfoque abierto y participativo de la aplicación contribuye a crear entornos
 - Material Design Components  
 - Git & GitHub  
 
----
 
 ## 📂 Estructura del proyecto
 
