@@ -12,6 +12,25 @@
 > eventos oficiales y privados, control de plazas en tiempo real,  
 > roles, testing y enfoque social.
 
+<details>
+<summary><b>📑 Contenido</b></summary>
+
+- [🎯 Objetivo del proyecto](#-objetivo-del-proyecto)
+- [📸 Capturas](#-capturas-flujos-principales)
+- [🎥 Demo](#-demo-plazas-en-tiempo-real)
+- [✅ Funcionalidades](#-funcionalidades-principales)
+- [🧩 Arquitectura](#-arquitectura-y-decisiones-técnicas)
+- [🧪 Testing](#-testing-y-calidad-del-software)
+- [🌍 Gestión de eventos](#-gestión-flexible-de-eventos)
+- [🤝 Impacto social](#-impacto-social-del-proyecto)
+- [🛠️ Tecnologías](#-tecnologías-utilizadas)
+- [🚀 Instalación](#-instalación-y-ejecución)
+- [📊 Estado del proyecto](#-estado-del-proyecto)
+- [🔧 Futuras mejoras](#-futuras-mejoras)
+- [👥 Autoría](#-autoría)
+- [📌 Aprendizajes](#-aprendizajes-clave)
+
+</details>
 
 
 Aplicación Android desarrollada como **Proyecto Final de Ciclo (TFG) – DAM**, diseñada para fomentar la **participación deportiva**, la **inclusión social** y la **conexión entre personas y ayuntamientos** a través de eventos deportivos con control de plazas en tiempo real.
