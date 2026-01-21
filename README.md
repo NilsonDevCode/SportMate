@@ -1,154 +1,162 @@
-# AppSportMate
-Aplicación Android desarrollada como parte del TFG de DAM.  
-El objetivo es conectar usuarios y ayuntamientos a través del deporte, permitiendo gestionar eventos, inscribirse y administrar plazas.
+# SportMate · AppSportMate 🏀🏃‍♂️⚽
+
+Aplicación Android desarrollada como **Proyecto Final de Ciclo (TFG) – DAM**, orientada a fomentar la participación deportiva y la conexión entre **usuarios** y **ayuntamientos** mediante la gestión de eventos deportivos con control de plazas en tiempo real.
+
+El proyecto resuelve un problema social claro: **facilitar el acceso al deporte**, combatir el sedentarismo y mejorar la organización de actividades deportivas locales mediante una app moderna, escalable y basada en la nube.
 
 ---
 
-## 📌 Funcionalidades principales
-- **Registro/Login con alias** (rol de Usuario o Ayuntamiento).
-- **Gestión de deportes por ayuntamiento**: crear, editar, borrar eventos y controlar las plazas.
-- **Inscripción de usuarios**: apuntarse o desapuntarse de un deporte.
-- **Control de plazas** en tiempo real (se suman/restan automáticamente).
-- **Gestión de inscritos**: el ayuntamiento puede ver y expulsar participantes.
-- **Firestore y Firebase Auth** como backend principal.
+## 🎯 Objetivo del proyecto
+
+Crear una aplicación móvil que permita a los **ayuntamientos** publicar deportes/eventos con un número limitado de plazas y a los **usuarios** inscribirse o darse de baja de forma dinámica, manteniendo siempre la coherencia de los datos y la seguridad de acceso.
 
 ---
 
-## 🛠️ Tecnologías usadas
-- Java (Android Studio)
-- Firebase Authentication
-- Firebase Firestore
-- Material Design Components
+## ✅ Funcionalidades principales
+
+### 🔐 Autenticación y roles
+- Registro e inicio de sesión mediante **alias + contraseña**.
+- Gestión de roles:
+  - **Usuario**
+  - **Ayuntamiento**
+- Autenticación segura con **Firebase Authentication**.
+- Persistencia de sesión y control de acceso por rol.
+
+### 🏛️ Funcionalidades de Ayuntamiento
+- Crear, editar y eliminar deportes/eventos.
+- Definir **plazas máximas** por evento.
+- Ver listado de usuarios inscritos.
+- Expulsar participantes de un evento.
+- Control automático de plazas (suma/resta en tiempo real).
+
+### 👤 Funcionalidades de Usuario
+- Visualizar los deportes disponibles de su ayuntamiento.
+- Apuntarse y desapuntarse de eventos.
+- Visualizar eventos en los que está inscrito.
+- Bloqueo automático si no hay plazas disponibles.
+
+### 🔄 Lógica de negocio
+- Sincronización en tiempo real con **Firestore**.
+- Actualización automática de plazas disponibles.
+- Filtrado de datos por **UID y rol**.
+- Prevención de duplicados e inconsistencias.
+
+---
+
+## 🧠 Arquitectura y enfoque técnico
+
+- Arquitectura modular y escalable.
+- Separación clara de responsabilidades:
+  - **UI**
+  - **Datos**
+  - **Lógica**
+- CRUDs implementados **manualmente** (sin FirebaseUI) para tener control total.
+- Código preparado para evolucionar hacia arquitecturas más avanzadas (MVVM).
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- Android Studio  
+- Java  
+- Firebase Authentication  
+- Cloud Firestore  
+- Firebase Storage  
+- Material Design Components  
+- Git & GitHub (control de versiones profesional)
 
 ---
 
 ## 📂 Estructura del proyecto
-El código está organizado de forma modular:
+ ## com.nilson.appsportmate
+## ├── adapters
+## │ └── RecyclerView Adapters (usuarios, deportes, eventos)
+## ├── data
+## │ ├── firebase
+## │ │ ├── FirebaseAuthManager
+## │ │ ├── FirestoreManager
+## │ │ └── FirebaseRefs
+## │ └── models
+## │ ├── Usuario
+## │ ├── Deporte
+## │ ├── Ayuntamiento
+## │ └── Evento
+## ├── ui
+## │ ├── auth // Login y registro
+## │ ├── usuario // Pantallas de usuario
+## │ ├── ayuntamiento // Pantallas de ayuntamiento
+## │ └── main // Pantalla principal y navegación
+## └── utils
+## ├── Constants
+## ├── Validations
+## └── Preferences
 
-com.nilson.appsportmate
-├── adapters → RecyclerView.Adapters (eventos, usuarios, etc.)
-├── data
-│ ├── firebase → Clases de conexión y transacciones con Firestore
-│ └── models → Modelos de datos (Usuario, Deporte, etc.)
-├── ui → Activities (pantallas principales)
-└── utils → Clases de utilidades (Preferencias, validaciones…)
-
-
----
-
-## 🚀 Cómo ejecutar el proyecto
-1. Clonar el repositorio
+1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-repo/AppSportMate.git
-Abrir en Android Studio (versión más reciente).
+   git clone https://github.com/NilsonDevCode/SportMate.git
+2. Abre el proyecto con Android Studio.
 
-Conectar el proyecto a tu Firebase:
+3. Crea un proyecto en Firebase:
+   . Activa Authentication (Email/Password).
+   . Activa Cloud Firestore.
+   . (Opcional) Firebase Storage.
 
-Crear un proyecto en Firebase.
+4. Descarga el archivo google-services.json y colócalo en: app/google-services.json
+5. Sincroniza Gradle y ejecuta la app en un emulador o dispositivo físico.
 
-Descargar el archivo google-services.json y colocarlo en la carpeta app/.
+🔒 Seguridad y buenas prácticas
+- Acceso a datos restringido por UID.
+- Separación clara de usuarios y ayuntamientos.
+- Validaciones de formulario completas.
+- Prevención de acciones no autorizadas.
+- Código preparado para reglas de seguridad avanzadas en Firestore.
 
-Sincronizar Gradle y ejecutar en un emulador o dispositivo físico.
 
-👥 Equipo
+Código preparado para reglas de seguridad avanzadas en Firestore.
+## 📊 Estado del proyecto
 
-Este proyecto ha sido desarrollado por:
+✔ Funcional y completo
+
+✔ Evaluado y aprobado con calificación excelente
+
+✔ Lógica de negocio sólida
+
+✔ Arquitectura clara y mantenible
+
+## 🔧 Futuras mejoras 
+- Tests instrumentados
+- Mejoras UI/UX
+- Notificaciones push
+- Optimización de rendimiento
+
+## 👥 Autoría
+
+Proyecto desarrollado inicialmente en equipo (4 personas).
+Esta versión corresponde a una copia independiente, mantenida y evolucionada de forma personal.
+
+Nilson (owner de esta versión)
 
 Antonio
+
 Jordy
+
 Elio
-Nilson
 
+## 📌 Aprendizajes clave
 
+Desarrollo de una app Android completa desde cero.
 
----
+Implementación real de autenticación y base de datos en la nube.
 
-## 📄 .gitignore
+Gestión de roles y permisos.
 
-```gitignore
-# Gradle
-.gradle/
-build/
-*/build/
+Control de estados y sincronización en tiempo real.
 
-# Local config
-local.properties
+Uso profesional de Git en proyectos colaborativos.
 
-# Android Studio
-.idea/
-*.iml
-captures/
+Organización de código a nivel profesional.
 
-# Log/Temp files
-*.log
-*.tmp
-*.temp
+## 📄 Licencia
 
-# Keystores (no compartir claves privadas)
-*.jks
-*.keystore
-
-# Firebase
-# (permitimos subir google-services.json para que todos trabajen igual)
-# google-services.json
-
-# OS files
-.DS_Store
-Thumbs.db
-```
-
-# 1. Inicializar repo (si no lo tienes)
-git init
-
-# 2. Añadir remoto (sustituye la URL por la de tu repo en GitHub)
-git remote add origin https://github.com/TU-USUARIO/AppSportMate.git
-
-# 3. Añadir todos los archivos (respetando el .gitignore)
-git add .
-
-# 4. Primer commit
-git commit -m "Primer commit - AppSportMate TFG DAM"
-
-# 5. Subir al repo remoto
-git branch -M main
-git push -u origin main
-
-## Estructura recomendada para el proyecto
-```
-com.example.sportmate
-├── data
-│   ├── model             // Data Classes (User.java, Event.java)
-│   ├── repository        // Repositorios (UserRepository.java, EventRepository.java)
-│   ├── source
-│   │   └── remote        // Clases para interactuar con Firebase
-│   │       ├── firebase  // Específico de Firebase
-│   │       │   ├── auth    // AuthService.java (para FirebaseAuth)
-│   │       │   └── firestore // FirestoreService.java (para Cloud Firestore)
-│   │       └── dto       // Data Transfer Objects si necesitas transformar datos de Firebase
-│   └── util              // Clases de utilidad para el manejo de datos (e.g., Result.java para manejar éxito/error)
-│
-├── di                    // (Opcional, pero muy recomendado) Para Inyección de Dependencias (e.g., Hilt, Dagger)
-│   ├── AppModule.java
-│   └── ViewModelModule.java
-│
-├── ui
-│   ├── // Paquetes por funcionalidad (feature)
-│   ├── auth              // Funcionalidad de Autenticación
-│   │   ├── LoginActivity.java
-│   │   ├── RegisterActivity.java
-│   │   └── AuthViewModel.java
-│   │
-│   ├── home              // Funcionalidad de la pantalla principal
-│   │   ├── HomeActivity.java
-│   │   ├── HomeFragment.java // Si usas fragments
-│   │   └── HomeViewModel.java
-│   │
-│   ├── base              // Clases base comunes para UI (BaseActivity.java, BaseFragment.java)
-│   └── adapter           // Adapters comunes o base si los tienes
-│
-├── util                  // Clases de utilidad generales para la aplicación (Constants.java, Extensions.java si usas, etc.)
-│
-├── App.java              // Clase Application (si necesitas inicializar algo globalmente)
-│
-└── MainActivity.java     // Tu actividad principal de lanzamiento
-```
+Este proyecto se distribuye con fines educativos y demostrativos.
+Puedes usarlo como referencia respetando la autoría original.
