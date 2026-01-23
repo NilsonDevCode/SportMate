@@ -4,8 +4,9 @@
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![MVVM](https://img.shields.io/badge/Architecture-MVVM-blue?style=for-the-badge)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-![Firestore](https://img.shields.io/badge/Cloud%20Firestore-039BE5?style=for-the-badge&logo=firebase&logoColor=white)
-![Testing](https://img.shields.io/badge/Testing-White%20%26%20Black%20Box-success?style=for-the-badge)
+![Testing](https://img.shields.io/badge/Testing-JUnit%20%7C%20Espresso%20%7C%20Mockito-success?style=for-the-badge)
+
+
 
 > **TL;DR técnico**  
 > App Android en Java con Clean Architecture + MVVM y Firebase,  
@@ -280,16 +281,12 @@ El enfoque abierto y participativo de la aplicación contribuye a crear entornos
 
 ## 👥 Autoría
 
-Proyecto desarrollado inicialmente en equipo (4 personas).
+Proyecto desarrollado inicialmente en equipo (4 personas).  
 Esta versión corresponde a una copia independiente, mantenida y evolucionada de forma personal.
 
-Nilson (owner de esta versión)
+- **Equipo original:** Antonio, Jordy, Elio, Nilson  
+- **Mantenimiento y evolución (fork personal):** Nilson  
 
-Antonio
-
-Jordy
-
-Elio
 
 ## 📌 Aprendizajes clave
 
