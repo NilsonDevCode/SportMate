@@ -245,7 +245,7 @@ The open and participatory approach of the application contributes to creating h
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Technologies Used 
 
 - Android Studio  
 - Java  
