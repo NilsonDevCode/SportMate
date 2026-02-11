@@ -32,7 +32,7 @@
 - [🧪 Testing and Software Quality](#-testing-and-software-quality)
 - [🌍 Flexible Event Management](#-flexible-event-management)
 - [🤝 Social Impact of the Project](#-social-impact-of-the-project)
-- [🛠️ Technologies Used](#-technologies-used)
+- [🛠️ Technologies Used](#tech-section)
 - [🚀 Installation and Execution](#-installation-and-execution)
 - [🔒 Security and Best Practices](#-security-and-best-practices)
 - [📊 Project Status](#-project-status)
@@ -245,7 +245,9 @@ The open and participatory approach of the application contributes to creating h
 
 ---
 
-## 🛠️ Technologies Used 
+<a name="tech-section"></a>
+## 🛠️ Technologies Used
+
 
 - Android Studio  
 - Java  
