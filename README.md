@@ -5,7 +5,7 @@
   <a href="#español">🇪🇸 Español</a>
 </p>
 
----
+<br>
 
 ## English
 
@@ -50,7 +50,6 @@ SportMate enables both **municipalities** and **users** to create and manage spo
 
 The project addresses real-world issues such as **sedentary lifestyle**, **social isolation**, and **lack of community integration**, encouraging interaction between people of different ages, cultures, and backgrounds through sport as a shared element.
 
----
 
 ## 🎯 Project Goal
 
@@ -63,7 +62,6 @@ Develop a mobile application that allows:
 
 All of this while maintaining a **robust architecture**, **data consistency**, and **secure role-based access control**.
 
----
 
 ## 📸 Screenshots (Main Flows)
 
@@ -82,7 +80,7 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
 
 <br/>
 
----
+
 
 
 ## 🎥 Demo (Real-Time Seat Management)
@@ -99,7 +97,7 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
   </sub>
 </p>
 
----
+
 
 ## ✅ Core Features
 #### 🔐 Authentication & Roles
@@ -134,7 +132,7 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
 - Prevention of duplicates, inconsistent registrations, and invalid states.
 - Guaranteed consistency between **events, users, and participants**.
 
----  
+
 
 ## 📂 Project Structure
 ```
@@ -168,7 +166,7 @@ com.nilson.appsportmate
 ├── App // Application class
 └── MainActivity // Main activity
 ```
----
+
 
 ## 🧩 Architecture and Technical Decisions
 
@@ -190,7 +188,7 @@ All **CRUD operations are implemented manually** (without FirebaseUI) to maintai
 
 The organization by **layers** (`data`, `domain`, `ui`) and by **features** reflects a professional approach similar to that used in **real production projects**, preparing the application for future expansion without deep restructuring.
 
----
+
 
 ## 🧪 Testing and Software Quality
 
@@ -211,7 +209,7 @@ The project includes **real software testing**, focused on ensuring the reliabil
 
 These tests focus mainly on **Login** and **Sign Up** flows, ensuring security and stability.
 
----
+
 
 ## 🌍 Flexible Event Management
 
@@ -230,7 +228,7 @@ SportMate enables **open and decentralized** event management, combining institu
 
 This approach transforms **SportMate** into a **social, inclusive, and scalable** platform designed for everyday use, not limited to a fixed context.
 
----
+
 
 ## 🤝 Social Impact of the Project
 
@@ -243,7 +241,7 @@ SportMate is an application with **real social impact**, designed to go beyond s
 
 The open and participatory approach of the application contributes to creating healthier, more inclusive, and socially connected environments, both locally and in broader contexts.
 
----
+
 
 <a name="tech-section"></a>
 ## 🛠️ Technologies Used
@@ -257,7 +255,7 @@ The open and participatory approach of the application contributes to creating h
 - Material Design Components  
 - Git & GitHub
 
----
+
 
 ## 🚀 Installation and Execution
 
@@ -274,7 +272,7 @@ The open and participatory approach of the application contributes to creating h
 `app/google-services.json`
 5. Sync Gradle and run the app on an emulator or physical device.
 
----  
+
 
 ## 🔒 Security and Best Practices
 - Data access restricted by UID.
@@ -317,8 +315,16 @@ This version corresponds to an independent copy, personally maintained and evolv
 This project is distributed for educational and demonstrative purposes.
 It may be used as a reference while respecting the original authorship.
 
-   
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Español
 
