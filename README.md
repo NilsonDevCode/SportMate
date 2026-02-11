@@ -82,6 +82,7 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
 
 <br/>
 
+---
 
 
 ## 🎥 Demo (Real-Time Seat Management)
@@ -97,6 +98,8 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
     Live demo showing automatic seat updates when a user joins or leaves an event, powered by Cloud Firestore.
   </sub>
 </p>
+
+---
 
 ## ✅ Core Features
 #### 🔐 Authentication & Roles
@@ -131,6 +134,8 @@ All of this while maintaining a **robust architecture**, **data consistency**, a
 - Prevention of duplicates, inconsistent registrations, and invalid states.
 - Guaranteed consistency between **events, users, and participants**.
 
+---  
+
 ## 📂 Project Structure
 ```
 com.nilson.appsportmate
@@ -163,6 +168,7 @@ com.nilson.appsportmate
 ├── App // Application class
 └── MainActivity // Main activity
 ```
+---
 
 ## 🧩 Architecture and Technical Decisions
 
@@ -184,6 +190,8 @@ All **CRUD operations are implemented manually** (without FirebaseUI) to maintai
 
 The organization by **layers** (`data`, `domain`, `ui`) and by **features** reflects a professional approach similar to that used in **real production projects**, preparing the application for future expansion without deep restructuring.
 
+---
+
 ## 🧪 Testing and Software Quality
 
 The project includes **real software testing**, focused on ensuring the reliability of critical processes.
@@ -203,6 +211,8 @@ The project includes **real software testing**, focused on ensuring the reliabil
 
 These tests focus mainly on **Login** and **Sign Up** flows, ensuring security and stability.
 
+---
+
 ## 🌍 Flexible Event Management
 
 SportMate enables **open and decentralized** event management, combining institutional organization with users’ personal initiative.
@@ -220,6 +230,8 @@ SportMate enables **open and decentralized** event management, combining institu
 
 This approach transforms **SportMate** into a **social, inclusive, and scalable** platform designed for everyday use, not limited to a fixed context.
 
+---
+
 ## 🤝 Social Impact of the Project
 
 SportMate is an application with **real social impact**, designed to go beyond simple sports event organization.
@@ -231,6 +243,8 @@ SportMate is an application with **real social impact**, designed to go beyond s
 
 The open and participatory approach of the application contributes to creating healthier, more inclusive, and socially connected environments, both locally and in broader contexts.
 
+---
+
 ## 🛠️ Technologies Used
 
 - Android Studio  
@@ -239,7 +253,9 @@ The open and participatory approach of the application contributes to creating h
 - Cloud Firestore  
 - Firebase Storage  
 - Material Design Components  
-- Git & GitHub  
+- Git & GitHub
+
+---
 
 ## 🚀 Installation and Execution
 
@@ -256,6 +272,8 @@ The open and participatory approach of the application contributes to creating h
 `app/google-services.json`
 5. Sync Gradle and run the app on an emulator or physical device.
 
+---  
+
 ## 🔒 Security and Best Practices
 - Data access restricted by UID.
 - Clear separation between users and municipalities.
@@ -263,27 +281,27 @@ The open and participatory approach of the application contributes to creating h
 - Prevention of unauthorized actions.
 - Code prepared for advanced Firestore security rules.
 
-### 📊 Project Status
+## 📊 Project Status
 - ✔ Functional and complete
 - ✔ Evaluated and approved with excellent grade
 - ✔ Solid business logic
 - ✔ Clear and maintainable architecture
 - ✔ Software tests implemented (white-box and black-box)
 
-### 🔧 Future Improvements
+## 🔧 Future Improvements
 - Expanded instrumented testing
 - UI/UX improvements
 - Push notifications
 - Performance optimization
 
-### 👥 Authorship
+## 👥 Authorship
 Project initially developed as a team (4 members).
 This version corresponds to an independent copy, personally maintained and evolved.
 
 **Original team:** Antonio, Jordy, Elio, Nilson
 **Maintenance and evolution (personal fork):** Nilson
 
-### 📌 Key Learnings
+## 📌 Key Learnings
 - Development of a complete Android application using MVVM architecture.
 - Real integration of Firebase Authentication, Cloud Firestore, and Storage.
 - Implementation of role and permission management at the application level.
@@ -293,7 +311,7 @@ This version corresponds to an independent copy, personally maintained and evolv
 - Professional use of Git and GitHub in a collaborative environment.
 - Modular, maintainable, and scalable code organization.
 
-### 📄 License
+## 📄 License
 This project is distributed for educational and demonstrative purposes.
 It may be used as a reference while respecting the original authorship.
 
