@@ -1,5 +1,308 @@
 # SportMate · AppSportMate 🏀🏃‍♂️⚽
 
+<p align="center">
+  <a href="#english">🇬🇧 English</a> |
+  <a href="#español">🇪🇸 Español</a>
+</p>
+
+---
+
+## English
+
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![MVVM](https://img.shields.io/badge/Architecture-MVVM-blue?style=for-the-badge)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Testing](https://img.shields.io/badge/Testing-JUnit%20%7C%20Espresso%20%7C%20Mockito-success?style=for-the-badge)
+
+> **Technical TL;DR**  
+> Android app built in Java using Clean Architecture + MVVM and Firebase.  
+> Supports official and private events, real-time seat control,  
+> role-based access, testing, and a strong social focus.
+
+<details>
+<summary><b>📑 Contents</b></summary>
+
+- [🎯 Project Goal](#-project-goal)
+- [📸 Screenshots](#-screenshots-main-flows)
+- [🎥 Demo](#-demo-real-time-seat-management)
+- [✅ Core Features](#-core-features)
+- [📂 Project Structure](#-project-structure)
+- [🧩 Architecture and Technical Decisions](#-architecture-and-technical-decisions)
+- [🧪 Testing and Software Quality](#-testing-and-software-quality)
+- [🌍 Flexible Event Management](#-flexible-event-management)
+- [🤝 Social Impact of the Project](#-social-impact-of-the-project)
+- [🛠️ Technologies Used](#-technologies-used)
+- [🚀 Installation and Execution](#-installation-and-execution)
+- [🔒 Security and Best Practices](#-security-and-best-practices)
+- [📊 Project Status](#-project-status)
+- [🔧 Future Improvements](#-future-improvements)
+- [👥 Authorship](#-authorship)
+- [📌 Key Learnings](#-key-learnings)
+- [📄 License](#-license)
+
+</details>
+
+
+Android application developed as a **Final Degree Project (TFG) – DAM**, created to promote **sports participation**, **social inclusion**, and **connection between citizens and municipalities** through sports events with real-time seat management.
+
+SportMate enables both **municipalities** and **users** to create and manage sports events within an **open, flexible, and social platform**, where anyone can practice sports, meet new people, and participate in activities without geographical, cultural, or social barriers.
+
+The project addresses real-world issues such as **sedentary lifestyle**, **social isolation**, and **lack of community integration**, encouraging interaction between people of different ages, cultures, and backgrounds through sport as a shared element.
+
+---
+
+## 🎯 Project Goal
+
+Develop a mobile application that allows:
+
+- **Municipalities** to publish and manage official sports events with limited capacity.
+- **Users** to **join existing events or create their own private events** anywhere.
+- Enable sports participation even outside the user’s usual environment (travel, new cities, temporary stays).
+- Build an **inclusive**, accessible, and socially driven sports community that promotes healthy habits and real human relationships.
+
+All of this while maintaining a **robust architecture**, **data consistency**, and **secure role-based access control**.
+
+---
+
+## 📸 Screenshots (Main Flows)
+
+<table align="center">
+  <tr>
+    <td align="center"><b>Login</b></td>
+    <td align="center"><b>Event Details</b></td>
+    <td align="center"><b>Profile / Home</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/login.png" alt="Login screen" width="260"/></td>
+    <td><img src="docs/eventos.png" alt="Event details with seat control" width="260"/></td>
+    <td><img src="docs/perfil.png" alt="Profile and home screen" width="260"/></td>
+  </tr>
+</table>
+
+<br/>
+
+
+
+## 🎥 Demo (Real-Time Seat Management)
+
+<p align="center">
+  <img src="docs/plazas_realtime.gif" 
+       alt="Real-time synchronization of available seats using Firebase Cloud Firestore" 
+       width="380"/>
+</p>
+
+<p align="center">
+  <sub>
+    Live demo showing automatic seat updates when a user joins or leaves an event, powered by Cloud Firestore.
+  </sub>
+</p>
+
+## ✅ Core Features
+#### 🔐 Authentication & Roles
+- Secure sign-up and login using **alias + password**.
+- Role-based system:
+  - **User**
+  - **Municipality**
+- Authentication handled by **Firebase Authentication**.
+- Persistent sessions and **role-based access control**.
+
+#### 🏛️ Municipality Capabilities
+- Create, edit, and delete **official sports events**.
+- Define and manage **maximum participant capacity**.
+- View the list of **registered participants** per event.
+- Remove participants and automatically **free seats**.
+- Automatic **real-time seat synchronization**.
+- Centralized sports event management for the local community.
+
+#### 👤 User Capabilities
+- Browse **official municipality events**.
+- **Create private sports events** in any location.
+- Join or leave both **official and private events**.
+- View events the user is registered in.
+- Participate in sports activities even while **traveling or outside their city**.
+- Automatic registration blocking when **no seats are available**.
+- Full freedom to organize or participate in sports activities.
+
+#### 🔄 Business Logic & Data Integrity
+- **Real-time synchronization** using Cloud Firestore.
+- Automatic and consistent **seat availability management**.
+- Visibility and permissions controlled by **UID and role**.
+- Prevention of duplicates, inconsistent registrations, and invalid states.
+- Guaranteed consistency between **events, users, and participants**.
+
+## 📂 Project Structure
+```
+com.nilson.appsportmate
+├── common
+│ ├── datos.firebase // Shared Firebase configuration and utilities
+│ ├── modelos // Shared models
+│ └── utils // Constants, validations, and helpers
+│
+├── data
+│ ├── local // Local data sources (if applicable)
+│ ├── remote // Firebase / Firestore access
+│ └── repository // Repository implementations
+│
+├── domain
+│ ├── models // Domain models
+│ ├── repository // Repository interfaces
+│ └── usecase // Use cases (business logic)
+│
+├── di // Dependency injection
+│
+├── features // Feature-based modules
+│ ├── townhall // Municipality features
+│ └── user.ui // User features
+│
+├── ui
+│ ├── auth // Login and registration
+│ ├── splash // Splash screen
+│ └── shared // Reusable components
+│
+├── App // Application class
+└── MainActivity // Main activity
+```
+
+## 🧩 Architecture and Technical Decisions
+
+The application is designed following **Clean Architecture + MVVM** with the goal of **separating responsibilities**, **improving maintainability**, and **facilitating project scalability**.
+
+The business logic is **decoupled from the presentation layer**, which allows:
+
+- Changing the data source (**Firebase, local, or mock**) without affecting the UI.
+- Testing **use cases** in isolation.
+- Maintaining code that is more **clean, predictable, and easy to evolve**.
+
+The **MVVM architecture** is implemented across the entire application, with a clear separation of responsibilities:
+
+- **UI**: Activities / Fragments (presentation)
+- **ViewModel**: state management and presentation logic
+- **Data**: repositories, Firebase, and models
+
+All **CRUD operations are implemented manually** (without FirebaseUI) to maintain full control over business logic and data flows.
+
+The organization by **layers** (`data`, `domain`, `ui`) and by **features** reflects a professional approach similar to that used in **real production projects**, preparing the application for future expansion without deep restructuring.
+
+## 🧪 Testing and Software Quality
+
+The project includes **real software testing**, focused on ensuring the reliability of critical processes.
+
+### 🔍 Implemented Test Types
+- **White-box testing**:
+  - Internal logic validation.
+  - Flow, condition, and state control.
+- **Black-box testing**:
+  - Functional validation from the user’s perspective.
+
+### 🎯 Covered Cases
+- Successful and failed login.
+- Registration with valid and invalid data.
+- Required field validations.
+- Error handling and user feedback.
+
+These tests focus mainly on **Login** and **Sign Up** flows, ensuring security and stability.
+
+## 🌍 Flexible Event Management
+
+SportMate enables **open and decentralized** event management, combining institutional organization with users’ personal initiative.
+
+### 🧩 Supported Event Types
+- **Official events**, created and managed by municipalities.
+- **Private events**, freely created by users.
+- Ability to join existing events or create new ones without geographical restrictions.
+
+### 📍 Real Use and Social Reach
+
+- Users can create or join events even when **outside their usual municipality**.
+- The application is useful both locally and during travel, trips, or temporary stays.
+- It facilitates spontaneous sports practice and human connection anywhere.
+
+This approach transforms **SportMate** into a **social, inclusive, and scalable** platform designed for everyday use, not limited to a fixed context.
+
+## 🤝 Social Impact of the Project
+
+SportMate is an application with **real social impact**, designed to go beyond simple sports event organization.
+
+- Reduces **sedentary lifestyle** by facilitating regular physical activity.
+- Combats **social isolation** by promoting interaction between people with shared interests.
+- Encourages **social integration** among people of different ages, cultures, and backgrounds.
+- Strengthens **community cohesion**, using sport as a universal language.
+
+The open and participatory approach of the application contributes to creating healthier, more inclusive, and socially connected environments, both locally and in broader contexts.
+
+## 🛠️ Technologies Used
+
+- Android Studio  
+- Java  
+- Firebase Authentication  
+- Cloud Firestore  
+- Firebase Storage  
+- Material Design Components  
+- Git & GitHub  
+
+## 🚀 Installation and Execution
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NilsonDevCode/SportMate.git
+   ```
+2. Open the project with Android Studio.
+3. Create a project in Firebase:
+- Enable Authentication (Email/Password).
+- Enable Cloud Firestore.
+- (Optional) Firebase Storage.
+4. Download the google-services.json file and place it in:
+`app/google-services.json`
+5. Sync Gradle and run the app on an emulator or physical device.
+
+## 🔒 Security and Best Practices
+- Data access restricted by UID.
+- Clear separation between users and municipalities.
+- Complete form validations.
+- Prevention of unauthorized actions.
+- Code prepared for advanced Firestore security rules.
+
+### 📊 Project Status
+- ✔ Functional and complete
+- ✔ Evaluated and approved with excellent grade
+- ✔ Solid business logic
+- ✔ Clear and maintainable architecture
+- ✔ Software tests implemented (white-box and black-box)
+
+### 🔧 Future Improvements
+- Expanded instrumented testing
+- UI/UX improvements
+- Push notifications
+- Performance optimization
+
+### 👥 Authorship
+Project initially developed as a team (4 members).
+This version corresponds to an independent copy, personally maintained and evolved.
+
+**Original team:** Antonio, Jordy, Elio, Nilson
+**Maintenance and evolution (personal fork):** Nilson
+
+### 📌 Key Learnings
+- Development of a complete Android application using MVVM architecture.
+- Real integration of Firebase Authentication, Cloud Firestore, and Storage.
+- Implementation of role and permission management at the application level.
+- State control, real-time data synchronization, and consistency.
+- Design and implementation of complex business logic without FirebaseUI.
+- Application of software testing (white-box and black-box) in critical flows.
+- Professional use of Git and GitHub in a collaborative environment.
+- Modular, maintainable, and scalable code organization.
+
+### 📄 License
+This project is distributed for educational and demonstrative purposes.
+It may be used as a reference while respecting the original authorship.
+
+   
+
+
+## Español
+# SportMate · AppSportMate 🏀🏃‍♂️⚽
+
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![MVVM](https://img.shields.io/badge/Architecture-MVVM-blue?style=for-the-badge)
@@ -83,9 +386,6 @@ Todo ello manteniendo una arquitectura sólida, datos coherentes y un control de
     Demo real de la sincronización automática de plazas al inscribirse o darse de baja de un evento, usando Cloud Firestore.
   </sub>
 </p>
-
-
-
 
 
 
