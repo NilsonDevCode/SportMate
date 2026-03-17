@@ -350,10 +350,10 @@ It may be used as a reference while respecting the original authorship.
 - [✅ Funcionalidades](#-funcionalidades-principales)
 - [📂 Estructura del proyecto](#-estructura-del-proyecto)
 - [🧩 Arquitectura](#-arquitectura-y-decisiones-técnicas)
-- [🧪 Testing](#-testing-y-calidad-del-software)
+- [🔍 Testing y calidad del software](#-testing-y-calidad-del-software)
 - [🌍 Gestión de eventos](#-gestión-flexible-de-eventos)
 - [🤝 Impacto social](#-impacto-social-del-proyecto)
-- [🛠️ Tecnologías](#️-tecnologías-y-stack-técnico)
+- [🛠️ Tecnologías y Stack Técnico](#️-tecnologías-y-stack-técnico)
 - [🚀 Instalación](#-instalación-y-ejecución)
 - [📊 Estado del proyecto](#-estado-del-proyecto)
 - [🔧 Futuras mejoras](#-futuras-mejoras)
@@ -502,7 +502,7 @@ Los **CRUDs están implementados manualmente** (sin FirebaseUI) para tener contr
 
 La organización por **capas** (`data`, `domain`, `ui`) y por **features** refleja un enfoque profesional, similar al utilizado en **proyectos reales de producción**, y prepara la aplicación para futuras ampliaciones sin necesidad de reestructuraciones profundas.
 
-## 🧪 Testing y calidad del software
+## 🔍 Testing y calidad del software
 
 El proyecto incluye un plan de **pruebas de software reales**, diseñado para garantizar la fiabilidad de los procesos críticos y la integridad de los datos en Firebase.
 
