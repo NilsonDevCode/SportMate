@@ -32,7 +32,7 @@
 - [🔍 Testing Strategy & Tools](#-testing-strategy-tools)
 - [🌍 Flexible Event Management](#-flexible-event-management)
 - [🤝 Social Impact of the Project](#-social-impact-of-the-project)
-- [🛠️ Technologies and Technical Stack](#-technologies-and-technical-stack)
+- [🛠️ Technologies and Technical Stack](#tech-section)
 - [🚀 Installation and Execution](#-installation-and-execution)
 - [🔒 Security and Best Practices](#-security-and-best-practices)
 - [📊 Project Status](#-project-status)
@@ -190,7 +190,7 @@ The organization by **layers** (`data`, `domain`, `ui`) and by **features** refl
 
 
 
-### 🔍 Testing Strategy & Tools
+## 🔍 Testing Strategy & Tools
 - **White Box Testing (Unit Testing):** 
   - Implemented using **JUnit 4** and **Mockito**.
   - Validation of the internal logic within **Use Cases** and **ViewModels**.
