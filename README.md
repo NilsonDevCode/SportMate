@@ -29,7 +29,7 @@
 - [✅ Core Features](#-core-features)
 - [📂 Project Structure](#-project-structure)
 - [🧩 Architecture and Technical Decisions](#-architecture-and-technical-decisions)
-- [🔍 Testing Strategy & Tools](#-testing-strategy-tools)
+- [🔍 Testing Strategy & Tools](#-testing-strategy--tools)
 - [🌍 Flexible Event Management](#-flexible-event-management)
 - [🤝 Social Impact of the Project](#-social-impact-of-the-project)
 - [🛠️ Technologies and Technical Stack](#tech-section)
