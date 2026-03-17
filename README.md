@@ -32,7 +32,7 @@
 - [🔍 Testing Strategy & Tools](#-testing-strategy-tools)
 - [🌍 Flexible Event Management](#-flexible-event-management)
 - [🤝 Social Impact of the Project](#-social-impact-of-the-project)
-- [🛠️ Technologies and Technical Stack](#tech-section)
+- [🛠️ Technologies and Technical Stack](#-technologies-and-technical-stack)
 - [🚀 Installation and Execution](#-installation-and-execution)
 - [🔒 Security and Best Practices](#-security-and-best-practices)
 - [📊 Project Status](#-project-status)
