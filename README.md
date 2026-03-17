@@ -32,7 +32,7 @@
 - [🧪 Testing and Software Quality](#-testing-and-software-quality)
 - [🌍 Flexible Event Management](#-flexible-event-management)
 - [🤝 Social Impact of the Project](#-social-impact-of-the-project)
-- [🛠️ Technologies Used](#tech-section)
+- [🛠️ Technologies and Technical Stack](#tech-section)
 - [🚀 Installation and Execution](#-installation-and-execution)
 - [🔒 Security and Best Practices](#-security-and-best-practices)
 - [📊 Project Status](#-project-status)
@@ -190,22 +190,21 @@ The organization by **layers** (`data`, `domain`, `ui`) and by **features** refl
 
 
 
-## 🧪 Testing and Software Quality
+### 🔍 Testing Strategy & Tools
+- **White Box Testing (Unit Testing):** 
+  - Implemented using **JUnit 4** and **Mockito**.
+  - Validation of the internal logic within **Use Cases** and **ViewModels**.
+  - Use of **Mocks** to simulate Firebase responses and isolate business logic.
+- **Black Box Testing (UI Testing):** 
+  - Implemented using **Espresso**.
+  - Functional validation of user flows (E2E).
+  - Navigation control and UI state verification.
 
-The project includes **real software testing**, focused on ensuring the reliability of critical processes.
-
-### 🔍 Implemented Test Types
-- **White-box testing**:
-  - Internal logic validation.
-  - Flow, condition, and state control.
-- **Black-box testing**:
-  - Functional validation from the user’s perspective.
-
-### 🎯 Covered Cases
-- Successful and failed login.
-- Registration with valid and invalid data.
-- Required field validations.
-- Error handling and user feedback.
+### 🎯 Test Scenarios (E2E and Unit)
+- **Authentication Flows:** Login and Registration with valid/invalid data and network error handling (E2E with Espresso).
+- **Real-time Slot Logic:** Validation that registration is only possible if slots are available, ensuring consistency in Firestore.
+- **Form Validations:** Strict control of required fields, data formats, and user error messaging.
+- **Session Persistence:** Verification of the entry flow based on authentication state and user role (User vs. Town Hall).
 
 These tests focus mainly on **Login** and **Sign Up** flows, ensuring security and stability.
 
@@ -244,17 +243,16 @@ The open and participatory approach of the application contributes to creating h
 
 
 <a name="tech-section"></a>
-## 🛠️ Technologies Used
-
-
-- Android Studio  
-- Java  
-- Firebase Authentication  
-- Cloud Firestore  
-- Firebase Storage  
-- Material Design Components  
-- Git & GitHub
-
+## 🛠️ Technologies and Technical Stack
+*   **Language:** Java (JDK 11/17) - *Focus on robustness and strong typing.*
+*   **Android Jetpack Components:**
+    *   **Navigation Component:** Flow management via `nav_graph.xml`.
+    *   **ViewModel & LiveData:** Reactive architecture and state persistence across lifecycle changes.
+    *   **Lifecycle:** Intelligent UI state management.
+*   **Architecture:** Clean Architecture + MVVM (Strict separation of concerns).
+*   **Backend & Cloud:** Firebase (Auth, Real-time Firestore, Storage).
+*   **UI/UX:** Material Design Components (XML) with a focus on accessibility.
+*   **DI (Dependency Injection):** Implemented in the `di/` layer for decoupling.
 
 
 ## 🚀 Installation and Execution
@@ -302,14 +300,16 @@ This version corresponds to an independent copy, personally maintained and evolv
 **Maintenance and evolution (personal fork):** Nilson
 
 ## 📌 Key Learnings
-- Development of a complete Android application using MVVM architecture.
-- Real integration of Firebase Authentication, Cloud Firestore, and Storage.
-- Implementation of role and permission management at the application level.
-- State control, real-time data synchronization, and consistency.
-- Design and implementation of complex business logic without FirebaseUI.
-- Application of software testing (white-box and black-box) in critical flows.
-- Professional use of Git and GitHub in a collaborative environment.
-- Modular, maintainable, and scalable code organization.
+
+*   **Jetpack Architecture in Java:** Professional implementation of **ViewModels, LiveData, and Navigation Component** to overcome traditional Android lifecycle limitations and ensure a reactive UI.
+*   **Java Mastery and Design Patterns:** Utilization of Java to structure an application under **MVVM and Clean Architecture**, demonstrating a solid foundation in the **JVM** that facilitates a smooth transition to ecosystems like **Spring Boot**.
+*   **Real-Time Data Management:** Design and implementation of **complex business logic without FirebaseUI**, maintaining full control over synchronization, slot consistency, and states in **Cloud Firestore**.
+*   **Security and Access Control:** Advanced integration of **Firebase Authentication** with a **role-based management system (User/Town Hall)** and application-level permissions.
+*   **Dependency Injection and Modularity:** Organized **modular code (data, domain, ui)** and decoupling, enhancing software maintainability and scalability through the `di/` layer.
+*   **Software Quality and Testing:** Application of **white-box and black-box testing** methodologies on critical flows such as registration and event enrollment logic.
+*   **Cloud Services Integration:** Multimedia file management and data persistence through the combined use of **Firebase Storage** and **Firestore**.
+*   **Professional Workflow:** Advanced use of **Git and GitHub** in collaborative environments, managing branches, conflicts, and technical documentation efficiently.
+
 
 ## 📄 License
 This project is distributed for educational and demonstrative purposes.
@@ -504,20 +504,23 @@ La organización por **capas** (`data`, `domain`, `ui`) y por **features** refle
 
 ## 🧪 Testing y calidad del software
 
-El proyecto incluye **pruebas de software reales**, centradas en garantizar la fiabilidad de los procesos críticos.
+El proyecto incluye un plan de **pruebas de software reales**, diseñado para garantizar la fiabilidad de los procesos críticos y la integridad de los datos en Firebase.
 
-### 🔍 Tipos de pruebas implementadas
-- **Pruebas de caja blanca**:
-  - Validación de la lógica interna.
-  - Control de flujos, condiciones y estados.
-- **Pruebas de caja negra**:
-  - Validación funcional desde la perspectiva del usuario.
+### 🔍 Estrategia de Testing y Herramientas
+- **Pruebas de Caja Blanca (Unit Testing):** 
+  - Implementadas con **JUnit 4** y **Mockito**.
+  - Validación de la lógica interna de los **Use Cases** y **ViewModels**.
+  - Uso de **Mocks** para simular las respuestas de Firebase y aislar la lógica de negocio.
+- **Pruebas de Caja Negra (UI Testing):** 
+  - Implementadas con **Espresso**.
+  - Validación funcional de flujos desde la perspectiva del usuario (E2E).
+  - Control de navegación y estados de la interfaz.
 
-### 🎯 Casos cubiertos
-- Login correcto e incorrecto.
-- Registro con datos válidos e inválidos.
-- Validaciones de campos obligatorios.
-- Gestión de errores y mensajes al usuario.
+### 🎯 Escenarios de prueba (E2E y Unitarios)
+- **Flujos de Autenticación:** Login y Registro con datos válidos, inválidos y gestión de errores de red (E2E con Espresso).
+- **Lógica de Plazas en Tiempo Real:** Validación de que la inscripción solo es posible si hay plazas disponibles, garantizando la consistencia en Firestore.
+- **Validaciones de Formulario:** Control estricto de campos obligatorios, formatos de datos y gestión de mensajes de error al usuario.
+- **Persistencia de Sesión:** Verificación del flujo de entrada según el estado de autenticación y el rol del usuario (Usuario vs. Ayuntamiento).
 
 Estas pruebas se centran principalmente en los flujos de **Login** y **Sign Up**, garantizando seguridad y estabilidad.
 ## 🌍 Gestión flexible de eventos
@@ -550,15 +553,17 @@ SportMate es una aplicación con **impacto social real**, diseñada para ir más
 El enfoque abierto y participativo de la aplicación contribuye a crear entornos más saludables, inclusivos y socialmente conectados, tanto a nivel local como en contextos más amplios.
 
 
-## 🛠️ Tecnologías utilizadas
+## 🛠️ Tecnologías y Stack Técnico
+*   **Lenguaje:** Java (JDK 11/17) - *Enfoque en robustez y tipado fuerte.*
+*   **Android Jetpack Components:**
+    *   **Navigation Component:** Gestión de flujos mediante `nav_graph.xml`.
+    *   **ViewModel & LiveData:** Arquitectura reactiva y persistencia de estado ante cambios de ciclo de vida.
+    *   **Lifecycle:** Gestión inteligente de estados de la UI.
+*   **Arquitectura:** Clean Architecture + MVVM (Separación estricta de responsabilidades).
+*   **Backend & Cloud:** Firebase (Auth, Firestore en tiempo real, Storage).
+*   **UI/UX:** Material Design Components (XML) con enfoque en accesibilidad.
+*   **DI (Inyección de Dependencias):** Implementada en la capa `di/` para desacoplamiento.
 
-- Android Studio  
-- Java  
-- Firebase Authentication  
-- Cloud Firestore  
-- Firebase Storage  
-- Material Design Components  
-- Git & GitHub  
 
 ## 🚀 Instalación y ejecución
 
@@ -615,14 +620,14 @@ Esta versión corresponde a una copia independiente, mantenida y evolucionada de
 
 ## 📌 Aprendizajes clave
 
-- Desarrollo de una aplicación Android completa con **arquitectura MVVM**.
-- Integración real de **Firebase Authentication**, **Cloud Firestore** y **Storage**.
-- Implementación de **gestión de roles y permisos** a nivel de aplicación.
-- Control de estado, sincronización de datos y consistencia en tiempo real.
-- Diseño e implementación de **lógica de negocio compleja** sin FirebaseUI.
-- Aplicación de **pruebas de software** (caja blanca y caja negra) en flujos críticos.
-- Uso profesional de **Git y GitHub** en un entorno colaborativo.
-- Organización de código modular, mantenible y escalable.
+*   **Arquitectura Jetpack en Java:** Implementación profesional de **ViewModels, LiveData y Navigation Component** para solventar las limitaciones tradicionales del ciclo de vida de Android y garantizar una UI reactiva.
+*   **Dominio de Java y Patrones de Diseño:** Uso de Java para estructurar una aplicación bajo **MVVM y Clean Architecture**, demostrando una base sólida en la **JVM** que facilita la transición hacia ecosistemas como **Spring Boot**.
+*   **Gestión de Datos en Tiempo Real:** Diseño e implementación de **lógica de negocio compleja sin FirebaseUI**, manteniendo control total sobre la sincronización, consistencia de plazas y estados en **Cloud Firestore**.
+*   **Seguridad y Control de Acceso:** Integración avanzada de **Firebase Authentication** con un sistema de **gestión de roles (Usuario/Ayuntamiento)** y permisos a nivel de aplicación.
+*   **Inyección de Dependencias y Modularidad:** Organización de código **modular (data, domain, ui)** y desacoplado, facilitando el mantenimiento y la escalabilidad del software mediante la capa `di/`.
+*   **Calidad de Software y Testing:** Aplicación de metodologías de **pruebas de caja blanca y caja negra** en flujos críticos como el registro y la lógica de inscripción de eventos.
+*   **Integración de Servicios Cloud:** Gestión de archivos multimedia y persistencia de datos mediante el uso combinado de **Firebase Storage** y **Firestore**.
+*   **Flujo de Trabajo Profesional:** Uso avanzado de **Git y GitHub** en entornos colaborativos, gestionando ramas, conflictos y documentación técnica de forma eficiente.
 
 ## 📄 Licencia
 
