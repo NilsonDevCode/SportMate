@@ -353,7 +353,7 @@ It may be used as a reference while respecting the original authorship.
 - [🧪 Testing](#-testing-y-calidad-del-software)
 - [🌍 Gestión de eventos](#-gestión-flexible-de-eventos)
 - [🤝 Impacto social](#-impacto-social-del-proyecto)
-- [🛠️ Tecnologías](#-tecnologías-utilizadas)
+- [🛠️ Tecnologías](#-Tecnologías-y-Stack-Técnico)
 - [🚀 Instalación](#-instalación-y-ejecución)
 - [📊 Estado del proyecto](#-estado-del-proyecto)
 - [🔧 Futuras mejoras](#-futuras-mejoras)
